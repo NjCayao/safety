@@ -1,0 +1,114 @@
+/* Estilos personalizados para reportes en tiempo real */
+
+/* Animación para indicar actualización */
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.8; }
+    100% { opacity: 1; }
+  }
+  
+  .actualizando {
+    animation: pulse 1s infinite;
+  }
+  
+  /* Estilos para contadores */
+  .reportes-counter {
+    transition: all 0.3s ease;
+    transform-origin: center;
+  }
+  
+  .reportes-counter.badge-warning {
+    transform: scale(1.2);
+    transition: transform 0.3s ease;
+  }
+  
+  /* Estilos para imágenes */
+  #reportes-container img {
+    transition: all 0.2s ease;
+  }
+  
+  #reportes-container img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  }
+  
+  /* Estilos para el timer de cuenta regresiva */
+  .countdown-timer {
+    font-weight: bold;
+    color: #fd7e14;
+  }
+  
+  /* Estilos para alertas en procesamiento */
+  .alert-procesando {
+    border-left: 4px solid #ffc107;
+    background-color: #fffbee;
+  }
+  
+  /* Estilos para destacar nuevos reportes */
+  .nuevo-reporte {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .nuevo-reporte::before {
+    content: "Nuevo";
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: #dc3545;
+    color: white;
+    padding: 2px 10px;
+    font-size: 10px;
+    transform: rotate(45deg) translate(15px, -10px);
+    text-transform: uppercase;
+    z-index: 10;
+  }
+  
+  /* Estilos para diferentes tipos de alertas */
+  .tipo-fatiga {
+    border-left: 5px solid #dc3545;
+  }
+  
+  .tipo-yawn {
+    border-left: 5px solid #ffc107;
+  }
+  
+  .tipo-phone {
+    border-left: 5px solid #17a2b8;
+  }
+  
+  .tipo-smoking {
+    border-left: 5px solid #6c757d;
+  }
+  
+  .tipo-distraction {
+    border-left: 5px solid #007bff;
+  }
+  
+  .tipo-unauthorized {
+    border-left: 5px solid #343a40;
+  }
+  
+  .tipo-behavior {
+    border-left: 5px solid #6610f2;
+  }
+  
+  /* Animación de carga */
+  .spinner-grow-sm {
+    width: 0.8rem;
+    height: 0.8rem;
+  }
+  
+  /* Adaptación para móviles */
+  @media (max-width: 768px) {
+    .card-tools {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+    
+    .card-tools button, 
+    .card-tools .custom-switch {
+      margin-bottom: 5px;
+    }
+  }

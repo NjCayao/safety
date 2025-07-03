@@ -1,0 +1,6 @@
+Reporte de Seguridad - DISTRACTION
+Fecha y hora: 20250510_183725
+Operador: Operador: Nilson Cayao
+Duración del comportamiento: 2.5 segundos
+
+Acción recomendada: El operador debe cesar el comportamiento peligroso inmediatamente.

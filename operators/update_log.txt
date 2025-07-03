@@ -1,0 +1,55 @@
+[2025-05-03 18:52:35] Iniciando actualizaci髇 de encodings
+[2025-05-03 18:52:35] Directorio de trabajo: C:\xampp\htdocs\safety_system\operators
+[2025-05-03 18:52:35] Buscando fotos en: C:\xampp\htdocs\safety_system\server\operator-photo
+[2025-05-03 18:52:35] Progreso: 5%
+[2025-05-03 18:52:35] Carpetas de operadores encontradas: 1
+[2025-05-03 18:52:35] Carpetas: 47469940
+[2025-05-03 18:52:35] Operador: Operador: Nilson Cayao (DNI: 47469940) - Im醙enes encontradas: 4
+[2025-05-03 18:52:36] Rostro detectado en face1_20250503_114741.jpg
+[2025-05-03 18:52:36] Rostro detectado en face2_20250503_114741.jpg
+[2025-05-03 18:52:37] Rostro detectado en face3_20250503_114741.jpg
+[2025-05-03 18:52:37] Rostro detectado en profile_20250503_114741.jpg
+[2025-05-03 18:52:37] Progreso: 90%
+[2025-05-03 18:52:37] Archivo existente: encodings.pkl
+[2025-05-03 18:52:37] Tama駉 antiguo: 4473 bytes
+[2025-05-03 18:52:37] 趌tima modificaci髇: 2025-05-03 18:40:12
+[2025-05-03 18:52:37] Progreso: 90%
+[2025-05-03 18:52:37] Archivo de prueba creado con 閤ito
+[2025-05-03 18:52:37] Guardando en ruta absoluta: C:\xampp\htdocs\safety_system\operators\encodings.pkl
+[2025-05-03 18:52:37] Archivo guardado con 閤ito
+[2025-05-03 18:52:37] Tama駉 nuevo: 4473 bytes
+[2025-05-03 18:52:37] Nueva modificaci髇: 2025-05-03 18:52:37
+[2025-05-03 18:52:37] Diferencia de tama駉: 0 bytes
+[2025-05-03 18:52:37] Progreso: 100%
+[2025-05-03 18:52:37] Actualizaci髇 completada.
+[2025-05-03 18:52:37] PHP: C贸digo de retorno: 0
+[2025-05-03 18:52:37] PHP: Script Python ejecutado exitosamente
+[2025-05-03 18:52:37] PHP: Archivo encodings.pkl actualizado - Tama帽o: 4473 bytes, Modificado: 2025-05-03 18:40:12
+[2025-05-03 18:52:37] PHP: ADVERTENCIA: El archivo no fue modificado
+[2025-05-03 19:02:20] PHP: Iniciando ejecuci贸n del script Python
+[2025-05-03 19:02:20] PHP: Script Python: C:\xampp\htdocs\safety_system\operators\update_encodings.py
+[2025-05-03 19:02:20] PHP: Directorio de trabajo: C:\xampp\htdocs\safety_system\operators
+[2025-05-03 19:02:20] PHP: Archivo encodings.pkl existente - Tama帽o: 4473 bytes, Modificado: 2025-05-03 18:52:37
+[2025-05-03 19:02:20] PHP: Comando ejecutado: cd /d "C:\xampp\htdocs\safety_system\operators" && python "C:\xampp\htdocs\safety_system\operators\update_encodings.py" > "C:\xampp\htdocs\safety_system\operators/python_output.txt" 2>&1
+[2025-05-03 19:02:23] PHP: C贸digo de retorno: 0
+[2025-05-03 19:02:23] PHP: Script Python ejecutado exitosamente
+[2025-05-03 19:02:23] PHP: Archivo encodings.pkl actualizado - Tama帽o: 4473 bytes, Modificado: 2025-05-03 18:52:37
+[2025-05-03 19:02:23] PHP: ADVERTENCIA: El archivo no fue modificado
+[2025-05-03 19:02:56] PHP: Iniciando ejecuci贸n del script Python
+[2025-05-03 19:02:56] PHP: Script Python: C:\xampp\htdocs\safety_system\operators\update_encodings.py
+[2025-05-03 19:02:56] PHP: Directorio de trabajo: C:\xampp\htdocs\safety_system\operators
+[2025-05-03 19:02:56] PHP: Archivo encodings.pkl existente - Tama帽o: 4473 bytes, Modificado: 2025-05-03 19:02:23
+[2025-05-03 19:02:56] PHP: Comando ejecutado: cd /d "C:\xampp\htdocs\safety_system\operators" && python "C:\xampp\htdocs\safety_system\operators\update_encodings.py" > "C:\xampp\htdocs\safety_system\operators/python_output.txt" 2>&1
+[2025-05-03 19:03:00] PHP: C贸digo de retorno: 0
+[2025-05-03 19:03:00] PHP: Script Python ejecutado exitosamente
+[2025-05-03 19:03:00] PHP: Archivo encodings.pkl actualizado - Tama帽o: 4473 bytes, Modificado: 2025-05-03 19:02:23
+[2025-05-03 19:03:00] PHP: ADVERTENCIA: El archivo no fue modificado
+[2025-05-03 19:08:46] PHP: Iniciando ejecuci贸n del script Python
+[2025-05-03 19:08:46] PHP: Script Python: C:\xampp\htdocs\safety_system\operators\update_encodings.py
+[2025-05-03 19:08:46] PHP: Directorio de trabajo: C:\xampp\htdocs\safety_system\operators
+[2025-05-03 19:08:46] PHP: Archivo encodings.pkl existente - Tama帽o: 4473 bytes, Modificado: 2025-05-03 19:03:00
+[2025-05-03 19:08:46] PHP: Comando ejecutado: cd /d "C:\xampp\htdocs\safety_system\operators" && python "C:\xampp\htdocs\safety_system\operators\update_encodings.py" > "C:\xampp\htdocs\safety_system\operators/python_output.txt" 2>&1
+[2025-05-03 19:08:49] PHP: C贸digo de retorno: 0
+[2025-05-03 19:08:49] PHP: Script Python ejecutado exitosamente
+[2025-05-03 19:08:49] PHP: Archivo encodings.pkl actualizado - Tama帽o: 4473 bytes, Modificado: 2025-05-03 19:03:00
+[2025-05-03 19:08:49] PHP: ADVERTENCIA: El archivo no fue modificado

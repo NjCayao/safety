@@ -1,0 +1,6 @@
+Reporte de Seguridad - FATIGUE
+Fecha y hora: 20250506_011032
+Operador: Operador: Nilson Cayao
+Episodios de fatiga detectados: 1
+
+Acción recomendada: El operador debe tomar un descanso inmediato de al menos 15 minutos.

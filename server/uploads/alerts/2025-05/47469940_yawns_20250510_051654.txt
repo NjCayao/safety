@@ -1,0 +1,6 @@
+Reporte de Seguridad - YAWNS
+Fecha y hora: 20250510_051654
+Operador: Operador: Nilson Cayao
+Bostezos detectados: 3
+
+Acción recomendada: El operador debe tomar un descanso inmediato de al menos 15 minutos.

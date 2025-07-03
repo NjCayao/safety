@@ -1,0 +1,2 @@
+2025-04-27 15:28:20,560 - SafetySystem - INFO - Iniciando sistema de seguridad modular
+2025-04-27 15:28:20,782 - MainSystem - CRITICAL - Error crítico en el sistema: Unable to open C:\xampp\htdocs\safety_system\client\models\shape_predictor_68_face_landmarks.dat

@@ -1,0 +1,9 @@
+Reporte de Seguridad - DISTRACTION
+Fecha y hora: 20250510_174609
+Operador: Operador: Nilson Cayao
+Duración del comportamiento: 2.6 segundos
+Dirección de la mirada: DERECHA
+Nivel de alerta alcanzado: 1
+Distracción detectada: Mirada fuera del camino
+
+Acción recomendada: El operador debe cesar el comportamiento peligroso inmediatamente.

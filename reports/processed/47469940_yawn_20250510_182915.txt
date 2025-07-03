@@ -1,0 +1,6 @@
+Reporte de Seguridad - YAWN
+Fecha y hora: 20250510_182915
+Operador: Operador: Nilson Cayao
+Bostezos detectados: 1
+
+Acción recomendada: El operador debe cesar el comportamiento peligroso inmediatamente.

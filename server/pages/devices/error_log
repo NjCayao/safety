@@ -1,0 +1,4 @@
+[24-Jun-2025 15:06:59 UTC] PHP Warning:  Undefined variable $alert in /home1/ntohdchg/safetysystem.devcayao.com/server/includes/footer.php on line 81
+[24-Jun-2025 15:06:59 UTC] PHP Warning:  Trying to access array offset on value of type null in /home1/ntohdchg/safetysystem.devcayao.com/server/includes/footer.php on line 81
+[24-Jun-2025 15:06:59 UTC] PHP Warning:  Undefined variable $alert in /home1/ntohdchg/safetysystem.devcayao.com/server/includes/footer.php on line 82
+[24-Jun-2025 15:06:59 UTC] PHP Warning:  Trying to access array offset on value of type null in /home1/ntohdchg/safetysystem.devcayao.com/server/includes/footer.php on line 82

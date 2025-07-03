@@ -1,0 +1,8 @@
+Reporte de Seguridad - PHONE_3S
+Fecha y hora: 20250510_152731
+Operador: Operador: Nilson Cayao
+Duración del comportamiento: 3.4 segundos
+Comportamiento detectado: cell phone
+Uso de celular detectado por más de 3 segundos
+
+Acción recomendada: El operador debe cesar el comportamiento peligroso inmediatamente.

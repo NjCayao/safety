@@ -1,0 +1,173 @@
+2025-06-05 01:07:33,572 - SafetySystem - INFO - Iniciando sistema de seguridad modular
+2025-06-05 01:07:34,607 - ConfigManager - DEBUG - Configuración 'yawn.enable_night_mode' no encontrada, usando default: True
+2025-06-05 01:07:34,607 - ConfigManager - DEBUG - Configuración 'yawn.night_mode_threshold' no encontrada, usando default: 50
+2025-06-05 01:07:34,607 - ConfigManager - DEBUG - Configuración 'yawn.night_adjustment' no encontrada, usando default: 0.05
+2025-06-05 01:07:34,607 - ConfigManager - DEBUG - Configuración 'yawn.show_debug_info' no encontrada, usando default: True
+2025-06-05 01:07:34,607 - ConfigManager - DEBUG - Configuración 'yawn.show_mouth_contour' no encontrada, usando default: True
+2025-06-05 01:07:34,607 - ConfigManager - DEBUG - Configuración 'yawn.show_progress_bar' no encontrada, usando default: True
+2025-06-05 01:07:34,607 - ConfigManager - DEBUG - Configuración 'yawn.show_light_level' no encontrada, usando default: True
+2025-06-05 01:07:34,607 - ConfigManager - DEBUG - Configuración 'yawn.show_mar_value' no encontrada, usando default: True
+2025-06-05 01:07:34,607 - ConfigManager - DEBUG - Configuración 'yawn.show_mode_indicator' no encontrada, usando default: True
+2025-06-05 01:07:34,608 - ConfigManager - DEBUG - Configuración 'audio.files.fallback' no encontrada, usando default: alarma.mp3
+2025-06-05 01:07:34,765 - ConfigManager - DEBUG - Configuración 'distraction.night_mode_threshold' no encontrada, usando default: 50
+2025-06-05 01:07:34,765 - ConfigManager - DEBUG - Configuración 'distraction.enable_night_mode' no encontrada, usando default: True
+2025-06-05 01:07:34,772 - AlarmModule - INFO - Módulo de audio inicializado
+2025-06-05 01:07:34,792 - MainSystem - INFO - Sistema de seguridad iniciado
+2025-06-05 01:07:34,792 - MainSystem - INFO - Inicializando módulos del sistema
+2025-06-05 01:07:34,998 - CameraModule - INFO - Cámara inicializada: 640x480 @ 30fps
+2025-06-05 01:07:34,999 - FaceRecognitionModule - INFO - Operadores cargados: 1
+2025-06-05 01:07:35,828 - AlarmModule - INFO - Módulo de audio inicializado
+2025-06-05 01:07:39,666 - MainSystem - INFO - Deteniendo sistema
+2025-06-05 01:07:39,716 - CameraModule - INFO - Cámara liberada
+2025-06-05 01:18:11,365 - SafetySystem - INFO - Iniciando sistema de seguridad modular
+2025-06-05 01:18:12,399 - ConfigManager - DEBUG - Configuración 'yawn.enable_night_mode' no encontrada, usando default: True
+2025-06-05 01:18:12,399 - ConfigManager - DEBUG - Configuración 'yawn.night_mode_threshold' no encontrada, usando default: 50
+2025-06-05 01:18:12,399 - ConfigManager - DEBUG - Configuración 'yawn.night_adjustment' no encontrada, usando default: 0.05
+2025-06-05 01:18:12,399 - ConfigManager - DEBUG - Configuración 'yawn.show_debug_info' no encontrada, usando default: True
+2025-06-05 01:18:12,399 - ConfigManager - DEBUG - Configuración 'yawn.show_mouth_contour' no encontrada, usando default: True
+2025-06-05 01:18:12,399 - ConfigManager - DEBUG - Configuración 'yawn.show_progress_bar' no encontrada, usando default: True
+2025-06-05 01:18:12,399 - ConfigManager - DEBUG - Configuración 'yawn.show_light_level' no encontrada, usando default: True
+2025-06-05 01:18:12,399 - ConfigManager - DEBUG - Configuración 'yawn.show_mar_value' no encontrada, usando default: True
+2025-06-05 01:18:12,399 - ConfigManager - DEBUG - Configuración 'yawn.show_mode_indicator' no encontrada, usando default: True
+2025-06-05 01:18:12,399 - ConfigManager - DEBUG - Configuración 'audio.files.fallback' no encontrada, usando default: alarma.mp3
+2025-06-05 01:18:12,562 - ConfigManager - DEBUG - Configuración 'distraction.night_mode_threshold' no encontrada, usando default: 50
+2025-06-05 01:18:12,562 - ConfigManager - DEBUG - Configuración 'distraction.enable_night_mode' no encontrada, usando default: True
+2025-06-05 01:18:12,571 - ConfigManager - DEBUG - Configuración 'behavior.enable_night_mode' no encontrada, usando default: True
+2025-06-05 01:18:12,571 - ConfigManager - DEBUG - Configuración 'behavior.show_debug_info' no encontrada, usando default: True
+2025-06-05 01:18:12,571 - ConfigManager - DEBUG - Configuración 'behavior.show_confidence_values' no encontrada, usando default: True
+2025-06-05 01:18:12,571 - ConfigManager - DEBUG - Configuración 'behavior.show_timing_info' no encontrada, usando default: True
+2025-06-05 01:18:12,571 - ConfigManager - DEBUG - Configuración 'behavior.show_mode_indicator' no encontrada, usando default: True
+2025-06-05 01:18:12,572 - AlarmModule - INFO - Módulo de audio inicializado
+2025-06-05 01:18:12,590 - MainSystem - INFO - Sistema de seguridad iniciado
+2025-06-05 01:18:12,590 - MainSystem - INFO - Inicializando módulos del sistema
+2025-06-05 01:18:12,590 - CameraModule - INFO - Inicializando cámara...
+2025-06-05 01:18:12,806 - CameraModule - INFO - Configuración de cámara aplicada
+2025-06-05 01:18:12,806 - CameraModule - INFO - Calentando cámara por 1 segundos...
+2025-06-05 01:18:13,868 - CameraModule - INFO - Cámara inicializada: 1280x720 @ 30.0fps
+2025-06-05 01:18:13,869 - CameraModule - INFO - Aplicando optimizaciones para desarrollo...
+2025-06-05 01:18:13,870 - FaceRecognitionModule - INFO - Operadores cargados: 1
+2025-06-05 01:18:14,702 - AlarmModule - INFO - Módulo de audio inicializado
+2025-06-05 01:18:14,710 - CameraModule - WARNING - FPS bajo detectado: 0.3/15
+2025-06-05 01:18:14,710 - CameraModule - INFO - Aplicando optimizaciones para desarrollo...
+2025-06-05 01:18:19,681 - MainSystem - INFO - Deteniendo sistema
+2025-06-05 01:18:19,712 - CameraModule - INFO - Cámara liberada
+2025-06-05 01:31:20,997 - SafetySystem - INFO - Iniciando sistema de seguridad optimizado
+2025-06-05 01:31:22,055 - ConfigManager - DEBUG - Configuración 'yawn.enable_night_mode' no encontrada, usando default: True
+2025-06-05 01:31:22,055 - ConfigManager - DEBUG - Configuración 'yawn.night_mode_threshold' no encontrada, usando default: 50
+2025-06-05 01:31:22,055 - ConfigManager - DEBUG - Configuración 'yawn.night_adjustment' no encontrada, usando default: 0.05
+2025-06-05 01:31:22,055 - ConfigManager - DEBUG - Configuración 'yawn.show_debug_info' no encontrada, usando default: True
+2025-06-05 01:31:22,055 - ConfigManager - DEBUG - Configuración 'yawn.show_mouth_contour' no encontrada, usando default: True
+2025-06-05 01:31:22,055 - ConfigManager - DEBUG - Configuración 'yawn.show_progress_bar' no encontrada, usando default: True
+2025-06-05 01:31:22,055 - ConfigManager - DEBUG - Configuración 'yawn.show_light_level' no encontrada, usando default: True
+2025-06-05 01:31:22,055 - ConfigManager - DEBUG - Configuración 'yawn.show_mar_value' no encontrada, usando default: True
+2025-06-05 01:31:22,055 - ConfigManager - DEBUG - Configuración 'yawn.show_mode_indicator' no encontrada, usando default: True
+2025-06-05 01:31:22,055 - ConfigManager - DEBUG - Configuración 'audio.files.fallback' no encontrada, usando default: alarma.mp3
+2025-06-05 01:31:22,264 - ConfigManager - DEBUG - Configuración 'distraction.night_mode_threshold' no encontrada, usando default: 50
+2025-06-05 01:31:22,264 - ConfigManager - DEBUG - Configuración 'distraction.enable_night_mode' no encontrada, usando default: True
+2025-06-05 01:31:22,281 - ConfigManager - DEBUG - Configuración 'behavior.enable_night_mode' no encontrada, usando default: True
+2025-06-05 01:31:22,281 - ConfigManager - DEBUG - Configuración 'behavior.enable_optimization' no encontrada, usando default: True
+2025-06-05 01:31:22,281 - ConfigManager - DEBUG - Configuración 'behavior.processing_interval' no encontrada, usando default: 1
+2025-06-05 01:31:22,281 - ConfigManager - DEBUG - Configuración 'behavior.roi_enabled' no encontrada, usando default: False
+2025-06-05 01:31:22,281 - ConfigManager - DEBUG - Configuración 'behavior.roi_scale_factor' no encontrada, usando default: 0.6
+2025-06-05 01:31:22,281 - ConfigManager - DEBUG - Configuración 'behavior.yolo_input_size' no encontrada, usando default: 416
+2025-06-05 01:31:22,281 - ConfigManager - DEBUG - Configuración 'behavior.nms_threshold' no encontrada, usando default: 0.5
+2025-06-05 01:31:22,282 - ConfigManager - DEBUG - Configuración 'behavior.max_detections' no encontrada, usando default: 10
+2025-06-05 01:31:22,282 - ConfigManager - DEBUG - Configuración 'behavior.memory_optimization' no encontrada, usando default: False
+2025-06-05 01:31:22,282 - ConfigManager - DEBUG - Configuración 'behavior.frame_skip_threshold' no encontrada, usando default: 3
+2025-06-05 01:31:22,282 - ConfigManager - DEBUG - Configuración 'behavior.enable_prediction_cache' no encontrada, usando default: True
+2025-06-05 01:31:22,282 - ConfigManager - DEBUG - Configuración 'behavior.cache_size' no encontrada, usando default: 5
+2025-06-05 01:31:22,282 - ConfigManager - DEBUG - Configuración 'behavior.similarity_threshold' no encontrada, usando default: 0.8
+2025-06-05 01:31:22,282 - AlarmModule - INFO - Módulo de audio inicializado
+2025-06-05 01:31:22,304 - MainSystem - INFO - Sistema de seguridad optimizado iniciado
+2025-06-05 01:31:22,304 - MainSystem - INFO - Inicializando módulos del sistema
+2025-06-05 01:31:22,304 - CameraModule - INFO - Inicializando cámara...
+2025-06-05 01:31:22,584 - CameraModule - INFO - Configuración de cámara aplicada
+2025-06-05 01:31:22,585 - CameraModule - INFO - Calentando cámara por 1 segundos...
+2025-06-05 01:31:23,675 - CameraModule - INFO - Cámara inicializada: 1280x720 @ 30.0fps
+2025-06-05 01:31:23,676 - CameraModule - INFO - Aplicando optimizaciones para desarrollo...
+2025-06-05 01:31:23,685 - FaceRecognitionModule - INFO - Operadores cargados: 1
+2025-06-05 01:31:24,519 - AlarmModule - INFO - Módulo de audio inicializado
+2025-06-05 01:31:24,529 - CameraModule - WARNING - FPS bajo detectado: 0.3/15
+2025-06-05 01:31:24,529 - CameraModule - INFO - Aplicando optimizaciones para desarrollo...
+2025-06-05 01:31:29,594 - MainSystem - INFO - Deteniendo sistema optimizado
+2025-06-05 01:31:29,610 - CameraModule - INFO - Cámara liberada
+2025-06-05 03:18:36,374 - SafetySystem - INFO - Iniciando sistema de seguridad optimizado
+2025-06-05 03:18:37,422 - ConfigManager - DEBUG - Configuración 'yawn.enable_night_mode' no encontrada, usando default: True
+2025-06-05 03:18:37,422 - ConfigManager - DEBUG - Configuración 'yawn.night_mode_threshold' no encontrada, usando default: 50
+2025-06-05 03:18:37,423 - ConfigManager - DEBUG - Configuración 'yawn.night_adjustment' no encontrada, usando default: 0.05
+2025-06-05 03:18:37,423 - ConfigManager - DEBUG - Configuración 'yawn.show_debug_info' no encontrada, usando default: True
+2025-06-05 03:18:37,423 - ConfigManager - DEBUG - Configuración 'yawn.show_mouth_contour' no encontrada, usando default: True
+2025-06-05 03:18:37,423 - ConfigManager - DEBUG - Configuración 'yawn.show_progress_bar' no encontrada, usando default: True
+2025-06-05 03:18:37,423 - ConfigManager - DEBUG - Configuración 'yawn.show_light_level' no encontrada, usando default: True
+2025-06-05 03:18:37,423 - ConfigManager - DEBUG - Configuración 'yawn.show_mar_value' no encontrada, usando default: True
+2025-06-05 03:18:37,423 - ConfigManager - DEBUG - Configuración 'yawn.show_mode_indicator' no encontrada, usando default: True
+2025-06-05 03:18:37,423 - ConfigManager - DEBUG - Configuración 'audio.files.fallback' no encontrada, usando default: alarma.mp3
+2025-06-05 03:18:37,572 - ConfigManager - DEBUG - Configuración 'distraction.night_mode_threshold' no encontrada, usando default: 50
+2025-06-05 03:18:37,572 - ConfigManager - DEBUG - Configuración 'distraction.enable_night_mode' no encontrada, usando default: True
+2025-06-05 03:18:37,581 - ConfigManager - DEBUG - Configuración 'behavior.enable_night_mode' no encontrada, usando default: True
+2025-06-05 03:18:37,581 - ConfigManager - DEBUG - Configuración 'behavior.enable_optimization' no encontrada, usando default: True
+2025-06-05 03:18:37,581 - ConfigManager - DEBUG - Configuración 'behavior.processing_interval' no encontrada, usando default: 1
+2025-06-05 03:18:37,581 - ConfigManager - DEBUG - Configuración 'behavior.roi_enabled' no encontrada, usando default: False
+2025-06-05 03:18:37,581 - ConfigManager - DEBUG - Configuración 'behavior.roi_scale_factor' no encontrada, usando default: 0.6
+2025-06-05 03:18:37,581 - ConfigManager - DEBUG - Configuración 'behavior.yolo_input_size' no encontrada, usando default: 416
+2025-06-05 03:18:37,581 - ConfigManager - DEBUG - Configuración 'behavior.nms_threshold' no encontrada, usando default: 0.5
+2025-06-05 03:18:37,581 - ConfigManager - DEBUG - Configuración 'behavior.max_detections' no encontrada, usando default: 10
+2025-06-05 03:18:37,581 - ConfigManager - DEBUG - Configuración 'behavior.memory_optimization' no encontrada, usando default: False
+2025-06-05 03:18:37,581 - ConfigManager - DEBUG - Configuración 'behavior.frame_skip_threshold' no encontrada, usando default: 3
+2025-06-05 03:18:37,581 - ConfigManager - DEBUG - Configuración 'behavior.enable_prediction_cache' no encontrada, usando default: True
+2025-06-05 03:18:37,581 - ConfigManager - DEBUG - Configuración 'behavior.cache_size' no encontrada, usando default: 5
+2025-06-05 03:18:37,581 - ConfigManager - DEBUG - Configuración 'behavior.similarity_threshold' no encontrada, usando default: 0.8
+2025-06-05 03:18:37,581 - AlarmModule - INFO - Módulo de audio inicializado
+2025-06-05 03:18:37,601 - MainSystem - INFO - Sistema de seguridad optimizado iniciado
+2025-06-05 03:18:37,601 - MainSystem - INFO - Inicializando módulos del sistema
+2025-06-05 03:18:37,601 - CameraModule - INFO - Inicializando cámara...
+2025-06-05 03:18:37,831 - CameraModule - INFO - Configuración de cámara aplicada
+2025-06-05 03:18:37,831 - CameraModule - INFO - Calentando cámara por 1 segundos...
+2025-06-05 03:18:38,905 - CameraModule - INFO - Cámara inicializada: 1280x720 @ 30.0fps
+2025-06-05 03:18:38,905 - CameraModule - INFO - Aplicando optimizaciones para desarrollo...
+2025-06-05 03:18:38,908 - FaceRecognitionModule - INFO - Operadores cargados: 1
+2025-06-05 03:18:39,745 - AlarmModule - INFO - Módulo de audio inicializado
+2025-06-05 03:18:39,756 - CameraModule - WARNING - FPS bajo detectado: 0.3/15
+2025-06-05 03:18:39,756 - CameraModule - INFO - Aplicando optimizaciones para desarrollo...
+2025-06-05 03:18:41,944 - MainSystem - INFO - Deteniendo sistema optimizado
+2025-06-05 03:18:41,979 - CameraModule - INFO - Cámara liberada
+2025-06-05 14:40:09,344 - SafetySystem - INFO - Iniciando sistema de seguridad optimizado
+2025-06-05 14:40:10,507 - ConfigManager - DEBUG - Configuración 'yawn.enable_night_mode' no encontrada, usando default: True
+2025-06-05 14:40:10,507 - ConfigManager - DEBUG - Configuración 'yawn.night_mode_threshold' no encontrada, usando default: 50
+2025-06-05 14:40:10,507 - ConfigManager - DEBUG - Configuración 'yawn.night_adjustment' no encontrada, usando default: 0.05
+2025-06-05 14:40:10,507 - ConfigManager - DEBUG - Configuración 'yawn.show_debug_info' no encontrada, usando default: True
+2025-06-05 14:40:10,507 - ConfigManager - DEBUG - Configuración 'yawn.show_mouth_contour' no encontrada, usando default: True
+2025-06-05 14:40:10,507 - ConfigManager - DEBUG - Configuración 'yawn.show_progress_bar' no encontrada, usando default: True
+2025-06-05 14:40:10,507 - ConfigManager - DEBUG - Configuración 'yawn.show_light_level' no encontrada, usando default: True
+2025-06-05 14:40:10,507 - ConfigManager - DEBUG - Configuración 'yawn.show_mar_value' no encontrada, usando default: True
+2025-06-05 14:40:10,507 - ConfigManager - DEBUG - Configuración 'yawn.show_mode_indicator' no encontrada, usando default: True
+2025-06-05 14:40:10,507 - ConfigManager - DEBUG - Configuración 'audio.files.fallback' no encontrada, usando default: alarma.mp3
+2025-06-05 14:40:10,765 - ConfigManager - DEBUG - Configuración 'distraction.night_mode_threshold' no encontrada, usando default: 50
+2025-06-05 14:40:10,765 - ConfigManager - DEBUG - Configuración 'distraction.enable_night_mode' no encontrada, usando default: True
+2025-06-05 14:40:10,787 - ConfigManager - DEBUG - Configuración 'behavior.enable_night_mode' no encontrada, usando default: True
+2025-06-05 14:40:10,787 - ConfigManager - DEBUG - Configuración 'behavior.enable_optimization' no encontrada, usando default: True
+2025-06-05 14:40:10,787 - ConfigManager - DEBUG - Configuración 'behavior.processing_interval' no encontrada, usando default: 1
+2025-06-05 14:40:10,788 - ConfigManager - DEBUG - Configuración 'behavior.roi_enabled' no encontrada, usando default: False
+2025-06-05 14:40:10,788 - ConfigManager - DEBUG - Configuración 'behavior.roi_scale_factor' no encontrada, usando default: 0.6
+2025-06-05 14:40:10,788 - ConfigManager - DEBUG - Configuración 'behavior.yolo_input_size' no encontrada, usando default: 416
+2025-06-05 14:40:10,788 - ConfigManager - DEBUG - Configuración 'behavior.nms_threshold' no encontrada, usando default: 0.5
+2025-06-05 14:40:10,788 - ConfigManager - DEBUG - Configuración 'behavior.max_detections' no encontrada, usando default: 10
+2025-06-05 14:40:10,788 - ConfigManager - DEBUG - Configuración 'behavior.memory_optimization' no encontrada, usando default: False
+2025-06-05 14:40:10,788 - ConfigManager - DEBUG - Configuración 'behavior.frame_skip_threshold' no encontrada, usando default: 3
+2025-06-05 14:40:10,788 - ConfigManager - DEBUG - Configuración 'behavior.enable_prediction_cache' no encontrada, usando default: True
+2025-06-05 14:40:10,788 - ConfigManager - DEBUG - Configuración 'behavior.cache_size' no encontrada, usando default: 5
+2025-06-05 14:40:10,788 - ConfigManager - DEBUG - Configuración 'behavior.similarity_threshold' no encontrada, usando default: 0.8
+2025-06-05 14:40:10,788 - AlarmModule - INFO - Módulo de audio inicializado
+2025-06-05 14:40:10,818 - MainSystem - INFO - Sistema de seguridad optimizado iniciado
+2025-06-05 14:40:10,818 - MainSystem - INFO - Inicializando módulos del sistema
+2025-06-05 14:40:10,819 - CameraModule - INFO - Inicializando cámara...
+2025-06-05 14:40:11,112 - CameraModule - INFO - Configuración de cámara aplicada
+2025-06-05 14:40:11,112 - CameraModule - INFO - Calentando cámara por 1 segundos...
+2025-06-05 14:40:12,133 - CameraModule - INFO - Cámara inicializada: 1280x720 @ 30.0fps
+2025-06-05 14:40:12,134 - CameraModule - INFO - Aplicando optimizaciones para desarrollo...
+2025-06-05 14:40:12,155 - FaceRecognitionModule - INFO - Operadores cargados: 1
+2025-06-05 14:40:13,033 - AlarmModule - INFO - Módulo de audio inicializado
+2025-06-05 14:40:13,046 - CameraModule - WARNING - FPS bajo detectado: 0.3/15
+2025-06-05 14:40:13,046 - CameraModule - INFO - Aplicando optimizaciones para desarrollo...
+2025-06-05 14:40:14,818 - MainSystem - INFO - Deteniendo sistema optimizado
+2025-06-05 14:40:14,862 - CameraModule - INFO - Cámara liberada

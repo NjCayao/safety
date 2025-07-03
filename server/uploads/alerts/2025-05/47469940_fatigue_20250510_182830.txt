@@ -1,0 +1,6 @@
+Reporte de Seguridad - FATIGUE
+Fecha y hora: 20250510_182830
+Operador: Operador: Nilson Cayao
+Episodios de fatiga detectados: 1
+
+Acción recomendada: El operador debe cesar el comportamiento peligroso inmediatamente.

@@ -1,0 +1,9 @@
+Reporte de Seguridad - PHONE_7S
+Fecha y hora: 20250510_164922
+Operador: Operador: Nilson Cayao
+Duración del comportamiento: 7.7 segundos
+Comportamiento detectado: cell phone
+Uso prolongado de celular detectado (más de 7 segundos)
+ALERTA CRÍTICA: Comportamiento peligroso sostenido
+
+Acción recomendada: El operador debe cesar el comportamiento peligroso inmediatamente.
