@@ -16,9 +16,9 @@ from client.api.sync import SyncManager
 from client.utils.file_manager import FileManager
 
 # Importar wrappers
-from behavior_detection_wrapper import BehaviorDetectorWrapper
-from fatigue_detection_wrapper import FatigueDetectorWrapper
-from face_recognition_wrapper import FaceRecognizerWrapper
+from sync.wrappers.behavior_detection_wrapper import BehaviorDetectorWrapper
+from sync.wrappers.fatigue_detection_wrapper import FatigueDetectorWrapper
+from sync.wrappers.face_recognition_wrapper import FaceRecognizerWrapper
 
 logger = logging.getLogger('main_system_wrapper')
 

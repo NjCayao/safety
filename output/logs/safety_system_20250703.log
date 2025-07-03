@@ -1,0 +1,922 @@
+2025-07-03 10:24:04,394 - SafetySystem - INFO - Iniciando sistema de seguridad optimizado
+2025-07-03 10:24:04,397 - ConfigManager - DEBUG - Configuración 'device.device_id' no encontrada, usando default: DEV_AE1C24FB
+2025-07-03 10:24:04,397 - ConfigManager - DEBUG - Configuración 'sync.config_check_interval' no encontrada, usando default: 60
+2025-07-03 10:24:04,397 - ConfigSyncClient - INFO - Cliente de sincronización inicializado
+2025-07-03 10:24:04,397 - ConfigManager - DEBUG - Configuración 'sync.heartbeat_interval' no encontrada, usando default: 120
+2025-07-03 10:24:04,397 - ConfigManager - DEBUG - Configuración 'sync.heartbeat_timeout' no encontrada, usando default: 15
+2025-07-03 10:24:04,398 - HeartbeatSender - INFO - Enviador de heartbeats inicializado
+2025-07-03 10:24:05,431 - ConfigManager - DEBUG - Configuración 'yawn.enable_night_mode' no encontrada, usando default: True
+2025-07-03 10:24:05,431 - ConfigManager - DEBUG - Configuración 'yawn.night_mode_threshold' no encontrada, usando default: 50
+2025-07-03 10:24:05,431 - ConfigManager - DEBUG - Configuración 'yawn.night_adjustment' no encontrada, usando default: 0.05
+2025-07-03 10:24:05,432 - ConfigManager - DEBUG - Configuración 'yawn.show_debug_info' no encontrada, usando default: True
+2025-07-03 10:24:05,432 - ConfigManager - DEBUG - Configuración 'yawn.show_mouth_contour' no encontrada, usando default: True
+2025-07-03 10:24:05,432 - ConfigManager - DEBUG - Configuración 'yawn.show_progress_bar' no encontrada, usando default: True
+2025-07-03 10:24:05,432 - ConfigManager - DEBUG - Configuración 'yawn.show_light_level' no encontrada, usando default: True
+2025-07-03 10:24:05,432 - ConfigManager - DEBUG - Configuración 'yawn.show_mar_value' no encontrada, usando default: True
+2025-07-03 10:24:05,432 - ConfigManager - DEBUG - Configuración 'yawn.show_mode_indicator' no encontrada, usando default: True
+2025-07-03 10:24:05,432 - ConfigManager - DEBUG - Configuración 'audio.files.fallback' no encontrada, usando default: alarma.mp3
+2025-07-03 10:24:05,621 - ConfigManager - DEBUG - Configuración 'distraction.night_mode_threshold' no encontrada, usando default: 50
+2025-07-03 10:24:05,621 - ConfigManager - DEBUG - Configuración 'distraction.enable_night_mode' no encontrada, usando default: True
+2025-07-03 10:24:05,622 - ConfigManager - DEBUG - Configuración 'behavior.enable_night_mode' no encontrada, usando default: True
+2025-07-03 10:24:05,622 - ConfigManager - DEBUG - Configuración 'behavior.enable_optimization' no encontrada, usando default: True
+2025-07-03 10:24:05,622 - ConfigManager - DEBUG - Configuración 'behavior.processing_interval' no encontrada, usando default: 1
+2025-07-03 10:24:05,622 - ConfigManager - DEBUG - Configuración 'behavior.roi_enabled' no encontrada, usando default: False
+2025-07-03 10:24:05,622 - ConfigManager - DEBUG - Configuración 'behavior.roi_scale_factor' no encontrada, usando default: 0.6
+2025-07-03 10:24:05,622 - ConfigManager - DEBUG - Configuración 'behavior.yolo_input_size' no encontrada, usando default: 416
+2025-07-03 10:24:05,622 - ConfigManager - DEBUG - Configuración 'behavior.nms_threshold' no encontrada, usando default: 0.5
+2025-07-03 10:24:05,622 - ConfigManager - DEBUG - Configuración 'behavior.max_detections' no encontrada, usando default: 10
+2025-07-03 10:24:05,622 - ConfigManager - DEBUG - Configuración 'behavior.memory_optimization' no encontrada, usando default: False
+2025-07-03 10:24:05,622 - ConfigManager - DEBUG - Configuración 'behavior.frame_skip_threshold' no encontrada, usando default: 3
+2025-07-03 10:24:05,622 - ConfigManager - DEBUG - Configuración 'behavior.enable_prediction_cache' no encontrada, usando default: True
+2025-07-03 10:24:05,622 - ConfigManager - DEBUG - Configuración 'behavior.cache_size' no encontrada, usando default: 5
+2025-07-03 10:24:05,622 - ConfigManager - DEBUG - Configuración 'behavior.similarity_threshold' no encontrada, usando default: 0.8
+2025-07-03 10:24:05,622 - AlarmModule - INFO - Módulo de audio inicializado
+2025-07-03 10:24:05,650 - MainSystem - INFO - Sistema de seguridad optimizado iniciado
+2025-07-03 10:24:05,650 - MainSystem - INFO - Inicializando módulos del sistema
+2025-07-03 10:24:05,650 - CameraModule - INFO - Inicializando cámara...
+2025-07-03 10:24:05,840 - CameraModule - INFO - Configuración de cámara aplicada
+2025-07-03 10:24:05,840 - CameraModule - INFO - Calentando cámara por 1 segundos...
+2025-07-03 10:24:06,932 - CameraModule - INFO - Cámara inicializada: 1280x720 @ 30.0fps
+2025-07-03 10:24:06,933 - CameraModule - INFO - Aplicando optimizaciones para desarrollo...
+2025-07-03 10:24:06,933 - FaceRecognitionModule - ERROR - Error al cargar operadores: No module named 'numpy._core'
+2025-07-03 10:24:06,934 - MainSystem - WARNING - No se pudieron cargar operadores
+2025-07-03 10:24:07,903 - AlarmModule - INFO - Módulo de audio inicializado
+2025-07-03 10:24:07,903 - ConfigSyncClient - INFO - Iniciando cliente de sincronización de configuración
+2025-07-03 10:24:07,903 - ConfigSyncClient - INFO - Bucle de sincronización iniciado
+2025-07-03 10:24:07,903 - DeviceAuth - ERROR - API key no configurada
+2025-07-03 10:24:07,903 - HeartbeatSender - INFO - Iniciando envío de heartbeats
+2025-07-03 10:24:07,903 - DeviceAuth - WARNING - No se pudo obtener token válido
+2025-07-03 10:24:07,905 - ConfigSyncClient - WARNING - No hay token de autenticación válido
+2025-07-03 10:24:07,905 - HeartbeatSender - INFO - Bucle de heartbeats iniciado
+2025-07-03 10:24:07,905 - DeviceAuth - WARNING - No se pudo obtener token válido
+2025-07-03 10:24:07,905 - DeviceAuth - WARNING - No se pudo obtener token válido
+2025-07-03 10:24:07,905 - HeartbeatSender - DEBUG - No hay token de autenticación, saltando heartbeat
+2025-07-03 10:24:07,906 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:80
+2025-07-03 10:24:07,910 - urllib3.connectionpool - DEBUG - http://localhost:80 "GET /safety_system/api/v1/devices/status HTTP/1.1" 404 295
+2025-07-03 10:24:07,920 - CameraModule - WARNING - FPS bajo detectado: 0.3/15
+2025-07-03 10:24:07,920 - CameraModule - INFO - Aplicando optimizaciones para desarrollo...
+2025-07-03 10:24:38,175 - CameraModule - WARNING - FPS bajo detectado: 10.1/15
+2025-07-03 10:24:38,175 - CameraModule - INFO - Aplicando optimizaciones para desarrollo...
+2025-07-03 10:25:07,906 - DeviceAuth - ERROR - API key no configurada
+2025-07-03 10:25:07,906 - DeviceAuth - WARNING - No se pudo obtener token válido
+2025-07-03 10:25:07,906 - ConfigSyncClient - WARNING - No hay token de autenticación válido
+2025-07-03 10:25:39,217 - CameraModule - WARNING - FPS bajo detectado: 10.1/15
+2025-07-03 10:25:39,218 - CameraModule - INFO - Aplicando optimizaciones para desarrollo...
+2025-07-03 10:26:07,905 - DeviceAuth - WARNING - No se pudo obtener token válido
+2025-07-03 10:26:07,905 - HeartbeatSender - DEBUG - No hay token de autenticación, saltando heartbeat
+2025-07-03 10:26:07,906 - DeviceAuth - ERROR - API key no configurada
+2025-07-03 10:26:07,906 - DeviceAuth - WARNING - No se pudo obtener token válido
+2025-07-03 10:26:07,906 - ConfigSyncClient - WARNING - No hay token de autenticación válido
+2025-07-03 10:27:07,907 - DeviceAuth - ERROR - API key no configurada
+2025-07-03 10:27:07,907 - DeviceAuth - WARNING - No se pudo obtener token válido
+2025-07-03 10:27:07,907 - ConfigSyncClient - WARNING - No hay token de autenticación válido
+2025-07-03 10:27:10,416 - CameraModule - WARNING - FPS bajo detectado: 10.2/15
+2025-07-03 10:27:10,416 - CameraModule - INFO - Aplicando optimizaciones para desarrollo...
+2025-07-03 10:27:20,742 - MainSystem - INFO - Deteniendo sistema optimizado
+2025-07-03 10:27:20,742 - ConfigSyncClient - INFO - Deteniendo cliente de sincronización
+2025-07-03 10:27:20,742 - ConfigSyncClient - INFO - Bucle de sincronización terminado
+2025-07-03 10:27:20,742 - HeartbeatSender - INFO - Deteniendo envío de heartbeats
+2025-07-03 10:27:20,742 - HeartbeatSender - INFO - Bucle de heartbeats terminado
+2025-07-03 10:27:20,777 - CameraModule - INFO - Cámara liberada
+2025-07-03 10:32:39,744 - SafetySystem - INFO - Iniciando sistema de seguridad optimizado
+2025-07-03 10:32:39,746 - ConfigManager - DEBUG - Configuración 'device.device_id' no encontrada, usando default: DEV_AE1C24FB
+2025-07-03 10:32:39,746 - ConfigManager - DEBUG - Configuración 'sync.config_check_interval' no encontrada, usando default: 60
+2025-07-03 10:32:39,746 - ConfigSyncClient - INFO - Cliente de sincronización inicializado
+2025-07-03 10:32:39,746 - ConfigManager - DEBUG - Configuración 'sync.heartbeat_interval' no encontrada, usando default: 120
+2025-07-03 10:32:39,746 - ConfigManager - DEBUG - Configuración 'sync.heartbeat_timeout' no encontrada, usando default: 15
+2025-07-03 10:32:39,746 - HeartbeatSender - INFO - Enviador de heartbeats inicializado
+2025-07-03 10:32:40,698 - ConfigManager - DEBUG - Configuración 'yawn.enable_night_mode' no encontrada, usando default: True
+2025-07-03 10:32:40,698 - ConfigManager - DEBUG - Configuración 'yawn.night_mode_threshold' no encontrada, usando default: 50
+2025-07-03 10:32:40,698 - ConfigManager - DEBUG - Configuración 'yawn.night_adjustment' no encontrada, usando default: 0.05
+2025-07-03 10:32:40,698 - ConfigManager - DEBUG - Configuración 'yawn.show_debug_info' no encontrada, usando default: True
+2025-07-03 10:32:40,698 - ConfigManager - DEBUG - Configuración 'yawn.show_mouth_contour' no encontrada, usando default: True
+2025-07-03 10:32:40,698 - ConfigManager - DEBUG - Configuración 'yawn.show_progress_bar' no encontrada, usando default: True
+2025-07-03 10:32:40,698 - ConfigManager - DEBUG - Configuración 'yawn.show_light_level' no encontrada, usando default: True
+2025-07-03 10:32:40,698 - ConfigManager - DEBUG - Configuración 'yawn.show_mar_value' no encontrada, usando default: True
+2025-07-03 10:32:40,698 - ConfigManager - DEBUG - Configuración 'yawn.show_mode_indicator' no encontrada, usando default: True
+2025-07-03 10:32:40,699 - ConfigManager - DEBUG - Configuración 'audio.files.fallback' no encontrada, usando default: alarma.mp3
+2025-07-03 10:32:40,836 - ConfigManager - DEBUG - Configuración 'distraction.night_mode_threshold' no encontrada, usando default: 50
+2025-07-03 10:32:40,836 - ConfigManager - DEBUG - Configuración 'distraction.enable_night_mode' no encontrada, usando default: True
+2025-07-03 10:32:40,837 - ConfigManager - DEBUG - Configuración 'behavior.enable_night_mode' no encontrada, usando default: True
+2025-07-03 10:32:40,837 - ConfigManager - DEBUG - Configuración 'behavior.enable_optimization' no encontrada, usando default: True
+2025-07-03 10:32:40,837 - ConfigManager - DEBUG - Configuración 'behavior.processing_interval' no encontrada, usando default: 1
+2025-07-03 10:32:40,837 - ConfigManager - DEBUG - Configuración 'behavior.roi_enabled' no encontrada, usando default: False
+2025-07-03 10:32:40,837 - ConfigManager - DEBUG - Configuración 'behavior.roi_scale_factor' no encontrada, usando default: 0.6
+2025-07-03 10:32:40,837 - ConfigManager - DEBUG - Configuración 'behavior.yolo_input_size' no encontrada, usando default: 416
+2025-07-03 10:32:40,837 - ConfigManager - DEBUG - Configuración 'behavior.nms_threshold' no encontrada, usando default: 0.5
+2025-07-03 10:32:40,837 - ConfigManager - DEBUG - Configuración 'behavior.max_detections' no encontrada, usando default: 10
+2025-07-03 10:32:40,837 - ConfigManager - DEBUG - Configuración 'behavior.memory_optimization' no encontrada, usando default: False
+2025-07-03 10:32:40,837 - ConfigManager - DEBUG - Configuración 'behavior.frame_skip_threshold' no encontrada, usando default: 3
+2025-07-03 10:32:40,837 - ConfigManager - DEBUG - Configuración 'behavior.enable_prediction_cache' no encontrada, usando default: True
+2025-07-03 10:32:40,837 - ConfigManager - DEBUG - Configuración 'behavior.cache_size' no encontrada, usando default: 5
+2025-07-03 10:32:40,837 - ConfigManager - DEBUG - Configuración 'behavior.similarity_threshold' no encontrada, usando default: 0.8
+2025-07-03 10:32:40,837 - AlarmModule - INFO - Módulo de audio inicializado
+2025-07-03 10:32:40,856 - MainSystem - INFO - Sistema de seguridad optimizado iniciado
+2025-07-03 10:32:40,857 - MainSystem - INFO - Inicializando módulos del sistema
+2025-07-03 10:32:40,857 - CameraModule - INFO - Inicializando cámara...
+2025-07-03 10:32:41,099 - CameraModule - INFO - Configuración de cámara aplicada
+2025-07-03 10:32:41,099 - CameraModule - INFO - Calentando cámara por 1 segundos...
+2025-07-03 10:32:42,158 - CameraModule - INFO - Cámara inicializada: 1280x720 @ 30.0fps
+2025-07-03 10:32:42,158 - CameraModule - INFO - Aplicando optimizaciones para desarrollo...
+2025-07-03 10:32:42,160 - FaceRecognitionModule - ERROR - Error al cargar operadores: No module named 'numpy._core'
+2025-07-03 10:32:42,160 - MainSystem - WARNING - No se pudieron cargar operadores
+2025-07-03 10:32:43,113 - AlarmModule - INFO - Módulo de audio inicializado
+2025-07-03 10:32:43,113 - ConfigSyncClient - INFO - Iniciando cliente de sincronización de configuración
+2025-07-03 10:32:43,114 - ConfigSyncClient - INFO - Bucle de sincronización iniciado
+2025-07-03 10:32:43,114 - DeviceAuth - ERROR - API key no configurada
+2025-07-03 10:32:43,114 - HeartbeatSender - INFO - Iniciando envío de heartbeats
+2025-07-03 10:32:43,114 - DeviceAuth - WARNING - No se pudo obtener token válido
+2025-07-03 10:32:43,114 - ConfigSyncClient - WARNING - No hay token de autenticación válido
+2025-07-03 10:32:43,114 - HeartbeatSender - INFO - Bucle de heartbeats iniciado
+2025-07-03 10:32:43,115 - DeviceAuth - WARNING - No se pudo obtener token válido
+2025-07-03 10:32:43,115 - DeviceAuth - WARNING - No se pudo obtener token válido
+2025-07-03 10:32:43,115 - HeartbeatSender - DEBUG - No hay token de autenticación, saltando heartbeat
+2025-07-03 10:32:43,117 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:80
+2025-07-03 10:32:43,120 - urllib3.connectionpool - DEBUG - http://localhost:80 "GET /safety_system/api/v1/devices/status HTTP/1.1" 404 295
+2025-07-03 10:32:43,132 - CameraModule - WARNING - FPS bajo detectado: 0.3/15
+2025-07-03 10:32:43,132 - CameraModule - INFO - Aplicando optimizaciones para desarrollo...
+2025-07-03 10:33:14,544 - MainSystem - INFO - Deteniendo sistema optimizado
+2025-07-03 10:33:14,544 - ConfigSyncClient - INFO - Deteniendo cliente de sincronización
+2025-07-03 10:33:14,544 - ConfigSyncClient - INFO - Bucle de sincronización terminado
+2025-07-03 10:33:14,544 - HeartbeatSender - INFO - Deteniendo envío de heartbeats
+2025-07-03 10:33:14,544 - HeartbeatSender - INFO - Bucle de heartbeats terminado
+2025-07-03 10:33:14,582 - CameraModule - INFO - Cámara liberada
+2025-07-03 10:39:26,594 - SafetySystem - INFO - Iniciando sistema de seguridad optimizado
+2025-07-03 10:39:26,596 - ConfigManager - DEBUG - Configuración 'device.device_id' no encontrada, usando default: DEV_AE1C24FB
+2025-07-03 10:39:26,596 - ConfigManager - DEBUG - Configuración 'sync.config_check_interval' no encontrada, usando default: 60
+2025-07-03 10:39:26,596 - ConfigSyncClient - INFO - Cliente de sincronización inicializado
+2025-07-03 10:39:26,596 - ConfigManager - DEBUG - Configuración 'sync.heartbeat_interval' no encontrada, usando default: 120
+2025-07-03 10:39:26,596 - ConfigManager - DEBUG - Configuración 'sync.heartbeat_timeout' no encontrada, usando default: 15
+2025-07-03 10:39:26,596 - HeartbeatSender - INFO - Enviador de heartbeats inicializado
+2025-07-03 10:39:27,597 - ConfigManager - DEBUG - Configuración 'yawn.enable_night_mode' no encontrada, usando default: True
+2025-07-03 10:39:27,597 - ConfigManager - DEBUG - Configuración 'yawn.night_mode_threshold' no encontrada, usando default: 50
+2025-07-03 10:39:27,597 - ConfigManager - DEBUG - Configuración 'yawn.night_adjustment' no encontrada, usando default: 0.05
+2025-07-03 10:39:27,597 - ConfigManager - DEBUG - Configuración 'yawn.show_debug_info' no encontrada, usando default: True
+2025-07-03 10:39:27,597 - ConfigManager - DEBUG - Configuración 'yawn.show_mouth_contour' no encontrada, usando default: True
+2025-07-03 10:39:27,597 - ConfigManager - DEBUG - Configuración 'yawn.show_progress_bar' no encontrada, usando default: True
+2025-07-03 10:39:27,597 - ConfigManager - DEBUG - Configuración 'yawn.show_light_level' no encontrada, usando default: True
+2025-07-03 10:39:27,597 - ConfigManager - DEBUG - Configuración 'yawn.show_mar_value' no encontrada, usando default: True
+2025-07-03 10:39:27,597 - ConfigManager - DEBUG - Configuración 'yawn.show_mode_indicator' no encontrada, usando default: True
+2025-07-03 10:39:27,598 - ConfigManager - DEBUG - Configuración 'audio.files.fallback' no encontrada, usando default: alarma.mp3
+2025-07-03 10:39:27,760 - ConfigManager - DEBUG - Configuración 'distraction.night_mode_threshold' no encontrada, usando default: 50
+2025-07-03 10:39:27,760 - ConfigManager - DEBUG - Configuración 'distraction.enable_night_mode' no encontrada, usando default: True
+2025-07-03 10:39:27,760 - ConfigManager - DEBUG - Configuración 'behavior.enable_night_mode' no encontrada, usando default: True
+2025-07-03 10:39:27,761 - ConfigManager - DEBUG - Configuración 'behavior.enable_optimization' no encontrada, usando default: True
+2025-07-03 10:39:27,761 - ConfigManager - DEBUG - Configuración 'behavior.processing_interval' no encontrada, usando default: 1
+2025-07-03 10:39:27,761 - ConfigManager - DEBUG - Configuración 'behavior.roi_enabled' no encontrada, usando default: False
+2025-07-03 10:39:27,761 - ConfigManager - DEBUG - Configuración 'behavior.roi_scale_factor' no encontrada, usando default: 0.6
+2025-07-03 10:39:27,761 - ConfigManager - DEBUG - Configuración 'behavior.yolo_input_size' no encontrada, usando default: 416
+2025-07-03 10:39:27,761 - ConfigManager - DEBUG - Configuración 'behavior.nms_threshold' no encontrada, usando default: 0.5
+2025-07-03 10:39:27,761 - ConfigManager - DEBUG - Configuración 'behavior.max_detections' no encontrada, usando default: 10
+2025-07-03 10:39:27,761 - ConfigManager - DEBUG - Configuración 'behavior.memory_optimization' no encontrada, usando default: False
+2025-07-03 10:39:27,761 - ConfigManager - DEBUG - Configuración 'behavior.frame_skip_threshold' no encontrada, usando default: 3
+2025-07-03 10:39:27,761 - ConfigManager - DEBUG - Configuración 'behavior.enable_prediction_cache' no encontrada, usando default: True
+2025-07-03 10:39:27,761 - ConfigManager - DEBUG - Configuración 'behavior.cache_size' no encontrada, usando default: 5
+2025-07-03 10:39:27,761 - ConfigManager - DEBUG - Configuración 'behavior.similarity_threshold' no encontrada, usando default: 0.8
+2025-07-03 10:39:27,761 - AlarmModule - INFO - Módulo de audio inicializado
+2025-07-03 10:39:27,779 - MainSystem - INFO - Sistema de seguridad optimizado iniciado
+2025-07-03 10:39:27,779 - MainSystem - INFO - Inicializando módulos del sistema
+2025-07-03 10:39:27,780 - CameraModule - INFO - Inicializando cámara...
+2025-07-03 10:39:28,015 - CameraModule - INFO - Configuración de cámara aplicada
+2025-07-03 10:39:28,015 - CameraModule - INFO - Calentando cámara por 1 segundos...
+2025-07-03 10:39:29,069 - CameraModule - INFO - Cámara inicializada: 1280x720 @ 30.0fps
+2025-07-03 10:39:29,070 - CameraModule - INFO - Aplicando optimizaciones para desarrollo...
+2025-07-03 10:39:29,071 - FaceRecognitionModule - ERROR - Error al cargar operadores: No module named 'numpy._core'
+2025-07-03 10:39:29,072 - MainSystem - WARNING - No se pudieron cargar operadores
+2025-07-03 10:39:30,033 - AlarmModule - INFO - Módulo de audio inicializado
+2025-07-03 10:39:30,034 - ConfigSyncClient - INFO - Iniciando cliente de sincronización de configuración
+2025-07-03 10:39:30,034 - ConfigSyncClient - INFO - Bucle de sincronización iniciado
+2025-07-03 10:39:30,034 - DeviceAuth - ERROR - API key no configurada
+2025-07-03 10:39:30,034 - HeartbeatSender - INFO - Iniciando envío de heartbeats
+2025-07-03 10:39:30,034 - DeviceAuth - WARNING - No se pudo obtener token válido
+2025-07-03 10:39:30,034 - ConfigSyncClient - WARNING - No hay token de autenticación válido
+2025-07-03 10:39:30,035 - HeartbeatSender - INFO - Bucle de heartbeats iniciado
+2025-07-03 10:39:30,035 - DeviceAuth - WARNING - No se pudo obtener token válido
+2025-07-03 10:39:30,035 - DeviceAuth - WARNING - No se pudo obtener token válido
+2025-07-03 10:39:30,035 - HeartbeatSender - DEBUG - No hay token de autenticación, saltando heartbeat
+2025-07-03 10:39:30,037 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:80
+2025-07-03 10:39:30,041 - urllib3.connectionpool - DEBUG - http://localhost:80 "GET /safety_system/api/v1/devices/status HTTP/1.1" 404 295
+2025-07-03 10:39:30,050 - CameraModule - WARNING - FPS bajo detectado: 0.3/15
+2025-07-03 10:39:30,050 - CameraModule - INFO - Aplicando optimizaciones para desarrollo...
+2025-07-03 10:39:49,181 - MainSystem - INFO - Deteniendo sistema optimizado
+2025-07-03 10:39:49,181 - ConfigSyncClient - INFO - Deteniendo cliente de sincronización
+2025-07-03 10:39:49,181 - ConfigSyncClient - INFO - Bucle de sincronización terminado
+2025-07-03 10:39:49,181 - HeartbeatSender - INFO - Deteniendo envío de heartbeats
+2025-07-03 10:39:49,181 - HeartbeatSender - INFO - Bucle de heartbeats terminado
+2025-07-03 10:39:49,232 - CameraModule - INFO - Cámara liberada
+2025-07-03 10:46:29,602 - SafetySystem - INFO - Iniciando sistema de seguridad optimizado
+2025-07-03 10:46:29,604 - ConfigManager - DEBUG - Configuración 'device.device_id' no encontrada, usando default: DEV_AE1C24FB
+2025-07-03 10:46:29,604 - ConfigManager - DEBUG - Configuración 'sync.config_check_interval' no encontrada, usando default: 60
+2025-07-03 10:46:29,604 - ConfigSyncClient - INFO - Cliente de sincronización inicializado
+2025-07-03 10:46:29,604 - ConfigManager - DEBUG - Configuración 'sync.heartbeat_interval' no encontrada, usando default: 120
+2025-07-03 10:46:29,604 - ConfigManager - DEBUG - Configuración 'sync.heartbeat_timeout' no encontrada, usando default: 15
+2025-07-03 10:46:29,604 - HeartbeatSender - INFO - Enviador de heartbeats inicializado
+2025-07-03 10:46:30,658 - ConfigManager - DEBUG - Configuración 'yawn.enable_night_mode' no encontrada, usando default: True
+2025-07-03 10:46:30,658 - ConfigManager - DEBUG - Configuración 'yawn.night_mode_threshold' no encontrada, usando default: 50
+2025-07-03 10:46:30,658 - ConfigManager - DEBUG - Configuración 'yawn.night_adjustment' no encontrada, usando default: 0.05
+2025-07-03 10:46:30,658 - ConfigManager - DEBUG - Configuración 'yawn.show_debug_info' no encontrada, usando default: True
+2025-07-03 10:46:30,658 - ConfigManager - DEBUG - Configuración 'yawn.show_mouth_contour' no encontrada, usando default: True
+2025-07-03 10:46:30,658 - ConfigManager - DEBUG - Configuración 'yawn.show_progress_bar' no encontrada, usando default: True
+2025-07-03 10:46:30,658 - ConfigManager - DEBUG - Configuración 'yawn.show_light_level' no encontrada, usando default: True
+2025-07-03 10:46:30,658 - ConfigManager - DEBUG - Configuración 'yawn.show_mar_value' no encontrada, usando default: True
+2025-07-03 10:46:30,658 - ConfigManager - DEBUG - Configuración 'yawn.show_mode_indicator' no encontrada, usando default: True
+2025-07-03 10:46:30,659 - ConfigManager - DEBUG - Configuración 'audio.files.fallback' no encontrada, usando default: alarma.mp3
+2025-07-03 10:46:30,803 - ConfigManager - DEBUG - Configuración 'distraction.night_mode_threshold' no encontrada, usando default: 50
+2025-07-03 10:46:30,803 - ConfigManager - DEBUG - Configuración 'distraction.enable_night_mode' no encontrada, usando default: True
+2025-07-03 10:46:30,805 - ConfigManager - DEBUG - Configuración 'behavior.enable_night_mode' no encontrada, usando default: True
+2025-07-03 10:46:30,805 - ConfigManager - DEBUG - Configuración 'behavior.enable_optimization' no encontrada, usando default: True
+2025-07-03 10:46:30,805 - ConfigManager - DEBUG - Configuración 'behavior.processing_interval' no encontrada, usando default: 1
+2025-07-03 10:46:30,805 - ConfigManager - DEBUG - Configuración 'behavior.roi_enabled' no encontrada, usando default: False
+2025-07-03 10:46:30,805 - ConfigManager - DEBUG - Configuración 'behavior.roi_scale_factor' no encontrada, usando default: 0.6
+2025-07-03 10:46:30,805 - ConfigManager - DEBUG - Configuración 'behavior.yolo_input_size' no encontrada, usando default: 416
+2025-07-03 10:46:30,805 - ConfigManager - DEBUG - Configuración 'behavior.nms_threshold' no encontrada, usando default: 0.5
+2025-07-03 10:46:30,805 - ConfigManager - DEBUG - Configuración 'behavior.max_detections' no encontrada, usando default: 10
+2025-07-03 10:46:30,805 - ConfigManager - DEBUG - Configuración 'behavior.memory_optimization' no encontrada, usando default: False
+2025-07-03 10:46:30,805 - ConfigManager - DEBUG - Configuración 'behavior.frame_skip_threshold' no encontrada, usando default: 3
+2025-07-03 10:46:30,805 - ConfigManager - DEBUG - Configuración 'behavior.enable_prediction_cache' no encontrada, usando default: True
+2025-07-03 10:46:30,805 - ConfigManager - DEBUG - Configuración 'behavior.cache_size' no encontrada, usando default: 5
+2025-07-03 10:46:30,805 - ConfigManager - DEBUG - Configuración 'behavior.similarity_threshold' no encontrada, usando default: 0.8
+2025-07-03 10:46:30,805 - AlarmModule - INFO - Módulo de audio inicializado
+2025-07-03 10:46:30,827 - MainSystem - INFO - Sistema de seguridad optimizado iniciado
+2025-07-03 10:46:30,827 - MainSystem - INFO - Inicializando módulos del sistema
+2025-07-03 10:46:30,827 - CameraModule - INFO - Inicializando cámara...
+2025-07-03 10:46:31,077 - CameraModule - INFO - Configuración de cámara aplicada
+2025-07-03 10:46:31,078 - CameraModule - INFO - Calentando cámara por 1 segundos...
+2025-07-03 10:46:32,129 - CameraModule - INFO - Cámara inicializada: 1280x720 @ 30.0fps
+2025-07-03 10:46:32,129 - CameraModule - INFO - Aplicando optimizaciones para desarrollo...
+2025-07-03 10:46:32,131 - FaceRecognitionModule - ERROR - Error al cargar operadores: No module named 'numpy._core'
+2025-07-03 10:46:32,131 - MainSystem - WARNING - No se pudieron cargar operadores
+2025-07-03 10:46:33,140 - AlarmModule - INFO - Módulo de audio inicializado
+2025-07-03 10:46:33,141 - ConfigSyncClient - INFO - Iniciando cliente de sincronización de configuración
+2025-07-03 10:46:33,141 - ConfigSyncClient - INFO - Bucle de sincronización iniciado
+2025-07-03 10:46:33,141 - DeviceAuth - ERROR - API key no configurada
+2025-07-03 10:46:33,141 - DeviceAuth - WARNING - No se pudo obtener token válido
+2025-07-03 10:46:33,141 - ConfigSyncClient - WARNING - No hay token de autenticación válido
+2025-07-03 10:46:33,141 - HeartbeatSender - INFO - Iniciando envío de heartbeats
+2025-07-03 10:46:33,142 - HeartbeatSender - INFO - Bucle de heartbeats iniciado
+2025-07-03 10:46:33,142 - DeviceAuth - WARNING - No se pudo obtener token válido
+2025-07-03 10:46:33,142 - HeartbeatSender - DEBUG - No hay token de autenticación, saltando heartbeat
+2025-07-03 10:46:33,142 - DeviceAuth - WARNING - No se pudo obtener token válido
+2025-07-03 10:46:33,144 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:80
+2025-07-03 10:46:33,148 - urllib3.connectionpool - DEBUG - http://localhost:80 "GET /safety_system/api/v1/devices/status HTTP/1.1" 404 295
+2025-07-03 10:46:33,161 - CameraModule - WARNING - FPS bajo detectado: 0.3/15
+2025-07-03 10:46:33,161 - CameraModule - INFO - Aplicando optimizaciones para desarrollo...
+2025-07-03 10:47:29,766 - MainSystem - INFO - Deteniendo sistema optimizado
+2025-07-03 10:47:29,766 - ConfigSyncClient - INFO - Deteniendo cliente de sincronización
+2025-07-03 10:47:29,766 - ConfigSyncClient - INFO - Bucle de sincronización terminado
+2025-07-03 10:47:29,766 - HeartbeatSender - INFO - Deteniendo envío de heartbeats
+2025-07-03 10:47:29,766 - HeartbeatSender - INFO - Bucle de heartbeats terminado
+2025-07-03 10:47:29,791 - CameraModule - INFO - Cámara liberada
+2025-07-03 11:00:31,022 - SafetySystem - INFO - Iniciando sistema de seguridad optimizado
+2025-07-03 11:00:31,022 - ConfigManager - DEBUG - Configuración 'device.device_id' no encontrada, usando default: DEV_AE1C24FB
+2025-07-03 11:00:31,022 - ConfigManager - DEBUG - Configuración 'sync.config_check_interval' no encontrada, usando default: 60
+2025-07-03 11:00:31,022 - ConfigSyncClient - INFO - Cliente de sincronización inicializado
+2025-07-03 11:00:31,024 - ConfigManager - DEBUG - Configuración 'sync.heartbeat_interval' no encontrada, usando default: 120
+2025-07-03 11:00:31,024 - ConfigManager - DEBUG - Configuración 'sync.heartbeat_timeout' no encontrada, usando default: 15
+2025-07-03 11:00:31,024 - HeartbeatSender - INFO - Enviador de heartbeats inicializado
+2025-07-03 11:00:31,996 - ConfigManager - DEBUG - Configuración 'yawn.enable_night_mode' no encontrada, usando default: True
+2025-07-03 11:00:31,996 - ConfigManager - DEBUG - Configuración 'yawn.night_mode_threshold' no encontrada, usando default: 50
+2025-07-03 11:00:31,996 - ConfigManager - DEBUG - Configuración 'yawn.night_adjustment' no encontrada, usando default: 0.05
+2025-07-03 11:00:31,996 - ConfigManager - DEBUG - Configuración 'yawn.show_debug_info' no encontrada, usando default: True
+2025-07-03 11:00:31,996 - ConfigManager - DEBUG - Configuración 'yawn.show_mouth_contour' no encontrada, usando default: True
+2025-07-03 11:00:31,996 - ConfigManager - DEBUG - Configuración 'yawn.show_progress_bar' no encontrada, usando default: True
+2025-07-03 11:00:31,996 - ConfigManager - DEBUG - Configuración 'yawn.show_light_level' no encontrada, usando default: True
+2025-07-03 11:00:31,996 - ConfigManager - DEBUG - Configuración 'yawn.show_mar_value' no encontrada, usando default: True
+2025-07-03 11:00:31,996 - ConfigManager - DEBUG - Configuración 'yawn.show_mode_indicator' no encontrada, usando default: True
+2025-07-03 11:00:31,996 - ConfigManager - DEBUG - Configuración 'audio.files.fallback' no encontrada, usando default: alarma.mp3
+2025-07-03 11:00:32,141 - ConfigManager - DEBUG - Configuración 'distraction.night_mode_threshold' no encontrada, usando default: 50
+2025-07-03 11:00:32,141 - ConfigManager - DEBUG - Configuración 'distraction.enable_night_mode' no encontrada, usando default: True
+2025-07-03 11:00:32,141 - ConfigManager - DEBUG - Configuración 'behavior.enable_night_mode' no encontrada, usando default: True
+2025-07-03 11:00:32,141 - ConfigManager - DEBUG - Configuración 'behavior.enable_optimization' no encontrada, usando default: True
+2025-07-03 11:00:32,141 - ConfigManager - DEBUG - Configuración 'behavior.processing_interval' no encontrada, usando default: 1
+2025-07-03 11:00:32,141 - ConfigManager - DEBUG - Configuración 'behavior.roi_enabled' no encontrada, usando default: False
+2025-07-03 11:00:32,141 - ConfigManager - DEBUG - Configuración 'behavior.roi_scale_factor' no encontrada, usando default: 0.6
+2025-07-03 11:00:32,141 - ConfigManager - DEBUG - Configuración 'behavior.yolo_input_size' no encontrada, usando default: 416
+2025-07-03 11:00:32,141 - ConfigManager - DEBUG - Configuración 'behavior.nms_threshold' no encontrada, usando default: 0.5
+2025-07-03 11:00:32,141 - ConfigManager - DEBUG - Configuración 'behavior.max_detections' no encontrada, usando default: 10
+2025-07-03 11:00:32,141 - ConfigManager - DEBUG - Configuración 'behavior.memory_optimization' no encontrada, usando default: False
+2025-07-03 11:00:32,141 - ConfigManager - DEBUG - Configuración 'behavior.frame_skip_threshold' no encontrada, usando default: 3
+2025-07-03 11:00:32,141 - ConfigManager - DEBUG - Configuración 'behavior.enable_prediction_cache' no encontrada, usando default: True
+2025-07-03 11:00:32,141 - ConfigManager - DEBUG - Configuración 'behavior.cache_size' no encontrada, usando default: 5
+2025-07-03 11:00:32,141 - ConfigManager - DEBUG - Configuración 'behavior.similarity_threshold' no encontrada, usando default: 0.8
+2025-07-03 11:00:32,141 - AlarmModule - INFO - Módulo de audio inicializado
+2025-07-03 11:00:32,160 - MainSystem - INFO - Sistema de seguridad optimizado iniciado
+2025-07-03 11:00:32,160 - MainSystem - INFO - Inicializando módulos del sistema
+2025-07-03 11:00:32,160 - CameraModule - INFO - Inicializando cámara...
+2025-07-03 11:00:32,331 - CameraModule - INFO - Configuración de cámara aplicada
+2025-07-03 11:00:32,331 - CameraModule - INFO - Calentando cámara por 1 segundos...
+2025-07-03 11:00:33,411 - CameraModule - INFO - Cámara inicializada: 1280x720 @ 30.0fps
+2025-07-03 11:00:33,412 - CameraModule - INFO - Aplicando optimizaciones para desarrollo...
+2025-07-03 11:00:33,415 - FaceRecognitionModule - ERROR - Error al cargar operadores: 'assets/operators'
+2025-07-03 11:00:33,415 - MainSystem - WARNING - No se pudieron cargar operadores
+2025-07-03 11:00:34,383 - AlarmModule - INFO - Módulo de audio inicializado
+2025-07-03 11:00:34,383 - ConfigSyncClient - INFO - Iniciando cliente de sincronización de configuración
+2025-07-03 11:00:34,384 - ConfigSyncClient - INFO - Bucle de sincronización iniciado
+2025-07-03 11:00:34,384 - DeviceAuth - ERROR - API key no configurada
+2025-07-03 11:00:34,384 - HeartbeatSender - INFO - Iniciando envío de heartbeats
+2025-07-03 11:00:34,384 - DeviceAuth - WARNING - No se pudo obtener token válido
+2025-07-03 11:00:34,384 - ConfigSyncClient - WARNING - No hay token de autenticación válido
+2025-07-03 11:00:34,384 - HeartbeatSender - INFO - Bucle de heartbeats iniciado
+2025-07-03 11:00:34,384 - DeviceAuth - WARNING - No se pudo obtener token válido
+2025-07-03 11:00:34,384 - HeartbeatSender - DEBUG - No hay token de autenticación, saltando heartbeat
+2025-07-03 11:00:34,384 - DeviceAuth - WARNING - No se pudo obtener token válido
+2025-07-03 11:00:34,387 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:80
+2025-07-03 11:00:34,390 - urllib3.connectionpool - DEBUG - http://localhost:80 "GET /safety_system/api/v1/devices/status HTTP/1.1" 404 295
+2025-07-03 11:00:34,400 - CameraModule - WARNING - FPS bajo detectado: 0.3/15
+2025-07-03 11:00:34,400 - CameraModule - INFO - Aplicando optimizaciones para desarrollo...
+2025-07-03 11:00:34,702 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:35,061 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:35,428 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:35,794 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:36,155 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:36,508 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:36,857 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:37,218 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:37,566 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:41,604 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:41,974 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:42,335 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:42,686 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:43,038 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:43,401 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:43,766 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:44,119 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:44,473 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:44,828 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:45,310 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:45,682 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:46,040 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:46,404 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:46,778 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:47,143 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:47,500 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:47,855 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:48,213 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:48,559 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:48,911 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:49,254 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:49,601 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:49,949 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:50,293 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:50,662 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:51,019 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:51,371 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:51,728 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:52,094 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:52,447 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:52,809 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:53,164 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:53,531 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:53,890 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:54,259 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:54,610 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:54,970 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:55,324 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:55,680 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:56,026 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:56,385 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:56,739 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:57,093 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:57,475 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:57,870 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:58,243 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:58,603 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:58,988 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:59,346 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:00:59,713 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:01:00,072 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:01:00,424 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:01:00,803 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:01:01,161 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:01:01,512 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:01:01,879 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:01:02,239 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:01:02,622 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:01:02,978 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:01:03,336 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:01:03,706 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:01:04,063 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:01:04,428 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:01:04,500 - MainSystem - INFO - Deteniendo sistema optimizado
+2025-07-03 11:01:04,500 - ConfigSyncClient - INFO - Deteniendo cliente de sincronización
+2025-07-03 11:01:04,500 - ConfigSyncClient - INFO - Bucle de sincronización terminado
+2025-07-03 11:01:04,500 - HeartbeatSender - INFO - Deteniendo envío de heartbeats
+2025-07-03 11:01:04,501 - HeartbeatSender - INFO - Bucle de heartbeats terminado
+2025-07-03 11:01:04,528 - CameraModule - INFO - Cámara liberada
+2025-07-03 11:02:51,902 - SafetySystem - INFO - Iniciando sistema de seguridad optimizado
+2025-07-03 11:02:51,904 - ConfigManager - DEBUG - Configuración 'device.device_id' no encontrada, usando default: DEV_AE1C24FB
+2025-07-03 11:02:51,904 - ConfigManager - DEBUG - Configuración 'sync.config_check_interval' no encontrada, usando default: 60
+2025-07-03 11:02:51,904 - ConfigSyncClient - INFO - Cliente de sincronización inicializado
+2025-07-03 11:02:51,904 - ConfigManager - DEBUG - Configuración 'sync.heartbeat_interval' no encontrada, usando default: 120
+2025-07-03 11:02:51,904 - ConfigManager - DEBUG - Configuración 'sync.heartbeat_timeout' no encontrada, usando default: 15
+2025-07-03 11:02:51,904 - HeartbeatSender - INFO - Enviador de heartbeats inicializado
+2025-07-03 11:02:52,866 - ConfigManager - DEBUG - Configuración 'yawn.enable_night_mode' no encontrada, usando default: True
+2025-07-03 11:02:52,866 - ConfigManager - DEBUG - Configuración 'yawn.night_mode_threshold' no encontrada, usando default: 50
+2025-07-03 11:02:52,866 - ConfigManager - DEBUG - Configuración 'yawn.night_adjustment' no encontrada, usando default: 0.05
+2025-07-03 11:02:52,866 - ConfigManager - DEBUG - Configuración 'yawn.show_debug_info' no encontrada, usando default: True
+2025-07-03 11:02:52,866 - ConfigManager - DEBUG - Configuración 'yawn.show_mouth_contour' no encontrada, usando default: True
+2025-07-03 11:02:52,866 - ConfigManager - DEBUG - Configuración 'yawn.show_progress_bar' no encontrada, usando default: True
+2025-07-03 11:02:52,866 - ConfigManager - DEBUG - Configuración 'yawn.show_light_level' no encontrada, usando default: True
+2025-07-03 11:02:52,866 - ConfigManager - DEBUG - Configuración 'yawn.show_mar_value' no encontrada, usando default: True
+2025-07-03 11:02:52,866 - ConfigManager - DEBUG - Configuración 'yawn.show_mode_indicator' no encontrada, usando default: True
+2025-07-03 11:02:52,866 - ConfigManager - DEBUG - Configuración 'audio.files.fallback' no encontrada, usando default: alarma.mp3
+2025-07-03 11:02:53,016 - ConfigManager - DEBUG - Configuración 'distraction.night_mode_threshold' no encontrada, usando default: 50
+2025-07-03 11:02:53,016 - ConfigManager - DEBUG - Configuración 'distraction.enable_night_mode' no encontrada, usando default: True
+2025-07-03 11:02:53,016 - ConfigManager - DEBUG - Configuración 'behavior.enable_night_mode' no encontrada, usando default: True
+2025-07-03 11:02:53,016 - ConfigManager - DEBUG - Configuración 'behavior.enable_optimization' no encontrada, usando default: True
+2025-07-03 11:02:53,016 - ConfigManager - DEBUG - Configuración 'behavior.processing_interval' no encontrada, usando default: 1
+2025-07-03 11:02:53,016 - ConfigManager - DEBUG - Configuración 'behavior.roi_enabled' no encontrada, usando default: False
+2025-07-03 11:02:53,016 - ConfigManager - DEBUG - Configuración 'behavior.roi_scale_factor' no encontrada, usando default: 0.6
+2025-07-03 11:02:53,016 - ConfigManager - DEBUG - Configuración 'behavior.yolo_input_size' no encontrada, usando default: 416
+2025-07-03 11:02:53,016 - ConfigManager - DEBUG - Configuración 'behavior.nms_threshold' no encontrada, usando default: 0.5
+2025-07-03 11:02:53,016 - ConfigManager - DEBUG - Configuración 'behavior.max_detections' no encontrada, usando default: 10
+2025-07-03 11:02:53,016 - ConfigManager - DEBUG - Configuración 'behavior.memory_optimization' no encontrada, usando default: False
+2025-07-03 11:02:53,016 - ConfigManager - DEBUG - Configuración 'behavior.frame_skip_threshold' no encontrada, usando default: 3
+2025-07-03 11:02:53,016 - ConfigManager - DEBUG - Configuración 'behavior.enable_prediction_cache' no encontrada, usando default: True
+2025-07-03 11:02:53,016 - ConfigManager - DEBUG - Configuración 'behavior.cache_size' no encontrada, usando default: 5
+2025-07-03 11:02:53,016 - ConfigManager - DEBUG - Configuración 'behavior.similarity_threshold' no encontrada, usando default: 0.8
+2025-07-03 11:02:53,016 - AlarmModule - INFO - Módulo de audio inicializado
+2025-07-03 11:02:53,037 - MainSystem - INFO - Sistema de seguridad optimizado iniciado
+2025-07-03 11:02:53,037 - MainSystem - INFO - Inicializando módulos del sistema
+2025-07-03 11:02:53,037 - CameraModule - INFO - Inicializando cámara...
+2025-07-03 11:02:53,208 - CameraModule - INFO - Configuración de cámara aplicada
+2025-07-03 11:02:53,208 - CameraModule - INFO - Calentando cámara por 1 segundos...
+2025-07-03 11:02:54,293 - CameraModule - INFO - Cámara inicializada: 1280x720 @ 30.0fps
+2025-07-03 11:02:54,296 - CameraModule - INFO - Aplicando optimizaciones para desarrollo...
+2025-07-03 11:02:54,299 - FaceRecognitionModule - ERROR - Error al cargar operadores: 'assets/operators'
+2025-07-03 11:02:54,299 - MainSystem - WARNING - No se pudieron cargar operadores
+2025-07-03 11:02:55,232 - AlarmModule - INFO - Módulo de audio inicializado
+2025-07-03 11:02:55,232 - ConfigSyncClient - INFO - Iniciando cliente de sincronización de configuración
+2025-07-03 11:02:55,232 - ConfigSyncClient - INFO - Bucle de sincronización iniciado
+2025-07-03 11:02:55,232 - DeviceAuth - ERROR - API key no configurada
+2025-07-03 11:02:55,232 - HeartbeatSender - INFO - Iniciando envío de heartbeats
+2025-07-03 11:02:55,232 - DeviceAuth - WARNING - No se pudo obtener token válido
+2025-07-03 11:02:55,232 - ConfigSyncClient - WARNING - No hay token de autenticación válido
+2025-07-03 11:02:55,233 - HeartbeatSender - INFO - Bucle de heartbeats iniciado
+2025-07-03 11:02:55,233 - DeviceAuth - WARNING - No se pudo obtener token válido
+2025-07-03 11:02:55,233 - DeviceAuth - WARNING - No se pudo obtener token válido
+2025-07-03 11:02:55,233 - HeartbeatSender - DEBUG - No hay token de autenticación, saltando heartbeat
+2025-07-03 11:02:55,235 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:80
+2025-07-03 11:02:55,239 - urllib3.connectionpool - DEBUG - http://localhost:80 "GET /safety_system/api/v1/devices/status HTTP/1.1" 404 295
+2025-07-03 11:02:55,250 - CameraModule - WARNING - FPS bajo detectado: 0.3/15
+2025-07-03 11:02:55,250 - CameraModule - INFO - Aplicando optimizaciones para desarrollo...
+2025-07-03 11:02:55,518 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:02:55,870 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:02:56,236 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:02:56,584 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:02:56,926 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:02:57,273 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:02:57,621 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:02:57,970 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:02:58,328 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:02:58,695 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:02:59,050 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:02:59,402 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:02:59,752 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:03:00,102 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:03:00,448 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:03:00,802 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:03:01,153 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:03:01,506 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:03:01,864 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:03:02,220 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:03:02,574 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:03:02,919 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:03:03,276 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:03:03,745 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:03:04,103 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:03:04,464 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:03:04,835 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:03:05,199 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:03:05,576 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:03:05,958 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:03:06,379 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:03:06,769 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:03:07,136 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:03:07,487 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:03:07,845 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:03:08,193 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:03:08,563 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:03:08,646 - MainSystem - INFO - Deteniendo sistema optimizado
+2025-07-03 11:03:08,646 - ConfigSyncClient - INFO - Deteniendo cliente de sincronización
+2025-07-03 11:03:08,646 - ConfigSyncClient - INFO - Bucle de sincronización terminado
+2025-07-03 11:03:08,646 - HeartbeatSender - INFO - Deteniendo envío de heartbeats
+2025-07-03 11:03:08,647 - HeartbeatSender - INFO - Bucle de heartbeats terminado
+2025-07-03 11:03:08,673 - CameraModule - INFO - Cámara liberada
+2025-07-03 11:05:20,555 - SafetySystem - INFO - Iniciando sistema de seguridad optimizado
+2025-07-03 11:05:20,556 - ConfigManager - DEBUG - Configuración 'device.device_id' no encontrada, usando default: DEV_AE1C24FB
+2025-07-03 11:05:20,556 - ConfigManager - DEBUG - Configuración 'sync.config_check_interval' no encontrada, usando default: 60
+2025-07-03 11:05:20,556 - ConfigSyncClient - INFO - Cliente de sincronización inicializado
+2025-07-03 11:05:20,556 - ConfigManager - DEBUG - Configuración 'sync.heartbeat_interval' no encontrada, usando default: 120
+2025-07-03 11:05:20,556 - ConfigManager - DEBUG - Configuración 'sync.heartbeat_timeout' no encontrada, usando default: 15
+2025-07-03 11:05:20,556 - HeartbeatSender - INFO - Enviador de heartbeats inicializado
+2025-07-03 11:05:21,540 - ConfigManager - DEBUG - Configuración 'yawn.enable_night_mode' no encontrada, usando default: True
+2025-07-03 11:05:21,540 - ConfigManager - DEBUG - Configuración 'yawn.night_mode_threshold' no encontrada, usando default: 50
+2025-07-03 11:05:21,540 - ConfigManager - DEBUG - Configuración 'yawn.night_adjustment' no encontrada, usando default: 0.05
+2025-07-03 11:05:21,540 - ConfigManager - DEBUG - Configuración 'yawn.show_debug_info' no encontrada, usando default: True
+2025-07-03 11:05:21,540 - ConfigManager - DEBUG - Configuración 'yawn.show_mouth_contour' no encontrada, usando default: True
+2025-07-03 11:05:21,540 - ConfigManager - DEBUG - Configuración 'yawn.show_progress_bar' no encontrada, usando default: True
+2025-07-03 11:05:21,540 - ConfigManager - DEBUG - Configuración 'yawn.show_light_level' no encontrada, usando default: True
+2025-07-03 11:05:21,540 - ConfigManager - DEBUG - Configuración 'yawn.show_mar_value' no encontrada, usando default: True
+2025-07-03 11:05:21,540 - ConfigManager - DEBUG - Configuración 'yawn.show_mode_indicator' no encontrada, usando default: True
+2025-07-03 11:05:21,540 - ConfigManager - DEBUG - Configuración 'audio.files.fallback' no encontrada, usando default: alarma.mp3
+2025-07-03 11:05:21,693 - ConfigManager - DEBUG - Configuración 'distraction.night_mode_threshold' no encontrada, usando default: 50
+2025-07-03 11:05:21,694 - ConfigManager - DEBUG - Configuración 'distraction.enable_night_mode' no encontrada, usando default: True
+2025-07-03 11:05:21,695 - ConfigManager - DEBUG - Configuración 'behavior.enable_night_mode' no encontrada, usando default: True
+2025-07-03 11:05:21,695 - ConfigManager - DEBUG - Configuración 'behavior.enable_optimization' no encontrada, usando default: True
+2025-07-03 11:05:21,695 - ConfigManager - DEBUG - Configuración 'behavior.processing_interval' no encontrada, usando default: 1
+2025-07-03 11:05:21,695 - ConfigManager - DEBUG - Configuración 'behavior.roi_enabled' no encontrada, usando default: False
+2025-07-03 11:05:21,695 - ConfigManager - DEBUG - Configuración 'behavior.roi_scale_factor' no encontrada, usando default: 0.6
+2025-07-03 11:05:21,695 - ConfigManager - DEBUG - Configuración 'behavior.yolo_input_size' no encontrada, usando default: 416
+2025-07-03 11:05:21,695 - ConfigManager - DEBUG - Configuración 'behavior.nms_threshold' no encontrada, usando default: 0.5
+2025-07-03 11:05:21,695 - ConfigManager - DEBUG - Configuración 'behavior.max_detections' no encontrada, usando default: 10
+2025-07-03 11:05:21,695 - ConfigManager - DEBUG - Configuración 'behavior.memory_optimization' no encontrada, usando default: False
+2025-07-03 11:05:21,695 - ConfigManager - DEBUG - Configuración 'behavior.frame_skip_threshold' no encontrada, usando default: 3
+2025-07-03 11:05:21,695 - ConfigManager - DEBUG - Configuración 'behavior.enable_prediction_cache' no encontrada, usando default: True
+2025-07-03 11:05:21,695 - ConfigManager - DEBUG - Configuración 'behavior.cache_size' no encontrada, usando default: 5
+2025-07-03 11:05:21,695 - ConfigManager - DEBUG - Configuración 'behavior.similarity_threshold' no encontrada, usando default: 0.8
+2025-07-03 11:05:21,695 - AlarmModule - INFO - Módulo de audio inicializado
+2025-07-03 11:05:21,713 - MainSystem - INFO - Sistema de seguridad optimizado iniciado
+2025-07-03 11:05:21,714 - MainSystem - INFO - Inicializando módulos del sistema
+2025-07-03 11:05:21,714 - CameraModule - INFO - Inicializando cámara...
+2025-07-03 11:05:21,887 - CameraModule - INFO - Configuración de cámara aplicada
+2025-07-03 11:05:21,888 - CameraModule - INFO - Calentando cámara por 1 segundos...
+2025-07-03 11:05:22,972 - CameraModule - INFO - Cámara inicializada: 1280x720 @ 30.0fps
+2025-07-03 11:05:22,972 - CameraModule - INFO - Aplicando optimizaciones para desarrollo...
+2025-07-03 11:05:22,974 - FaceRecognitionModule - ERROR - Error al cargar operadores: No module named 'numpy._core'
+2025-07-03 11:05:22,974 - MainSystem - WARNING - No se pudieron cargar operadores
+2025-07-03 11:05:23,902 - AlarmModule - INFO - Módulo de audio inicializado
+2025-07-03 11:05:23,903 - ConfigSyncClient - INFO - Iniciando cliente de sincronización de configuración
+2025-07-03 11:05:23,903 - ConfigSyncClient - INFO - Bucle de sincronización iniciado
+2025-07-03 11:05:23,903 - DeviceAuth - ERROR - API key no configurada
+2025-07-03 11:05:23,903 - HeartbeatSender - INFO - Iniciando envío de heartbeats
+2025-07-03 11:05:23,903 - DeviceAuth - WARNING - No se pudo obtener token válido
+2025-07-03 11:05:23,904 - ConfigSyncClient - WARNING - No hay token de autenticación válido
+2025-07-03 11:05:23,904 - HeartbeatSender - INFO - Bucle de heartbeats iniciado
+2025-07-03 11:05:23,904 - DeviceAuth - WARNING - No se pudo obtener token válido
+2025-07-03 11:05:23,904 - DeviceAuth - WARNING - No se pudo obtener token válido
+2025-07-03 11:05:23,904 - HeartbeatSender - DEBUG - No hay token de autenticación, saltando heartbeat
+2025-07-03 11:05:23,906 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:80
+2025-07-03 11:05:23,912 - urllib3.connectionpool - DEBUG - http://localhost:80 "GET /safety_system/api/v1/devices/status HTTP/1.1" 404 295
+2025-07-03 11:05:23,922 - CameraModule - WARNING - FPS bajo detectado: 0.3/15
+2025-07-03 11:05:23,922 - CameraModule - INFO - Aplicando optimizaciones para desarrollo...
+2025-07-03 11:05:30,735 - MainSystem - INFO - Deteniendo sistema optimizado
+2025-07-03 11:05:30,736 - ConfigSyncClient - INFO - Deteniendo cliente de sincronización
+2025-07-03 11:05:30,736 - ConfigSyncClient - INFO - Bucle de sincronización terminado
+2025-07-03 11:05:30,736 - HeartbeatSender - INFO - Deteniendo envío de heartbeats
+2025-07-03 11:05:30,736 - HeartbeatSender - INFO - Bucle de heartbeats terminado
+2025-07-03 11:05:30,752 - CameraModule - INFO - Cámara liberada
+2025-07-03 11:10:18,590 - SafetySystem - INFO - Iniciando sistema de seguridad optimizado
+2025-07-03 11:10:18,592 - ConfigManager - DEBUG - Configuración 'device.device_id' no encontrada, usando default: DEV_AE1C24FB
+2025-07-03 11:10:18,592 - ConfigManager - DEBUG - Configuración 'sync.config_check_interval' no encontrada, usando default: 60
+2025-07-03 11:10:18,592 - ConfigSyncClient - INFO - Cliente de sincronización inicializado
+2025-07-03 11:10:18,592 - ConfigManager - DEBUG - Configuración 'sync.heartbeat_interval' no encontrada, usando default: 120
+2025-07-03 11:10:18,592 - ConfigManager - DEBUG - Configuración 'sync.heartbeat_timeout' no encontrada, usando default: 15
+2025-07-03 11:10:18,592 - HeartbeatSender - INFO - Enviador de heartbeats inicializado
+2025-07-03 11:10:19,551 - ConfigManager - DEBUG - Configuración 'yawn.enable_night_mode' no encontrada, usando default: True
+2025-07-03 11:10:19,551 - ConfigManager - DEBUG - Configuración 'yawn.night_mode_threshold' no encontrada, usando default: 50
+2025-07-03 11:10:19,551 - ConfigManager - DEBUG - Configuración 'yawn.night_adjustment' no encontrada, usando default: 0.05
+2025-07-03 11:10:19,551 - ConfigManager - DEBUG - Configuración 'yawn.show_debug_info' no encontrada, usando default: True
+2025-07-03 11:10:19,551 - ConfigManager - DEBUG - Configuración 'yawn.show_mouth_contour' no encontrada, usando default: True
+2025-07-03 11:10:19,551 - ConfigManager - DEBUG - Configuración 'yawn.show_progress_bar' no encontrada, usando default: True
+2025-07-03 11:10:19,551 - ConfigManager - DEBUG - Configuración 'yawn.show_light_level' no encontrada, usando default: True
+2025-07-03 11:10:19,551 - ConfigManager - DEBUG - Configuración 'yawn.show_mar_value' no encontrada, usando default: True
+2025-07-03 11:10:19,551 - ConfigManager - DEBUG - Configuración 'yawn.show_mode_indicator' no encontrada, usando default: True
+2025-07-03 11:10:19,551 - ConfigManager - DEBUG - Configuración 'audio.files.fallback' no encontrada, usando default: alarma.mp3
+2025-07-03 11:10:19,707 - ConfigManager - DEBUG - Configuración 'distraction.night_mode_threshold' no encontrada, usando default: 50
+2025-07-03 11:10:19,708 - ConfigManager - DEBUG - Configuración 'distraction.enable_night_mode' no encontrada, usando default: True
+2025-07-03 11:10:19,708 - ConfigManager - DEBUG - Configuración 'behavior.enable_night_mode' no encontrada, usando default: True
+2025-07-03 11:10:19,708 - ConfigManager - DEBUG - Configuración 'behavior.enable_optimization' no encontrada, usando default: True
+2025-07-03 11:10:19,708 - ConfigManager - DEBUG - Configuración 'behavior.processing_interval' no encontrada, usando default: 1
+2025-07-03 11:10:19,708 - ConfigManager - DEBUG - Configuración 'behavior.roi_enabled' no encontrada, usando default: False
+2025-07-03 11:10:19,708 - ConfigManager - DEBUG - Configuración 'behavior.roi_scale_factor' no encontrada, usando default: 0.6
+2025-07-03 11:10:19,708 - ConfigManager - DEBUG - Configuración 'behavior.yolo_input_size' no encontrada, usando default: 416
+2025-07-03 11:10:19,708 - ConfigManager - DEBUG - Configuración 'behavior.nms_threshold' no encontrada, usando default: 0.5
+2025-07-03 11:10:19,708 - ConfigManager - DEBUG - Configuración 'behavior.max_detections' no encontrada, usando default: 10
+2025-07-03 11:10:19,708 - ConfigManager - DEBUG - Configuración 'behavior.memory_optimization' no encontrada, usando default: False
+2025-07-03 11:10:19,708 - ConfigManager - DEBUG - Configuración 'behavior.frame_skip_threshold' no encontrada, usando default: 3
+2025-07-03 11:10:19,709 - ConfigManager - DEBUG - Configuración 'behavior.enable_prediction_cache' no encontrada, usando default: True
+2025-07-03 11:10:19,709 - ConfigManager - DEBUG - Configuración 'behavior.cache_size' no encontrada, usando default: 5
+2025-07-03 11:10:19,709 - ConfigManager - DEBUG - Configuración 'behavior.similarity_threshold' no encontrada, usando default: 0.8
+2025-07-03 11:10:19,709 - AlarmModule - INFO - Módulo de audio inicializado
+2025-07-03 11:10:19,730 - MainSystem - INFO - Sistema de seguridad optimizado iniciado
+2025-07-03 11:10:19,731 - MainSystem - INFO - Inicializando módulos del sistema
+2025-07-03 11:10:19,731 - CameraModule - INFO - Inicializando cámara...
+2025-07-03 11:10:19,916 - CameraModule - INFO - Configuración de cámara aplicada
+2025-07-03 11:10:19,916 - CameraModule - INFO - Calentando cámara por 1 segundos...
+2025-07-03 11:10:21,002 - CameraModule - INFO - Cámara inicializada: 1280x720 @ 30.0fps
+2025-07-03 11:10:21,003 - CameraModule - INFO - Aplicando optimizaciones para desarrollo...
+2025-07-03 11:10:21,006 - FaceRecognitionModule - ERROR - Error al cargar operadores: No module named 'numpy._core'
+2025-07-03 11:10:21,007 - MainSystem - WARNING - No se pudieron cargar operadores
+2025-07-03 11:10:21,976 - AlarmModule - INFO - Módulo de audio inicializado
+2025-07-03 11:10:21,976 - ConfigSyncClient - INFO - Iniciando cliente de sincronización de configuración
+2025-07-03 11:10:21,976 - ConfigSyncClient - INFO - Bucle de sincronización iniciado
+2025-07-03 11:10:21,976 - DeviceAuth - ERROR - API key no configurada
+2025-07-03 11:10:21,976 - HeartbeatSender - INFO - Iniciando envío de heartbeats
+2025-07-03 11:10:21,976 - DeviceAuth - WARNING - No se pudo obtener token válido
+2025-07-03 11:10:21,976 - ConfigSyncClient - WARNING - No hay token de autenticación válido
+2025-07-03 11:10:21,976 - HeartbeatSender - INFO - Bucle de heartbeats iniciado
+2025-07-03 11:10:21,976 - DeviceAuth - WARNING - No se pudo obtener token válido
+2025-07-03 11:10:21,976 - DeviceAuth - WARNING - No se pudo obtener token válido
+2025-07-03 11:10:21,976 - HeartbeatSender - DEBUG - No hay token de autenticación, saltando heartbeat
+2025-07-03 11:10:21,978 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:80
+2025-07-03 11:10:21,983 - urllib3.connectionpool - DEBUG - http://localhost:80 "GET /safety_system/api/v1/devices/status HTTP/1.1" 404 295
+2025-07-03 11:10:21,993 - CameraModule - WARNING - FPS bajo detectado: 0.3/15
+2025-07-03 11:10:21,993 - CameraModule - INFO - Aplicando optimizaciones para desarrollo...
+2025-07-03 11:10:34,818 - MainSystem - INFO - Deteniendo sistema optimizado
+2025-07-03 11:10:34,818 - ConfigSyncClient - INFO - Deteniendo cliente de sincronización
+2025-07-03 11:10:34,818 - ConfigSyncClient - INFO - Bucle de sincronización terminado
+2025-07-03 11:10:34,818 - HeartbeatSender - INFO - Deteniendo envío de heartbeats
+2025-07-03 11:10:34,818 - HeartbeatSender - INFO - Bucle de heartbeats terminado
+2025-07-03 11:10:34,846 - CameraModule - INFO - Cámara liberada
+2025-07-03 11:26:48,765 - SafetySystem - INFO - Iniciando sistema de seguridad optimizado
+2025-07-03 11:26:48,766 - ConfigManager - DEBUG - Configuración 'device.device_id' no encontrada, usando default: DEV_AE1C24FB
+2025-07-03 11:26:48,767 - ConfigManager - DEBUG - Configuración 'sync.config_check_interval' no encontrada, usando default: 60
+2025-07-03 11:26:48,767 - ConfigSyncClient - INFO - Cliente de sincronización inicializado
+2025-07-03 11:26:48,767 - ConfigManager - DEBUG - Configuración 'sync.heartbeat_interval' no encontrada, usando default: 120
+2025-07-03 11:26:48,767 - ConfigManager - DEBUG - Configuración 'sync.heartbeat_timeout' no encontrada, usando default: 15
+2025-07-03 11:26:48,767 - HeartbeatSender - INFO - Enviador de heartbeats inicializado
+2025-07-03 11:26:49,764 - ConfigManager - DEBUG - Configuración 'yawn.enable_night_mode' no encontrada, usando default: True
+2025-07-03 11:26:49,764 - ConfigManager - DEBUG - Configuración 'yawn.night_mode_threshold' no encontrada, usando default: 50
+2025-07-03 11:26:49,764 - ConfigManager - DEBUG - Configuración 'yawn.night_adjustment' no encontrada, usando default: 0.05
+2025-07-03 11:26:49,764 - ConfigManager - DEBUG - Configuración 'yawn.show_debug_info' no encontrada, usando default: True
+2025-07-03 11:26:49,764 - ConfigManager - DEBUG - Configuración 'yawn.show_mouth_contour' no encontrada, usando default: True
+2025-07-03 11:26:49,764 - ConfigManager - DEBUG - Configuración 'yawn.show_progress_bar' no encontrada, usando default: True
+2025-07-03 11:26:49,764 - ConfigManager - DEBUG - Configuración 'yawn.show_light_level' no encontrada, usando default: True
+2025-07-03 11:26:49,764 - ConfigManager - DEBUG - Configuración 'yawn.show_mar_value' no encontrada, usando default: True
+2025-07-03 11:26:49,764 - ConfigManager - DEBUG - Configuración 'yawn.show_mode_indicator' no encontrada, usando default: True
+2025-07-03 11:26:49,764 - ConfigManager - DEBUG - Configuración 'audio.files.fallback' no encontrada, usando default: alarma.mp3
+2025-07-03 11:26:49,923 - ConfigManager - DEBUG - Configuración 'distraction.night_mode_threshold' no encontrada, usando default: 50
+2025-07-03 11:26:49,923 - ConfigManager - DEBUG - Configuración 'distraction.enable_night_mode' no encontrada, usando default: True
+2025-07-03 11:26:49,924 - ConfigManager - DEBUG - Configuración 'behavior.enable_night_mode' no encontrada, usando default: True
+2025-07-03 11:26:49,924 - ConfigManager - DEBUG - Configuración 'behavior.enable_optimization' no encontrada, usando default: True
+2025-07-03 11:26:49,924 - ConfigManager - DEBUG - Configuración 'behavior.processing_interval' no encontrada, usando default: 1
+2025-07-03 11:26:49,924 - ConfigManager - DEBUG - Configuración 'behavior.roi_enabled' no encontrada, usando default: False
+2025-07-03 11:26:49,924 - ConfigManager - DEBUG - Configuración 'behavior.roi_scale_factor' no encontrada, usando default: 0.6
+2025-07-03 11:26:49,924 - ConfigManager - DEBUG - Configuración 'behavior.yolo_input_size' no encontrada, usando default: 416
+2025-07-03 11:26:49,924 - ConfigManager - DEBUG - Configuración 'behavior.nms_threshold' no encontrada, usando default: 0.5
+2025-07-03 11:26:49,924 - ConfigManager - DEBUG - Configuración 'behavior.max_detections' no encontrada, usando default: 10
+2025-07-03 11:26:49,924 - ConfigManager - DEBUG - Configuración 'behavior.memory_optimization' no encontrada, usando default: False
+2025-07-03 11:26:49,924 - ConfigManager - DEBUG - Configuración 'behavior.frame_skip_threshold' no encontrada, usando default: 3
+2025-07-03 11:26:49,924 - ConfigManager - DEBUG - Configuración 'behavior.enable_prediction_cache' no encontrada, usando default: True
+2025-07-03 11:26:49,924 - ConfigManager - DEBUG - Configuración 'behavior.cache_size' no encontrada, usando default: 5
+2025-07-03 11:26:49,924 - ConfigManager - DEBUG - Configuración 'behavior.similarity_threshold' no encontrada, usando default: 0.8
+2025-07-03 11:26:49,925 - AlarmModule - INFO - Módulo de audio inicializado
+2025-07-03 11:26:49,942 - MainSystem - INFO - Sistema de seguridad optimizado iniciado
+2025-07-03 11:26:49,942 - MainSystem - INFO - Inicializando módulos del sistema
+2025-07-03 11:26:49,942 - CameraModule - INFO - Inicializando cámara...
+2025-07-03 11:26:50,118 - CameraModule - INFO - Configuración de cámara aplicada
+2025-07-03 11:26:50,118 - CameraModule - INFO - Calentando cámara por 1 segundos...
+2025-07-03 11:26:51,205 - CameraModule - INFO - Cámara inicializada: 1280x720 @ 30.0fps
+2025-07-03 11:26:51,205 - CameraModule - INFO - Aplicando optimizaciones para desarrollo...
+2025-07-03 11:26:51,207 - FaceRecognitionModule - ERROR - Error al cargar operadores: No module named 'numpy._core'
+2025-07-03 11:26:51,207 - MainSystem - WARNING - No se pudieron cargar operadores
+2025-07-03 11:26:52,147 - AlarmModule - INFO - Módulo de audio inicializado
+2025-07-03 11:26:52,147 - ConfigSyncClient - INFO - Iniciando cliente de sincronización de configuración
+2025-07-03 11:26:52,147 - ConfigSyncClient - INFO - Bucle de sincronización iniciado
+2025-07-03 11:26:52,148 - DeviceAuth - ERROR - API key no configurada
+2025-07-03 11:26:52,148 - HeartbeatSender - INFO - Iniciando envío de heartbeats
+2025-07-03 11:26:52,148 - DeviceAuth - WARNING - No se pudo obtener token válido
+2025-07-03 11:26:52,148 - ConfigSyncClient - WARNING - No hay token de autenticación válido
+2025-07-03 11:26:52,148 - HeartbeatSender - INFO - Bucle de heartbeats iniciado
+2025-07-03 11:26:52,148 - DeviceAuth - WARNING - No se pudo obtener token válido
+2025-07-03 11:26:52,148 - HeartbeatSender - DEBUG - No hay token de autenticación, saltando heartbeat
+2025-07-03 11:26:52,149 - DeviceAuth - WARNING - No se pudo obtener token válido
+2025-07-03 11:26:52,151 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:80
+2025-07-03 11:26:52,154 - urllib3.connectionpool - DEBUG - http://localhost:80 "GET /safety_system/api/v1/devices/status HTTP/1.1" 404 295
+2025-07-03 11:26:52,164 - CameraModule - WARNING - FPS bajo detectado: 0.3/15
+2025-07-03 11:26:52,164 - CameraModule - INFO - Aplicando optimizaciones para desarrollo...
+2025-07-03 11:27:02,998 - MainSystem - INFO - Deteniendo sistema optimizado
+2025-07-03 11:27:02,999 - ConfigSyncClient - INFO - Deteniendo cliente de sincronización
+2025-07-03 11:27:02,999 - ConfigSyncClient - INFO - Bucle de sincronización terminado
+2025-07-03 11:27:02,999 - HeartbeatSender - INFO - Deteniendo envío de heartbeats
+2025-07-03 11:27:02,999 - HeartbeatSender - INFO - Bucle de heartbeats terminado
+2025-07-03 11:27:03,024 - CameraModule - INFO - Cámara liberada
+2025-07-03 11:29:43,999 - SafetySystem - INFO - Iniciando sistema de seguridad optimizado
+2025-07-03 11:29:44,000 - ConfigManager - DEBUG - Configuración 'device.device_id' no encontrada, usando default: DEV_AE1C24FB
+2025-07-03 11:29:44,000 - ConfigManager - DEBUG - Configuración 'sync.config_check_interval' no encontrada, usando default: 60
+2025-07-03 11:29:44,000 - ConfigSyncClient - INFO - Cliente de sincronización inicializado
+2025-07-03 11:29:44,000 - ConfigManager - DEBUG - Configuración 'sync.heartbeat_interval' no encontrada, usando default: 120
+2025-07-03 11:29:44,000 - ConfigManager - DEBUG - Configuración 'sync.heartbeat_timeout' no encontrada, usando default: 15
+2025-07-03 11:29:44,000 - HeartbeatSender - INFO - Enviador de heartbeats inicializado
+2025-07-03 11:29:44,960 - ConfigManager - DEBUG - Configuración 'yawn.enable_night_mode' no encontrada, usando default: True
+2025-07-03 11:29:44,960 - ConfigManager - DEBUG - Configuración 'yawn.night_mode_threshold' no encontrada, usando default: 50
+2025-07-03 11:29:44,960 - ConfigManager - DEBUG - Configuración 'yawn.night_adjustment' no encontrada, usando default: 0.05
+2025-07-03 11:29:44,960 - ConfigManager - DEBUG - Configuración 'yawn.show_debug_info' no encontrada, usando default: True
+2025-07-03 11:29:44,960 - ConfigManager - DEBUG - Configuración 'yawn.show_mouth_contour' no encontrada, usando default: True
+2025-07-03 11:29:44,960 - ConfigManager - DEBUG - Configuración 'yawn.show_progress_bar' no encontrada, usando default: True
+2025-07-03 11:29:44,960 - ConfigManager - DEBUG - Configuración 'yawn.show_light_level' no encontrada, usando default: True
+2025-07-03 11:29:44,960 - ConfigManager - DEBUG - Configuración 'yawn.show_mar_value' no encontrada, usando default: True
+2025-07-03 11:29:44,960 - ConfigManager - DEBUG - Configuración 'yawn.show_mode_indicator' no encontrada, usando default: True
+2025-07-03 11:29:44,960 - ConfigManager - DEBUG - Configuración 'audio.files.fallback' no encontrada, usando default: alarma.mp3
+2025-07-03 11:29:45,113 - ConfigManager - DEBUG - Configuración 'distraction.night_mode_threshold' no encontrada, usando default: 50
+2025-07-03 11:29:45,113 - ConfigManager - DEBUG - Configuración 'distraction.enable_night_mode' no encontrada, usando default: True
+2025-07-03 11:29:45,113 - ConfigManager - DEBUG - Configuración 'behavior.enable_night_mode' no encontrada, usando default: True
+2025-07-03 11:29:45,113 - ConfigManager - DEBUG - Configuración 'behavior.enable_optimization' no encontrada, usando default: True
+2025-07-03 11:29:45,113 - ConfigManager - DEBUG - Configuración 'behavior.processing_interval' no encontrada, usando default: 1
+2025-07-03 11:29:45,113 - ConfigManager - DEBUG - Configuración 'behavior.roi_enabled' no encontrada, usando default: False
+2025-07-03 11:29:45,113 - ConfigManager - DEBUG - Configuración 'behavior.roi_scale_factor' no encontrada, usando default: 0.6
+2025-07-03 11:29:45,113 - ConfigManager - DEBUG - Configuración 'behavior.yolo_input_size' no encontrada, usando default: 416
+2025-07-03 11:29:45,113 - ConfigManager - DEBUG - Configuración 'behavior.nms_threshold' no encontrada, usando default: 0.5
+2025-07-03 11:29:45,113 - ConfigManager - DEBUG - Configuración 'behavior.max_detections' no encontrada, usando default: 10
+2025-07-03 11:29:45,113 - ConfigManager - DEBUG - Configuración 'behavior.memory_optimization' no encontrada, usando default: False
+2025-07-03 11:29:45,114 - ConfigManager - DEBUG - Configuración 'behavior.frame_skip_threshold' no encontrada, usando default: 3
+2025-07-03 11:29:45,114 - ConfigManager - DEBUG - Configuración 'behavior.enable_prediction_cache' no encontrada, usando default: True
+2025-07-03 11:29:45,114 - ConfigManager - DEBUG - Configuración 'behavior.cache_size' no encontrada, usando default: 5
+2025-07-03 11:29:45,114 - ConfigManager - DEBUG - Configuración 'behavior.similarity_threshold' no encontrada, usando default: 0.8
+2025-07-03 11:29:45,114 - AlarmModule - INFO - Módulo de audio inicializado
+2025-07-03 11:29:45,134 - MainSystem - INFO - Sistema de seguridad optimizado iniciado
+2025-07-03 11:29:45,134 - MainSystem - INFO - Inicializando módulos del sistema
+2025-07-03 11:29:45,134 - CameraModule - INFO - Inicializando cámara...
+2025-07-03 11:29:45,305 - CameraModule - INFO - Configuración de cámara aplicada
+2025-07-03 11:29:45,306 - CameraModule - INFO - Calentando cámara por 1 segundos...
+2025-07-03 11:29:46,392 - CameraModule - INFO - Cámara inicializada: 1280x720 @ 30.0fps
+2025-07-03 11:29:46,392 - CameraModule - INFO - Aplicando optimizaciones para desarrollo...
+2025-07-03 11:29:46,398 - FaceRecognitionModule - ERROR - Error al cargar operadores: 'assets/operators'
+2025-07-03 11:29:46,398 - MainSystem - WARNING - No se pudieron cargar operadores
+2025-07-03 11:29:47,365 - AlarmModule - INFO - Módulo de audio inicializado
+2025-07-03 11:29:47,365 - ConfigSyncClient - INFO - Iniciando cliente de sincronización de configuración
+2025-07-03 11:29:47,366 - ConfigSyncClient - INFO - Bucle de sincronización iniciado
+2025-07-03 11:29:47,366 - DeviceAuth - ERROR - API key no configurada
+2025-07-03 11:29:47,366 - HeartbeatSender - INFO - Iniciando envío de heartbeats
+2025-07-03 11:29:47,366 - DeviceAuth - WARNING - No se pudo obtener token válido
+2025-07-03 11:29:47,366 - ConfigSyncClient - WARNING - No hay token de autenticación válido
+2025-07-03 11:29:47,366 - HeartbeatSender - INFO - Bucle de heartbeats iniciado
+2025-07-03 11:29:47,367 - DeviceAuth - WARNING - No se pudo obtener token válido
+2025-07-03 11:29:47,367 - DeviceAuth - WARNING - No se pudo obtener token válido
+2025-07-03 11:29:47,367 - HeartbeatSender - DEBUG - No hay token de autenticación, saltando heartbeat
+2025-07-03 11:29:47,370 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:80
+2025-07-03 11:29:47,373 - urllib3.connectionpool - DEBUG - http://localhost:80 "GET /safety_system/api/v1/devices/status HTTP/1.1" 404 295
+2025-07-03 11:29:47,383 - CameraModule - WARNING - FPS bajo detectado: 0.3/15
+2025-07-03 11:29:47,384 - CameraModule - INFO - Aplicando optimizaciones para desarrollo...
+2025-07-03 11:29:47,645 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:29:47,997 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:29:48,343 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:29:48,690 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:29:49,044 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:29:49,398 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:29:49,792 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:29:50,157 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:29:50,512 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:29:50,868 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:29:51,213 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:29:51,560 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:29:51,933 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:29:52,306 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:29:52,661 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:29:53,030 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:29:53,397 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:29:53,773 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:29:54,140 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:29:54,487 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:29:54,844 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:29:55,214 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:29:55,557 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:29:55,908 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:29:56,258 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:29:56,610 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:29:56,981 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:29:57,343 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:29:57,693 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:29:58,047 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:29:58,406 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:29:58,763 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:29:59,117 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:29:59,467 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:29:59,817 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:30:00,179 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:30:00,538 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:30:00,891 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:30:01,239 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:30:01,588 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:30:01,945 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:30:02,297 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:30:02,650 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:30:03,001 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:30:03,351 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:30:03,723 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:30:04,074 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:30:04,424 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:30:04,787 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:30:05,148 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:30:05,505 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:30:05,855 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:30:06,222 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:30:06,580 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:30:06,943 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:30:07,305 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:30:07,663 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:30:08,032 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:30:08,395 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:30:08,752 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:30:09,108 - FaceRecognitionModule - ERROR - Error en reconocimiento facial: '47469940'
+2025-07-03 11:30:09,182 - MainSystem - INFO - Deteniendo sistema optimizado
+2025-07-03 11:30:09,182 - ConfigSyncClient - INFO - Deteniendo cliente de sincronización
+2025-07-03 11:30:09,182 - ConfigSyncClient - INFO - Bucle de sincronización terminado
+2025-07-03 11:30:09,183 - HeartbeatSender - INFO - Deteniendo envío de heartbeats
+2025-07-03 11:30:09,183 - HeartbeatSender - INFO - Bucle de heartbeats terminado
+2025-07-03 11:30:09,205 - CameraModule - INFO - Cámara liberada
+2025-07-03 11:33:46,255 - SafetySystem - INFO - Iniciando sistema de seguridad optimizado
+2025-07-03 11:33:46,256 - ConfigManager - DEBUG - Configuración 'device.device_id' no encontrada, usando default: DEV_AE1C24FB
+2025-07-03 11:33:46,256 - ConfigManager - DEBUG - Configuración 'sync.config_check_interval' no encontrada, usando default: 60
+2025-07-03 11:33:46,256 - ConfigSyncClient - INFO - Cliente de sincronización inicializado
+2025-07-03 11:33:46,256 - ConfigManager - DEBUG - Configuración 'sync.heartbeat_interval' no encontrada, usando default: 120
+2025-07-03 11:33:46,256 - ConfigManager - DEBUG - Configuración 'sync.heartbeat_timeout' no encontrada, usando default: 15
+2025-07-03 11:33:46,256 - HeartbeatSender - INFO - Enviador de heartbeats inicializado
+2025-07-03 11:33:47,256 - ConfigManager - DEBUG - Configuración 'yawn.enable_night_mode' no encontrada, usando default: True
+2025-07-03 11:33:47,257 - ConfigManager - DEBUG - Configuración 'yawn.night_mode_threshold' no encontrada, usando default: 50
+2025-07-03 11:33:47,257 - ConfigManager - DEBUG - Configuración 'yawn.night_adjustment' no encontrada, usando default: 0.05
+2025-07-03 11:33:47,257 - ConfigManager - DEBUG - Configuración 'yawn.show_debug_info' no encontrada, usando default: True
+2025-07-03 11:33:47,257 - ConfigManager - DEBUG - Configuración 'yawn.show_mouth_contour' no encontrada, usando default: True
+2025-07-03 11:33:47,257 - ConfigManager - DEBUG - Configuración 'yawn.show_progress_bar' no encontrada, usando default: True
+2025-07-03 11:33:47,257 - ConfigManager - DEBUG - Configuración 'yawn.show_light_level' no encontrada, usando default: True
+2025-07-03 11:33:47,257 - ConfigManager - DEBUG - Configuración 'yawn.show_mar_value' no encontrada, usando default: True
+2025-07-03 11:33:47,257 - ConfigManager - DEBUG - Configuración 'yawn.show_mode_indicator' no encontrada, usando default: True
+2025-07-03 11:33:47,257 - ConfigManager - DEBUG - Configuración 'audio.files.fallback' no encontrada, usando default: alarma.mp3
+2025-07-03 11:33:47,401 - ConfigManager - DEBUG - Configuración 'distraction.night_mode_threshold' no encontrada, usando default: 50
+2025-07-03 11:33:47,401 - ConfigManager - DEBUG - Configuración 'distraction.enable_night_mode' no encontrada, usando default: True
+2025-07-03 11:33:47,402 - ConfigManager - DEBUG - Configuración 'behavior.enable_night_mode' no encontrada, usando default: True
+2025-07-03 11:33:47,402 - ConfigManager - DEBUG - Configuración 'behavior.enable_optimization' no encontrada, usando default: True
+2025-07-03 11:33:47,402 - ConfigManager - DEBUG - Configuración 'behavior.processing_interval' no encontrada, usando default: 1
+2025-07-03 11:33:47,402 - ConfigManager - DEBUG - Configuración 'behavior.roi_enabled' no encontrada, usando default: False
+2025-07-03 11:33:47,402 - ConfigManager - DEBUG - Configuración 'behavior.roi_scale_factor' no encontrada, usando default: 0.6
+2025-07-03 11:33:47,402 - ConfigManager - DEBUG - Configuración 'behavior.yolo_input_size' no encontrada, usando default: 416
+2025-07-03 11:33:47,402 - ConfigManager - DEBUG - Configuración 'behavior.nms_threshold' no encontrada, usando default: 0.5
+2025-07-03 11:33:47,402 - ConfigManager - DEBUG - Configuración 'behavior.max_detections' no encontrada, usando default: 10
+2025-07-03 11:33:47,402 - ConfigManager - DEBUG - Configuración 'behavior.memory_optimization' no encontrada, usando default: False
+2025-07-03 11:33:47,402 - ConfigManager - DEBUG - Configuración 'behavior.frame_skip_threshold' no encontrada, usando default: 3
+2025-07-03 11:33:47,402 - ConfigManager - DEBUG - Configuración 'behavior.enable_prediction_cache' no encontrada, usando default: True
+2025-07-03 11:33:47,402 - ConfigManager - DEBUG - Configuración 'behavior.cache_size' no encontrada, usando default: 5
+2025-07-03 11:33:47,402 - ConfigManager - DEBUG - Configuración 'behavior.similarity_threshold' no encontrada, usando default: 0.8
+2025-07-03 11:33:47,402 - AlarmModule - INFO - Módulo de audio inicializado
+2025-07-03 11:33:47,423 - MainSystem - INFO - Sistema de seguridad optimizado iniciado
+2025-07-03 11:33:47,423 - MainSystem - INFO - Inicializando módulos del sistema
+2025-07-03 11:33:47,423 - CameraModule - INFO - Inicializando cámara...
+2025-07-03 11:33:47,597 - CameraModule - INFO - Configuración de cámara aplicada
+2025-07-03 11:33:47,597 - CameraModule - INFO - Calentando cámara por 1 segundos...
+2025-07-03 11:33:48,684 - CameraModule - INFO - Cámara inicializada: 1280x720 @ 30.0fps
+2025-07-03 11:33:48,684 - CameraModule - INFO - Aplicando optimizaciones para desarrollo...
+2025-07-03 11:33:48,687 - FaceRecognitionModule - INFO - Operadores cargados: 1
+2025-07-03 11:33:49,689 - AlarmModule - INFO - Módulo de audio inicializado
+2025-07-03 11:33:49,689 - ConfigSyncClient - INFO - Iniciando cliente de sincronización de configuración
+2025-07-03 11:33:49,690 - ConfigSyncClient - INFO - Bucle de sincronización iniciado
+2025-07-03 11:33:49,690 - DeviceAuth - ERROR - API key no configurada
+2025-07-03 11:33:49,690 - DeviceAuth - WARNING - No se pudo obtener token válido
+2025-07-03 11:33:49,690 - ConfigSyncClient - WARNING - No hay token de autenticación válido
+2025-07-03 11:33:49,690 - HeartbeatSender - INFO - Iniciando envío de heartbeats
+2025-07-03 11:33:49,690 - HeartbeatSender - INFO - Bucle de heartbeats iniciado
+2025-07-03 11:33:49,690 - DeviceAuth - WARNING - No se pudo obtener token válido
+2025-07-03 11:33:49,690 - DeviceAuth - WARNING - No se pudo obtener token válido
+2025-07-03 11:33:49,690 - HeartbeatSender - DEBUG - No hay token de autenticación, saltando heartbeat
+2025-07-03 11:33:49,693 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): localhost:80
+2025-07-03 11:33:49,695 - urllib3.connectionpool - DEBUG - http://localhost:80 "GET /safety_system/api/v1/devices/status HTTP/1.1" 404 295
+2025-07-03 11:33:49,705 - CameraModule - WARNING - FPS bajo detectado: 0.3/15
+2025-07-03 11:33:49,705 - CameraModule - INFO - Aplicando optimizaciones para desarrollo...
+2025-07-03 11:33:50,483 - MainSystem - INFO - Operador reconocido: Operador: Nilson Cayao (ID: 47469940)
+2025-07-03 11:33:50,484 - AlarmModule - INFO - Reproduciendo audio: C:\xampp\htdocs\safety_system\assets/audio\alarma.mp3
+2025-07-03 11:33:51,005 - BehaviorDetectionModule - ERROR - No se encontró: C:\xampp\htdocs\safety_system\assets/models\yolov3.cfg
+2025-07-03 11:33:51,256 - BehaviorDetectionModule - ERROR - No se encontró: C:\xampp\htdocs\safety_system\assets/models\yolov3.cfg
+2025-07-03 11:33:51,602 - BehaviorDetectionModule - ERROR - No se encontró: C:\xampp\htdocs\safety_system\assets/models\yolov3.cfg
+2025-07-03 11:33:51,951 - BehaviorDetectionModule - ERROR - No se encontró: C:\xampp\htdocs\safety_system\assets/models\yolov3.cfg
+2025-07-03 11:33:52,114 - BehaviorDetectionModule - ERROR - No se encontró: C:\xampp\htdocs\safety_system\assets/models\yolov3.cfg
+2025-07-03 11:33:53,092 - BehaviorDetectionModule - ERROR - No se encontró: C:\xampp\htdocs\safety_system\assets/models\yolov3.cfg
+2025-07-03 11:33:53,261 - BehaviorDetectionModule - ERROR - No se encontró: C:\xampp\htdocs\safety_system\assets/models\yolov3.cfg
+2025-07-03 11:33:53,428 - BehaviorDetectionModule - ERROR - No se encontró: C:\xampp\htdocs\safety_system\assets/models\yolov3.cfg
+2025-07-03 11:33:53,594 - BehaviorDetectionModule - ERROR - No se encontró: C:\xampp\htdocs\safety_system\assets/models\yolov3.cfg
+2025-07-03 11:33:53,762 - BehaviorDetectionModule - ERROR - No se encontró: C:\xampp\htdocs\safety_system\assets/models\yolov3.cfg
+2025-07-03 11:33:53,926 - BehaviorDetectionModule - ERROR - No se encontró: C:\xampp\htdocs\safety_system\assets/models\yolov3.cfg
+2025-07-03 11:33:54,093 - BehaviorDetectionModule - ERROR - No se encontró: C:\xampp\htdocs\safety_system\assets/models\yolov3.cfg
+2025-07-03 11:33:55,174 - BehaviorDetectionModule - ERROR - No se encontró: C:\xampp\htdocs\safety_system\assets/models\yolov3.cfg
+2025-07-03 11:33:55,340 - BehaviorDetectionModule - ERROR - No se encontró: C:\xampp\htdocs\safety_system\assets/models\yolov3.cfg
+2025-07-03 11:33:55,506 - BehaviorDetectionModule - ERROR - No se encontró: C:\xampp\htdocs\safety_system\assets/models\yolov3.cfg
+2025-07-03 11:33:55,674 - BehaviorDetectionModule - ERROR - No se encontró: C:\xampp\htdocs\safety_system\assets/models\yolov3.cfg
+2025-07-03 11:33:55,839 - BehaviorDetectionModule - ERROR - No se encontró: C:\xampp\htdocs\safety_system\assets/models\yolov3.cfg
+2025-07-03 11:33:56,008 - BehaviorDetectionModule - ERROR - No se encontró: C:\xampp\htdocs\safety_system\assets/models\yolov3.cfg
+2025-07-03 11:33:56,199 - BehaviorDetectionModule - ERROR - No se encontró: C:\xampp\htdocs\safety_system\assets/models\yolov3.cfg
+2025-07-03 11:33:56,374 - BehaviorDetectionModule - ERROR - No se encontró: C:\xampp\htdocs\safety_system\assets/models\yolov3.cfg
+2025-07-03 11:33:56,548 - BehaviorDetectionModule - ERROR - No se encontró: C:\xampp\htdocs\safety_system\assets/models\yolov3.cfg
+2025-07-03 11:33:56,732 - BehaviorDetectionModule - ERROR - No se encontró: C:\xampp\htdocs\safety_system\assets/models\yolov3.cfg
+2025-07-03 11:33:56,915 - BehaviorDetectionModule - ERROR - No se encontró: C:\xampp\htdocs\safety_system\assets/models\yolov3.cfg
+2025-07-03 11:33:57,085 - BehaviorDetectionModule - ERROR - No se encontró: C:\xampp\htdocs\safety_system\assets/models\yolov3.cfg
+2025-07-03 11:33:57,269 - BehaviorDetectionModule - ERROR - No se encontró: C:\xampp\htdocs\safety_system\assets/models\yolov3.cfg
+2025-07-03 11:33:57,532 - BehaviorDetectionModule - ERROR - No se encontró: C:\xampp\htdocs\safety_system\assets/models\yolov3.cfg
+2025-07-03 11:33:57,709 - BehaviorDetectionModule - ERROR - No se encontró: C:\xampp\htdocs\safety_system\assets/models\yolov3.cfg
+2025-07-03 11:33:57,971 - BehaviorDetectionModule - ERROR - No se encontró: C:\xampp\htdocs\safety_system\assets/models\yolov3.cfg
+2025-07-03 11:33:58,230 - BehaviorDetectionModule - ERROR - No se encontró: C:\xampp\htdocs\safety_system\assets/models\yolov3.cfg
+2025-07-03 11:33:58,405 - BehaviorDetectionModule - ERROR - No se encontró: C:\xampp\htdocs\safety_system\assets/models\yolov3.cfg
+2025-07-03 11:33:58,575 - BehaviorDetectionModule - ERROR - No se encontró: C:\xampp\htdocs\safety_system\assets/models\yolov3.cfg
+2025-07-03 11:33:58,754 - BehaviorDetectionModule - ERROR - No se encontró: C:\xampp\htdocs\safety_system\assets/models\yolov3.cfg
+2025-07-03 11:33:58,924 - BehaviorDetectionModule - ERROR - No se encontró: C:\xampp\htdocs\safety_system\assets/models\yolov3.cfg
+2025-07-03 11:33:59,094 - BehaviorDetectionModule - ERROR - No se encontró: C:\xampp\htdocs\safety_system\assets/models\yolov3.cfg
+2025-07-03 11:33:59,260 - BehaviorDetectionModule - ERROR - No se encontró: C:\xampp\htdocs\safety_system\assets/models\yolov3.cfg
+2025-07-03 11:33:59,435 - BehaviorDetectionModule - ERROR - No se encontró: C:\xampp\htdocs\safety_system\assets/models\yolov3.cfg
+2025-07-03 11:33:59,616 - BehaviorDetectionModule - ERROR - No se encontró: C:\xampp\htdocs\safety_system\assets/models\yolov3.cfg
+2025-07-03 11:33:59,789 - BehaviorDetectionModule - ERROR - No se encontró: C:\xampp\htdocs\safety_system\assets/models\yolov3.cfg
+2025-07-03 11:33:59,956 - BehaviorDetectionModule - ERROR - No se encontró: C:\xampp\htdocs\safety_system\assets/models\yolov3.cfg
+2025-07-03 11:34:06,359 - BehaviorDetectionModule - ERROR - No se encontró: C:\xampp\htdocs\safety_system\assets/models\yolov3.cfg
+2025-07-03 11:34:06,911 - MainSystem - INFO - Deteniendo sistema optimizado
+2025-07-03 11:34:06,911 - ConfigSyncClient - INFO - Deteniendo cliente de sincronización
+2025-07-03 11:34:06,911 - ConfigSyncClient - INFO - Bucle de sincronización terminado
+2025-07-03 11:34:06,912 - HeartbeatSender - INFO - Deteniendo envío de heartbeats
+2025-07-03 11:34:06,912 - HeartbeatSender - INFO - Bucle de heartbeats terminado
+2025-07-03 11:34:06,932 - CameraModule - INFO - Cámara liberada

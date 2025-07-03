@@ -30,21 +30,21 @@ except ImportError:
     print("⚠️ Sistema de sincronización no disponible")
 
 # Importar módulos individuales
-from camera_module import CameraModule
-from face_recognition_module import FaceRecognitionModule
-from fatigue_detection import FatigueDetector
-from bostezo_detection import BostezosDetector
-from distraction_detection import DistractionDetector
-from alarm_module import AlarmModule
-from behavior_detection_module import BehaviorDetectionModule
+from core.camera_module import CameraModule
+from core.face_recognition_module import FaceRecognitionModule
+from core.fatigue_detection import FatigueDetector
+from core.bostezo_detection import BostezosDetector
+from core.distraction_detection import DistractionDetector
+from core.alarm_module import AlarmModule
+from core.behavior_detection_module import BehaviorDetectionModule
 
 # Configuración de directorios
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 OPERATORS_DIR = os.path.join(BASE_DIR, "operators")
-MODEL_DIR = os.path.join(BASE_DIR, "models")
-AUDIO_DIR = os.path.join(BASE_DIR, "audio")
-REPORTS_DIR = os.path.join(BASE_DIR, "reports")
-LOGS_DIR = os.path.join(BASE_DIR, "logs")
+MODEL_DIR = os.path.join(BASE_DIR, "assets/models")
+AUDIO_DIR = os.path.join(BASE_DIR, "assets/audio")
+REPORTS_DIR = os.path.join(BASE_DIR, "output/reports")
+LOGS_DIR = os.path.join(BASE_DIR, "output/logs")
 
 # Asegurar que existan los directorios
 for directory in [OPERATORS_DIR, MODEL_DIR, AUDIO_DIR, REPORTS_DIR, LOGS_DIR]:

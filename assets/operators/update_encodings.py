@@ -5,32 +5,21 @@ import time
 import glob
 from datetime import datetime
 
-# Obtener el directorio donde está este script
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-
 def update_progress(progress):
     """Actualiza el archivo de progreso con el porcentaje actual"""
-    # Crear en la carpeta del script
-    progress_file = os.path.join(SCRIPT_DIR, "update_progress.txt")
-    with open(progress_file, "w") as f:
+    with open("update_progress.txt", "w") as f:
         f.write(str(progress))
 
 def main():
-    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    photos_dir = os.path.join(base_dir, "server", "operator-photo")
-    
-    print(f"Directorio base: {base_dir}")
-    print(f"Buscando fotos en: {photos_dir}")
+    # Ruta donde están las fotos de los operadores
+    photos_dir = "../server/operator-photo"
     
     # Inicializa el archivo de progreso
     update_progress(0)
-
-    # Archivo de log en la carpeta del script
-    log_file = os.path.join(SCRIPT_DIR, "update_log.txt")
     
     # Verifica si puede acceder al directorio de fotos
     if not os.path.exists(photos_dir):
-        with open(log_file, "a") as f:
+        with open("update_log.txt", "a") as f:
             f.write(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] ERROR: No se puede acceder al directorio de fotos: {photos_dir}\n")
         update_progress(100)  # Marca como completado para evitar que la interfaz se quede esperando
         return
@@ -118,20 +107,11 @@ def main():
     }
     
     # Guarda todos los encodings en el archivo pickle
-    output_file = os.path.join(SCRIPT_DIR, "encodings.pkl")
-    with open(output_file, "wb") as f:
+    with open("encodings.pkl", "wb") as f:
         pickle.dump(data, f)
     
     # Asegura que el progreso final sea 100%
     update_progress(100)
-
-     # Log final
-    with open(log_file, "a") as f:
-        f.write(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] Actualización completada. {len(encodings)} encodings guardados\n")
-    
-    # Asegura que el progreso final sea 100%
-    update_progress(100)
-    print(f"✅ Proceso completado. {len(encodings)} encodings guardados")
 
 if __name__ == "__main__":
     main()

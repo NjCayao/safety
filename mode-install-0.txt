@@ -1,0 +1,4 @@
+1. pip install -r requirements.txt
+2. pip install face_recognition
+3. python -m pip install --upgrade pip
+4. pip install numpy==1.26.0
