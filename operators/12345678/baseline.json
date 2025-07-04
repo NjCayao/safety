@@ -2,38 +2,38 @@
   "operator_id": "12345678",
   "operator_name": "Juan Pérez",
   "calibration_info": {
-    "first_calibration": "2025-07-04T16:36:13.107001",
-    "last_calibration": "2025-07-04T16:36:13.107001",
+    "first_calibration": "2025-07-04T17:43:31.872310",
+    "last_calibration": "2025-07-04T17:43:31.872310",
     "total_calibrations": 1,
-    "samples_collected": 338
+    "samples_collected": 329
   },
   "facial_metrics": {
     "eye_measurements": {
-      "eye_openness_avg": 0.2937237289921685,
-      "eye_openness_std": 0.019821087657912854,
+      "eye_openness_avg": 0.2650771968519612,
+      "eye_openness_std": 0.014956370088298419,
       "blink_rate_per_minute": 0.0
     },
     "eyebrow_measurements": {
-      "eyebrow_distance_avg": 0.12609838345990243,
-      "eyebrow_distance_std": 0.006244604782876337
+      "eyebrow_distance_avg": 0.12691406586948611,
+      "eyebrow_distance_std": 0.004782792965724258
     },
     "mouth_measurements": {
-      "mouth_ratio_avg": 4.1396503920646275,
-      "mouth_ratio_std": 0.26716469417242544
+      "mouth_ratio_avg": 3.901366613116938,
+      "mouth_ratio_std": 0.29335777862219176
     },
     "face_structure": {
-      "face_width_avg": 268.2553202802537,
-      "jaw_tension_avg": 0.046889287333880175
+      "face_width_avg": 258.67392341829907,
+      "jaw_tension_avg": 0.07866995895805287
     }
   },
   "thresholds": {
     "fatigue": {
-      "microsleep_threshold": 0.17623423739530109,
-      "severe_fatigue_threshold": 0.11748949159686739,
+      "microsleep_threshold": 0.1590463181111767,
+      "severe_fatigue_threshold": 0.10603087874078448,
       "blink_duration_threshold": 0.3
     },
     "stress": {
-      "high_tension_threshold": 0.0882688684219317,
+      "high_tension_threshold": 0.08883984610864028,
       "movement_threshold": 0.05,
       "jaw_tension_threshold": 0.7
     }

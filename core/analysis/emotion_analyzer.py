@@ -203,11 +203,11 @@ class EmotionAnalyzer:
             'surprised': 0,
             'fear': 0,
             'disgust': 0,
-            'neutral': 40  # Base
+            'neutral': 60  # Base
         }
         
         # FELICIDAD - Sonrisa + ojos ligeramente cerrados
-        if metrics['smile_ratio'] > 0.02:
+        if metrics['smile_ratio'] > 0.03:
             intensity = min(1.0, metrics['smile_ratio'] / 0.08)
             emotions['happy'] = int(30 + intensity * 50)
             emotions['neutral'] -= 20
@@ -219,7 +219,7 @@ class EmotionAnalyzer:
             emotions['neutral'] -= 15
         
         # IRA - Cejas juntas + tensión
-        if metrics['eyebrow_distance_ratio'] < 0.9:
+        if metrics['eyebrow_distance_ratio'] < 0.85:
             intensity = min(1.0, (0.9 - metrics['eyebrow_distance_ratio']) / 0.2)
             emotions['angry'] = int(20 + intensity * 50)
             emotions['neutral'] -= 15

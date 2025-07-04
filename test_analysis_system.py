@@ -212,8 +212,8 @@ class AnalysisSystemTester:
                                cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
             
             # Mostrar información adicional
-            if self.show_debug:
-                self.draw_debug_info(frame)
+            # if self.show_debug:
+            #     self.draw_debug_info(frame)
             
             # Mostrar frame
             if self.show_gui:
@@ -239,60 +239,7 @@ class AnalysisSystemTester:
             
             self.frame_count += 1
         
-        self.cleanup()
-    
-    def draw_debug_info(self, frame):
-        """Dibuja información de debug"""
-        y = 30
-        
-        # FPS
-        cv2.putText(frame, f"FPS: {self.fps:.1f}", (10, y),
-                   cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
-        y += 30
-        
-        # Operador
-        cv2.putText(frame, f"Operador: {self.current_operator['name']} ({self.current_operator['id']})",
-                   (10, y), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 1)
-        y += 25
-        
-        # Modo
-        mode = "Headless" if self.analysis_system.headless else "Visual"
-        cv2.putText(frame, f"Modo: {mode}", (10, y),
-                   cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 1)
-        y += 25
-        
-        # Resultados compactos
-        if self.last_results and 'analysis' in self.last_results:
-            analysis = self.last_results['analysis']
-            
-            # Fatiga
-            if 'fatigue' in analysis:
-                fatigue = analysis['fatigue'].get('fatigue_percentage', 0)
-                color = (0, 255, 0) if fatigue < 60 else (0, 0, 255)
-                cv2.putText(frame, f"Fatiga: {fatigue}%", (10, y),
-                           cv2.FONT_HERSHEY_SIMPLEX, 0.6, color, 1)
-                y += 25
-            
-            # Estrés
-            if 'stress' in analysis:
-                stress = analysis['stress'].get('stress_level', 0)
-                color = (0, 255, 0) if stress < 60 else (0, 0, 255)
-                cv2.putText(frame, f"Estrés: {stress}%", (10, y),
-                           cv2.FONT_HERSHEY_SIMPLEX, 0.6, color, 1)
-                y += 25
-            
-            # Pulso
-            if 'pulse' in analysis and analysis['pulse'].get('is_valid'):
-                bpm = analysis['pulse'].get('bpm', 0)
-                cv2.putText(frame, f"Pulso: {bpm} BPM", (10, y),
-                           cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 0), 1)
-                y += 25
-            
-            # Emoción
-            if 'emotion' in analysis:
-                emotion = analysis['emotion'].get('dominant_emotion', 'neutral')
-                cv2.putText(frame, f"Emoción: {emotion}", (10, y),
-                           cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 0), 1)
+        self.cleanup()   
     
     def update_fps(self):
         """Actualiza el cálculo de FPS"""

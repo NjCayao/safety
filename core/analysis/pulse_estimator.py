@@ -129,7 +129,7 @@ class PulseEstimator:
             self.timestamps.append(self.last_update)
             
             # Calcular BPM si tenemos suficientes datos
-            if len(self.signal_buffer) >= self.fps * 3:  # Mínimo 3 segundos
+            if len(self.signal_buffer) >= self.fps * 2:  # Mínimo 3 segundos
                 bpm, confidence, quality = self._calculate_bpm_advanced()
                 
                 if confidence > 0.5:

@@ -71,7 +71,7 @@ class IntegratedAnalysisSystem:
             self.logger.info("AnomalyDetector inicializado sin headless")
         
         # Dashboard (solo si no es headless)
-        self.dashboard = AnalysisDashboard() if not headless else None
+        self.dashboard = AnalysisDashboard(panel_width=300, position='right') if not headless else None
         
         # Estado actual
         self.current_operator = None

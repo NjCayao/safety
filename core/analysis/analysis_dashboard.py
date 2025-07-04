@@ -11,7 +11,7 @@ import time
 import logging
 
 class AnalysisDashboard:
-    def __init__(self, panel_width=400, position='right'):
+    def __init__(self, panel_width=300, position='right'):
         """
         Inicializa el dashboard de análisis.
         
@@ -25,7 +25,7 @@ class AnalysisDashboard:
         self.panel_width = panel_width
         self.position = position
         self.margin = 10
-        self.section_spacing = 25
+        self.section_spacing = 15
         
         # Colores del tema
         self.colors = {
@@ -40,7 +40,7 @@ class AnalysisDashboard:
             'divider': (100, 100, 100)
         }
         
-        # Fuentes
+        # Fuentes - AUMENTADAS PARA MEJOR LEGIBILIDAD
         self.fonts = {
             'title': cv2.FONT_HERSHEY_SIMPLEX,
             'subtitle': cv2.FONT_HERSHEY_SIMPLEX,
@@ -49,10 +49,10 @@ class AnalysisDashboard:
         }
         
         self.font_scales = {
-            'title': 0.7,
-            'subtitle': 0.6,
-            'body': 0.5,
-            'small': 0.4
+            'title': 0.5,      # Aumentado de 0.7
+            'subtitle': 0.45,   # Aumentado de 0.6
+            'body': 0.4,      # Aumentado de 0.5
+            'small': 0.35      # Aumentado de 0.4
         }
         
         # Historial para gráficos
@@ -71,6 +71,17 @@ class AnalysisDashboard:
         self.is_night_mode = False
         self._current_anomaly_data = None
         
+        # Diccionario de traducción de emociones
+        self.emotion_spanish = {
+            'neutral': 'neutral',
+            'happy': 'feliz',
+            'sad': 'triste',
+            'angry': 'enojado',
+            'surprised': 'sorprendido',
+            'fear': 'miedo',
+            'disgust': 'disgusto'
+        }
+        
     def render(self, frame, analysis_data):
         """
         Renderiza el dashboard completo en el frame.
@@ -83,7 +94,7 @@ class AnalysisDashboard:
             frame: Frame con dashboard dibujado
         """
         # Guardar datos de anomalías para usar en alertas
-        self._current_anomaly_data = analysis_data.get('anomaly', {})
+        self._current_anomaly_data = analysis_data.get('analysis', {}).get('anomaly', {})
         
         h, w = frame.shape[:2]
         
@@ -115,17 +126,17 @@ class AnalysisDashboard:
         
         # Sección de emociones
         y_offset = self._draw_emotion_section(frame, panel_x, y_offset, 
-                                            analysis_data.get('emotion', {}))
+                                            analysis_data.get('analysis', {}).get('emotion', {}))
         
         # Sección de indicadores vitales
-        y_offset = self._draw_vital_indicators(frame, panel_x, y_offset, analysis_data)
+        y_offset = self._draw_vital_indicators(frame, panel_x, y_offset, analysis_data.get('analysis', {}))
         
         # Sección de anomalías
         y_offset = self._draw_anomaly_section(frame, panel_x, y_offset, 
-                                            analysis_data.get('anomaly', {}))
+                                            analysis_data.get('analysis', {}).get('anomaly', {}))
         
         # Gráfico de tendencias
-        y_offset = self._draw_trend_graph(frame, panel_x, y_offset)
+        # y_offset = self._draw_trend_graph(frame, panel_x, y_offset)
         
         # Alertas activas
         y_offset = self._draw_alerts_section(frame, panel_x, y_offset, 
@@ -191,50 +202,65 @@ class AnalysisDashboard:
     def _draw_emotion_section(self, frame, x, y, emotion_data):
         """Dibuja la sección de análisis emocional"""
         cv2.putText(frame, "ESTADO EMOCIONAL", (x + 10, y),
-                   self.fonts['subtitle'], self.font_scales['subtitle'],
-                   self.colors['text_secondary'], 1)
+                self.fonts['subtitle'], self.font_scales['subtitle'],
+                self.colors['text_secondary'], 1)
         
         y += 25
         
         if emotion_data:
-            # Emoción dominante
+            # Obtener datos necesarios
             dominant = emotion_data.get('dominant_emotion', 'neutral')
             wellbeing = emotion_data.get('wellbeing', 50)
             
-            emotion_text = f"{dominant.upper()}"
+            # Mostrar emoción dominante
+            emotion_esp = self.emotion_spanish.get(dominant, dominant)
+            emotion_text = f"{emotion_esp.upper()}"
             cv2.putText(frame, emotion_text, (x + 20, y),
-                       self.fonts['body'], self.font_scales['body'],
-                       self.colors['accent'], 1)
+                    self.fonts['body'], self.font_scales['body'],
+                    self.colors['accent'], 1)
             
-            # Mini gráfico de emociones
+            # Mostrar TODAS las emociones
             y += 25
             emotions = emotion_data.get('emotions', {})
-            top_emotions = sorted(emotions.items(), key=lambda x: x[1], reverse=True)[:3]
             
-            for emotion, percentage in top_emotions:
+            # Ordenar por valor descendente
+            all_emotions = sorted(emotions.items(), key=lambda x: x[1], reverse=True)
+            
+            for emotion, percentage in all_emotions:
+                # Traducir nombre de emoción
+                emotion_esp = self.emotion_spanish.get(emotion, emotion)
+                
+                # Color según el porcentaje
+                if percentage > 30:
+                    color = self.colors['accent']
+                elif percentage > 15:
+                    color = self.colors['text_primary']
+                else:
+                    color = self.colors['text_secondary']
+                
                 # Nombre de emoción
-                cv2.putText(frame, f"{emotion[:8]}:", (x + 20, y),
-                           self.fonts['small'], self.font_scales['small'],
-                           self.colors['text_secondary'], 1)
+                cv2.putText(frame, f"{emotion_esp}:", (x + 20, y),
+                        self.fonts['small'], self.font_scales['small'],
+                        color, 1)
                 
                 # Barra mini
-                bar_x = x + 100
-                bar_width = 80
-                self._draw_mini_bar(frame, bar_x, y - 8, percentage, bar_width)
+                bar_x = x + 80
+                bar_width = 60
+                self._draw_mini_bar(frame, bar_x, y - 6, percentage, bar_width)
                 
                 # Porcentaje
                 cv2.putText(frame, f"{percentage}%", (bar_x + bar_width + 5, y),
-                           self.fonts['small'], self.font_scales['small'],
-                           self.colors['text_secondary'], 1)
+                        self.fonts['small'], self.font_scales['small'],
+                        color, 1)
                 
-                y += 18
+                y += 15
             
-            # Bienestar
+            # Bienestar (FUERA del bucle)
             y += 10
             wellbeing_color = self._get_value_color(wellbeing, inverse=True)
             cv2.putText(frame, f"Bienestar: {wellbeing}%", (x + 20, y),
-                       self.fonts['body'], self.font_scales['body'],
-                       wellbeing_color, 1)
+                    self.fonts['body'], self.font_scales['body'],
+                    wellbeing_color, 1)
             
             # Actualizar historial
             self.emotion_history.append({
@@ -250,7 +276,7 @@ class AnalysisDashboard:
         return y + 15
     
     def _draw_vital_indicators(self, frame, x, y, data):
-        """Dibuja indicadores vitales (estrés, fatiga, pulso)"""
+        """Dibuja indicadores vitales (estres, fatiga, pulso)"""
         cv2.putText(frame, "INDICADORES VITALES", (x + 10, y),
                    self.fonts['subtitle'], self.font_scales['subtitle'],
                    self.colors['text_secondary'], 1)
@@ -273,10 +299,14 @@ class AnalysisDashboard:
             self.fatigue_history.append({'time': time.time(), 'value': fatigue_score})
         
         # Pulso
-        if 'pulse' in data and data['pulse'].get('is_valid', False):
-            pulse_bpm = data['pulse']['bpm']
-            indicators.append(('Pulso', pulse_bpm, 'BPM'))
-            self.pulse_history.append({'time': time.time(), 'value': pulse_bpm})
+        if 'pulse' in data:
+            if data['pulse'].get('is_valid', False):
+                pulse_bpm = data['pulse']['bpm']
+                indicators.append(('Pulso', pulse_bpm, 'LPM'))
+                self.pulse_history.append({'time': time.time(), 'value': pulse_bpm})
+            else:
+                # Mostrar que está midiendo
+                indicators.append(('Pulso', 0, 'Midiendo...'))
         
         
         # Anomalías (ahora incluido en vital indicators)
@@ -286,8 +316,8 @@ class AnalysisDashboard:
             row = i // 2
             col = i % 2
             
-            ind_x = x + 20 + col * 150
-            ind_y = y + row * 50
+            ind_x = x + 20 + col * 180
+            ind_y = y + row * 35
             
             # Nombre del indicador
             cv2.putText(frame, name, (ind_x, ind_y),
@@ -299,7 +329,7 @@ class AnalysisDashboard:
             value_text = f"{int(value)}{unit}"
             cv2.putText(frame, value_text, (ind_x, ind_y + 20),
                        self.fonts['body'], self.font_scales['body'],
-                       value_color, 2)
+                       value_color, 1)
         
         y += len(indicators) * 25 + 20
         cv2.line(frame, (x + 20, y), (x + self.panel_width - 20, y),
@@ -346,7 +376,7 @@ class AnalysisDashboard:
         # Leyenda
         legend_y = graph_y + graph_height + 10
         legends = [
-            ('Estres', (0, 0, 255)),
+            ('Estrés', (0, 0, 255)),
             ('Fatiga', (0, 165, 255)),
             ('Bienestar', (0, 255, 0))
         ]
@@ -472,7 +502,7 @@ class AnalysisDashboard:
             
             # Dibujar cada línea
             for line in lines[:2]:  # Máximo 2 líneas por recomendación
-                cv2.putText(frame, f"* {line}", (x + 20, y),
+                cv2.putText(frame, f"• {line}", (x + 20, y),
                            self.fonts['small'], self.font_scales['small'],
                            self.colors['text_secondary'], 1)
                 y += 15
@@ -484,8 +514,8 @@ class AnalysisDashboard:
     def _draw_anomaly_section(self, frame, x, y, anomaly_data):
         """Dibuja la sección de detección de anomalías"""
         cv2.putText(frame, "DETECCION DE ANOMALIAS", (x + 10, y),
-                   self.fonts['subtitle'], self.font_scales['subtitle'],
-                   self.colors['text_secondary'], 1)
+                self.fonts['subtitle'], self.font_scales['subtitle'],
+                self.colors['text_secondary'], 1)
         
         y += 25
         
@@ -499,10 +529,14 @@ class AnalysisDashboard:
                 status = intox['status']
                 color = self._get_value_color(level, inverse=False)
                 
+                # Texto primero
                 cv2.putText(frame, f"Intoxicacion: {level}% [{status}]", (x + 20, y),
-                           self.fonts['body'], self.font_scales['body'],
-                           color, 1)
-                self._draw_mini_bar(frame, x + 180, y - 8, level, 100)
+                        self.fonts['body'], self.font_scales['body'],
+                        color, 1)
+                
+                # Barra DEBAJO del texto
+                y += 15
+                self._draw_mini_bar(frame, x + 20, y, level, 200)
                 y += 20
             
             # Riesgo neurológico
@@ -512,10 +546,14 @@ class AnalysisDashboard:
                 status = neuro['status']
                 color = self._get_value_color(level, inverse=False)
                 
+                # Texto primero
                 cv2.putText(frame, f"Riesgo Neurol.: {level}% [{status}]", (x + 20, y),
-                           self.fonts['body'], self.font_scales['body'],
-                           color, 1)
-                self._draw_mini_bar(frame, x + 180, y - 8, level, 100)
+                        self.fonts['body'], self.font_scales['body'],
+                        color, 1)
+                
+                # Barra DEBAJO del texto
+                y += 15
+                self._draw_mini_bar(frame, x + 20, y, level, 200)
                 y += 20
             
             # Comportamiento errático
@@ -525,11 +563,15 @@ class AnalysisDashboard:
                 status = erratic['status']
                 color = self._get_value_color(level, inverse=False)
                 
+                # Texto primero
                 cv2.putText(frame, f"Comp. Erratico: {level}% [{status}]", (x + 20, y),
-                           self.fonts['body'], self.font_scales['body'],
-                           color, 1)
-                self._draw_mini_bar(frame, x + 180, y - 8, level, 100)
-                y += 20
+                        self.fonts['body'], self.font_scales['body'],
+                        color, 1)
+                
+                # Barra DEBAJO del texto
+                y += 15
+                self._draw_mini_bar(frame, x + 20, y, level, 200)
+                y += 15
         
         y += 10
         cv2.line(frame, (x + 20, y), (x + self.panel_width - 20, y),
@@ -561,7 +603,7 @@ class AnalysisDashboard:
                      (100, 100, 100), 2)
         
         # Título
-        title = "CALIBRACION EN PROGRESO"
+        title = "CALIBRACIÓN EN PROGRESO"
         text_size = cv2.getTextSize(title, self.fonts['title'], 
                                    self.font_scales['title'], 2)[0]
         title_x = panel_x + (panel_width - text_size[0]) // 2
@@ -605,7 +647,7 @@ class AnalysisDashboard:
                    self.colors['text_primary'], 2)
         
         # Instrucciones
-        instruction = "Por favor, mantenga expresion neutral"
+        instruction = "Por favor, mantenga expresión neutral"
         text_size = cv2.getTextSize(instruction, self.fonts['small'],
                                    self.font_scales['small'], 1)[0]
         inst_x = panel_x + (panel_width - text_size[0]) // 2
@@ -680,7 +722,7 @@ class AnalysisDashboard:
     
     def _get_indicator_color(self, indicator_name, value):
         """Obtiene color específico para cada indicador"""
-        if indicator_name == 'Estres':
+        if indicator_name == 'Estrés':
             return self._get_value_color(value, inverse=False)
         elif indicator_name == 'Fatiga':
             return self._get_value_color(value, inverse=False)
@@ -691,7 +733,7 @@ class AnalysisDashboard:
                 return self.colors['warning']
             else:
                 return self.colors['danger']
-        elif indicator_name == 'Anomalias':
+        elif indicator_name == 'Anomalías':
             return self._get_value_color(value, inverse=False)
         else:
             return self.colors['text_secondary']

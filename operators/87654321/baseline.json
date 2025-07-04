@@ -1,0 +1,41 @@
+{
+  "operator_id": "87654321",
+  "operator_name": "María García",
+  "calibration_info": {
+    "first_calibration": "2025-07-04T16:56:18.374369",
+    "last_calibration": "2025-07-04T16:56:18.374369",
+    "total_calibrations": 1,
+    "samples_collected": 336
+  },
+  "facial_metrics": {
+    "eye_measurements": {
+      "eye_openness_avg": 0.3001939842295,
+      "eye_openness_std": 0.018169652267873895,
+      "blink_rate_per_minute": 0.0
+    },
+    "eyebrow_measurements": {
+      "eyebrow_distance_avg": 0.13596396155219356,
+      "eyebrow_distance_std": 0.004887993592229744
+    },
+    "mouth_measurements": {
+      "mouth_ratio_avg": 4.030725216621498,
+      "mouth_ratio_std": 0.3854736585013663
+    },
+    "face_structure": {
+      "face_width_avg": 272.0561721555612,
+      "jaw_tension_avg": 0.059313130219605124
+    }
+  },
+  "thresholds": {
+    "fatigue": {
+      "microsleep_threshold": 0.18011639053769998,
+      "severe_fatigue_threshold": 0.1200775936918,
+      "blink_duration_threshold": 0.3
+    },
+    "stress": {
+      "high_tension_threshold": 0.09517477308653549,
+      "movement_threshold": 0.05,
+      "jaw_tension_threshold": 0.7
+    }
+  }
+}
