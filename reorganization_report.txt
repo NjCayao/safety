@@ -41,3 +41,15 @@ safety_system/
 │   └── logs/
 ├── main_system.py          # Sistema principal
 └── main_system_wrapper.py  # Sistema con sincronización
+
+
+
+core/analysis/
+├── integrated_analysis_system.py   → 🧠 CEREBRO: Coordina todo
+├── calibration_manager.py         → 📏 Calibra cada operador (30 seg)
+├── fatigue_detector.py           → 😴 Detecta fatiga/microsueños
+├── stress_analyzer.py            → 😰 Detecta estrés/tensión
+├── pulse_estimator.py           → ❤️  Mide pulso sin contacto
+├── emotion_analyzer.py          → 😊 Detecta 7 emociones
+├── anomaly_detector.py          → ⚠️  Detecta intoxicación/problemas
+└── analysis_dashboard.py        → 📺 Panel visual (solo si hay pantalla)

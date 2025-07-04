@@ -268,7 +268,7 @@ class AnalysisDashboard:
         
         # Fatiga
         if 'fatigue' in data:
-            fatigue_score = data['fatigue']['fatigue_score']
+            fatigue_score = data['fatigue']['fatigue_percentage']
             indicators.append(('Fatiga', fatigue_score, '%'))
             self.fatigue_history.append({'time': time.time(), 'value': fatigue_score})
         
@@ -536,6 +536,84 @@ class AnalysisDashboard:
                 self.colors['divider'], 1)
         
         return y + 15
+    
+    def draw_calibration_progress(self, frame, progress, operator_name):
+        """Dibuja el progreso de calibración"""
+        h, w = frame.shape[:2]
+        
+        # Crear overlay oscuro
+        overlay = frame.copy()
+        cv2.rectangle(overlay, (0, 0), (w, h), (0, 0, 0), -1)
+        cv2.addWeighted(overlay, 0.7, frame, 0.3, 0, frame)
+        
+        # Panel central
+        panel_width = 400
+        panel_height = 200
+        panel_x = (w - panel_width) // 2
+        panel_y = (h - panel_height) // 2
+        
+        # Fondo del panel
+        cv2.rectangle(frame, (panel_x, panel_y), 
+                     (panel_x + panel_width, panel_y + panel_height),
+                     (40, 40, 40), -1)
+        cv2.rectangle(frame, (panel_x, panel_y),
+                     (panel_x + panel_width, panel_y + panel_height),
+                     (100, 100, 100), 2)
+        
+        # Título
+        title = "CALIBRACION EN PROGRESO"
+        text_size = cv2.getTextSize(title, self.fonts['title'], 
+                                   self.font_scales['title'], 2)[0]
+        title_x = panel_x + (panel_width - text_size[0]) // 2
+        cv2.putText(frame, title, (title_x, panel_y + 40),
+                   self.fonts['title'], self.font_scales['title'],
+                   self.colors['accent'], 2)
+        
+        # Nombre del operador
+        op_text = f"Operador: {operator_name}"
+        text_size = cv2.getTextSize(op_text, self.fonts['body'], 
+                                   self.font_scales['body'], 1)[0]
+        op_x = panel_x + (panel_width - text_size[0]) // 2
+        cv2.putText(frame, op_text, (op_x, panel_y + 70),
+                   self.fonts['body'], self.font_scales['body'],
+                   self.colors['text_primary'], 1)
+        
+        # Barra de progreso
+        bar_x = panel_x + 50
+        bar_y = panel_y + 100
+        bar_width = panel_width - 100
+        bar_height = 30
+        
+        # Fondo de la barra
+        cv2.rectangle(frame, (bar_x, bar_y),
+                     (bar_x + bar_width, bar_y + bar_height),
+                     (50, 50, 50), -1)
+        
+        # Progreso
+        progress_width = int(bar_width * (progress / 100))
+        cv2.rectangle(frame, (bar_x, bar_y),
+                     (bar_x + progress_width, bar_y + bar_height),
+                     self.colors['accent'], -1)
+        
+        # Porcentaje
+        percent_text = f"{progress}%"
+        text_size = cv2.getTextSize(percent_text, self.fonts['body'],
+                                   self.font_scales['body'], 2)[0]
+        percent_x = bar_x + (bar_width - text_size[0]) // 2
+        cv2.putText(frame, percent_text, (percent_x, bar_y + bar_height - 8),
+                   self.fonts['body'], self.font_scales['body'],
+                   self.colors['text_primary'], 2)
+        
+        # Instrucciones
+        instruction = "Por favor, mantenga expresion neutral"
+        text_size = cv2.getTextSize(instruction, self.fonts['small'],
+                                   self.font_scales['small'], 1)[0]
+        inst_x = panel_x + (panel_width - text_size[0]) // 2
+        cv2.putText(frame, instruction, (inst_x, panel_y + 160),
+                   self.fonts['small'], self.font_scales['small'],
+                   self.colors['text_secondary'], 1)
+        
+        return frame
                 
         
     def _draw_mode_indicator(self, frame, x, y):
@@ -544,8 +622,8 @@ class AnalysisDashboard:
         mode_color = (0, 150, 255) if self.is_night_mode else (255, 200, 0)
         
         cv2.putText(frame, mode_text, (x + 10, y),
-                self.fonts['small'], self.font_scales['small'],
-                mode_color, 1)
+                   self.fonts['small'], self.font_scales['small'],
+                   mode_color, 1)
     
     def _draw_score_bar(self, frame, x, y, score, width, color):
         """Dibuja una barra de puntuación"""
@@ -630,41 +708,37 @@ class AnalysisDashboard:
             self.colors['background'] = (0, 0, 0)
             self.colors['graph_bg'] = (50, 50, 50)
     
-    def get_compact_view(self, analysis_data):
-        """
-        Genera una vista compacta de los datos para logging o display mínimo.
-        
-        Returns:
-            dict: Resumen compacto de métricas clave
-        """
-        compact = {
-            'timestamp': time.time(),
-            'overall_status': 'UNKNOWN',
-            'key_metrics': {},
-            'active_alerts': 0
+    def get_config(self):
+        """Obtiene la configuración actual del dashboard"""
+        return {
+            'panel_width': self.panel_width,
+            'position': self.position,
+            'cache_enabled': self.cache_enabled,
+            'history_length': self.history_length,
+            'is_night_mode': self.is_night_mode
         }
-        
-        if 'overall_assessment' in analysis_data:
-            compact['overall_status'] = analysis_data['overall_assessment'].get('status', 'UNKNOWN')
-        
-        # Métricas clave
-        if 'emotion' in analysis_data:
-            compact['key_metrics']['emotion'] = analysis_data['emotion'].get('dominant_emotion', 'neutral')
-            compact['key_metrics']['wellbeing'] = analysis_data['emotion'].get('wellbeing', 0)
-        
-        if 'stress' in analysis_data:
-            compact['key_metrics']['stress'] = analysis_data['stress'].get('stress_level', 0)
-        
-        if 'fatigue' in analysis_data:
-            compact['key_metrics']['fatigue'] = analysis_data['fatigue'].get('fatigue_score', 0)
-        
-        if 'pulse' in analysis_data and analysis_data['pulse'].get('is_valid'):
-            compact['key_metrics']['pulse'] = analysis_data['pulse'].get('bpm', 0)
-        
-        if 'alerts' in analysis_data:
-            compact['active_alerts'] = len(analysis_data['alerts'])
-        
-        return compact
+    
+    def update_config(self, config):
+        """Actualiza la configuración del dashboard"""
+        if 'panel_width' in config:
+            self.panel_width = config['panel_width']
+        if 'position' in config:
+            self.position = config['position']
+        if 'cache_enabled' in config:
+            self.cache_enabled = config['cache_enabled']
+        if 'history_length' in config:
+            self.history_length = config['history_length']
+            # Redimensionar historiales
+            self._resize_histories(config['history_length'])
+    
+    def _resize_histories(self, new_length):
+        """Redimensiona los historiales de datos"""
+        self.history_length = new_length
+        # Crear nuevos deques con el nuevo tamaño
+        self.emotion_history = deque(self.emotion_history, maxlen=new_length)
+        self.stress_history = deque(self.stress_history, maxlen=new_length)
+        self.fatigue_history = deque(self.fatigue_history, maxlen=new_length)
+        self.pulse_history = deque(self.pulse_history, maxlen=new_length)
     
     def export_metrics(self):
         """Exporta métricas históricas para análisis posterior"""
