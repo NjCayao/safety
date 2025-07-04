@@ -8,14 +8,16 @@ import cv2
 import numpy as np
 from collections import deque
 import logging
+import time
 
 # Importar los analizadores específicos
 from .emotion_analyzer import EmotionAnalyzer
 from .stress_analyzer import StressAnalyzer
-from .advanced_fatigue_analyzer import AdvancedFatigueAnalyzer
+from .fatigue_stress_monitor import FatigueStressMonitor
 from .pulse_estimator import PulseEstimator
 from .anomaly_detector import AnomalyDetector
 from .analysis_dashboard import AnalysisDashboard
+
 
 # Versión del módulo
 __version__ = "1.0.0"
@@ -24,10 +26,10 @@ __version__ = "1.0.0"
 __all__ = [
     'EmotionAnalyzer',
     'StressAnalyzer', 
-    'AdvancedFatigueAnalyzer',
+    'FatigueStressMonitor',
     'PulseEstimator',
     'AnomalyDetector',
-    'AnalysisDashboard',
+    'AnalysisDashboard',    
     'BaseAnalyzer',
     'IntegratedAnalysisSystem'
 ]
@@ -186,8 +188,10 @@ class IntegratedAnalysisSystem:
         # Inicializar analizadores
         self.emotion_analyzer = EmotionAnalyzer()
         self.stress_analyzer = StressAnalyzer()
-        self.fatigue_analyzer = AdvancedFatigueAnalyzer()
-        
+        self.fatigue_monitor = FatigueStressMonitor()
+        self.anomaly_detector = AnomalyDetector()  # Agregar detector de anomalías
+        self.pulse_estimator = PulseEstimator()    # Agregar estimador de pulso
+            
         # Estado general
         self.operator_profile = {
             'emotional_state': 'neutral',
@@ -214,13 +218,31 @@ class IntegratedAnalysisSystem:
         # Análisis individual
         emotion_result = self.emotion_analyzer.analyze(frame, face_landmarks)
         stress_result = self.stress_analyzer.analyze(frame, face_landmarks)
-        fatigue_result = self.fatigue_analyzer.analyze(frame, face_landmarks, face_location)
+        
+        # Para fatiga, usar el monitor simple
+        fatigue_info = {'microsleep_count': 0}  # Simulado por ahora
+        fatigue_monitor_result = self.fatigue_monitor.update(frame, face_landmarks, fatigue_info)
+        
+        # Convertir resultado del monitor a formato esperado
+        fatigue_result = {
+            'fatigue_score': fatigue_monitor_result['fatigue_level'],
+            'fatigue_level': fatigue_monitor_result['fatigue_category'],
+            'recommendations': self.fatigue_monitor.get_recommendations()
+        }
+        
+        # Análisis de anomalías
+        anomaly_result = self.anomaly_detector.analyze(frame, face_landmarks, emotion_result)
+        
+        # Análisis de pulso
+        pulse_result = self.pulse_estimator.process_frame(frame, face_landmarks)
         
         # Combinar resultados
         integrated_result = {
             'emotion': emotion_result,
             'stress': stress_result,
             'fatigue': fatigue_result,
+            'anomaly': anomaly_result,
+            'pulse': pulse_result,
             'overall_assessment': self._calculate_overall_assessment(
                 emotion_result, stress_result, fatigue_result
             ),
@@ -345,7 +367,7 @@ class IntegratedAnalysisSystem:
     
     def draw_integrated_panel(self, frame):
         """
-        Dibuja panel integrado con toda la información.
+        Dibuja panel integrado completo con TODOS los análisis.
         
         Args:
             frame: Frame donde dibujar
@@ -353,114 +375,13 @@ class IntegratedAnalysisSystem:
         Returns:
             frame: Frame con panel dibujado
         """
-        h, w = frame.shape[:2]
-        panel_width = 320
-        panel_x = w - panel_width - 10
-        
-        # Crear fondo semi-transparente
-        overlay = frame.copy()
-        cv2.rectangle(overlay, (panel_x, 10), (w-10, h-10), (0, 0, 0), -1)
-        cv2.addWeighted(overlay, 0.7, frame, 0.3, 0, frame)
-        
-        # Título principal
-        cv2.putText(frame, "=== ANALISIS INTEGRADO ===", 
-                   (panel_x + 10, 35),
-                   cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
-        
         if self.analysis_history:
             latest = self.analysis_history[-1]
-            
-            # Panel de emociones (compacto)
-            y = 70
-            cv2.putText(frame, "ESTADO EMOCIONAL", (panel_x + 10, y),
-                       cv2.FONT_HERSHEY_SIMPLEX, 0.5, (200, 200, 200), 1)
-            y += 25
-            
-            # Mostrar emoción dominante
-            emotion = latest['emotion']['dominant_emotion']
-            wellbeing = latest['emotion']['wellbeing']
-            cv2.putText(frame, f"{emotion.upper()} | Bienestar: {wellbeing}%",
-                       (panel_x + 20, y),
-                       cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 255), 2)
-            
-            # Separador
-            y += 30
-            cv2.line(frame, (panel_x + 20, y), (w - 30, y), (100, 100, 100), 1)
-            
-            # Indicadores críticos
-            y += 25
-            cv2.putText(frame, "INDICADORES CRITICOS", (panel_x + 10, y),
-                       cv2.FONT_HERSHEY_SIMPLEX, 0.5, (200, 200, 200), 1)
-            y += 30
-            
-            # Estrés
-            stress_level = latest['stress']['stress_level']
-            stress_color = (0, 255, 0) if stress_level < 30 else (0, 165, 255) if stress_level < 60 else (0, 0, 255)
-            cv2.putText(frame, f"Estres: {stress_level}%", (panel_x + 20, y),
-                       cv2.FONT_HERSHEY_SIMPLEX, 0.6, stress_color, 2)
-            self._draw_mini_bar(frame, panel_x + 130, y-10, stress_level, stress_color)
-            
-            # Fatiga
-            y += 30
-            fatigue_level = latest['fatigue']['fatigue_score']
-            fatigue_color = (0, 255, 0) if fatigue_level < 30 else (0, 165, 255) if fatigue_level < 60 else (0, 0, 255)
-            cv2.putText(frame, f"Fatiga: {fatigue_level}%", (panel_x + 20, y),
-                       cv2.FONT_HERSHEY_SIMPLEX, 0.6, fatigue_color, 2)
-            self._draw_mini_bar(frame, panel_x + 130, y-10, fatigue_level, fatigue_color)
-            
-            # Evaluación general
-            y += 40
-            cv2.line(frame, (panel_x + 20, y), (w - 30, y), (100, 100, 100), 1)
-            y += 25
-            
-            overall = latest['overall_assessment']
-            cv2.putText(frame, "CONDICION GENERAL:", (panel_x + 10, y),
-                       cv2.FONT_HERSHEY_SIMPLEX, 0.5, (200, 200, 200), 1)
-            y += 30
-            cv2.putText(frame, overall['status'], (panel_x + 20, y),
-                       cv2.FONT_HERSHEY_SIMPLEX, 0.8, overall['color'], 2)
-            
-            # Alertas activas
-            if latest['alerts']:
-                y += 40
-                cv2.line(frame, (panel_x + 20, y), (w - 30, y), (100, 100, 100), 1)
-                y += 25
-                cv2.putText(frame, "⚠️ ALERTAS ACTIVAS:", (panel_x + 10, y),
-                           cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 165, 255), 1)
-                y += 25
-                
-                for alert in latest['alerts'][:2]:  # Máximo 2 alertas
-                    alert_color = (0, 0, 255) if alert['severity'] == 'critical' else (0, 165, 255)
-                    cv2.putText(frame, f"• {alert['message'][:30]}...", 
-                               (panel_x + 20, y),
-                               cv2.FONT_HERSHEY_SIMPLEX, 0.4, alert_color, 1)
-                    y += 20
-            
-            # Recomendaciones
-            if latest['recommendations']:
-                y += 20
-                cv2.line(frame, (panel_x + 20, y), (w - 30, y), (100, 100, 100), 1)
-                y += 25
-                cv2.putText(frame, "💡 RECOMENDACIONES:", (panel_x + 10, y),
-                           cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
-                y += 25
-                
-                for rec in latest['recommendations'][:2]:  # Máximo 2
-                    # Dividir texto largo en líneas
-                    words = rec.split()
-                    line = ""
-                    for word in words:
-                        if len(line + word) < 35:
-                            line += word + " "
-                        else:
-                            cv2.putText(frame, f"• {line}", (panel_x + 20, y),
-                                       cv2.FONT_HERSHEY_SIMPLEX, 0.4, (255, 255, 255), 1)
-                            y += 18
-                            line = word + " "
-                    if line:
-                        cv2.putText(frame, f"• {line}", (panel_x + 20, y),
-                                   cv2.FONT_HERSHEY_SIMPLEX, 0.4, (255, 255, 255), 1)
-                        y += 25
+            # Crear instancia temporal de AnalysisDashboard si no existe
+            if not hasattr(self, 'dashboard'):
+                self.dashboard = AnalysisDashboard()
+            # Usar el dashboard mejorado
+            return self.dashboard.render(frame, latest)
         
         return frame
     
@@ -495,7 +416,7 @@ class IntegratedAnalysisSystem:
         """Reinicia el sistema de análisis"""
         self.emotion_analyzer.reset()
         self.stress_analyzer.reset()
-        self.fatigue_analyzer.reset()
+        self.fatigue_monitor.reset()
         self.analysis_history.clear()
         self.operator_profile = {
             'emotional_state': 'neutral',

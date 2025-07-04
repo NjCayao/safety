@@ -11,7 +11,7 @@ import time
 import logging
 
 class AnalysisDashboard:
-    def __init__(self, panel_width=350, position='right'):
+    def __init__(self, panel_width=400, position='right'):
         """
         Inicializa el dashboard de análisis.
         
@@ -69,6 +69,7 @@ class AnalysisDashboard:
         
         # Estado del modo
         self.is_night_mode = False
+        self._current_anomaly_data = None
         
     def render(self, frame, analysis_data):
         """
@@ -81,6 +82,9 @@ class AnalysisDashboard:
         Returns:
             frame: Frame con dashboard dibujado
         """
+        # Guardar datos de anomalías para usar en alertas
+        self._current_anomaly_data = analysis_data.get('anomaly', {})
+        
         h, w = frame.shape[:2]
         
         # Determinar posición del panel
@@ -116,6 +120,10 @@ class AnalysisDashboard:
         # Sección de indicadores vitales
         y_offset = self._draw_vital_indicators(frame, panel_x, y_offset, analysis_data)
         
+        # Sección de anomalías
+        y_offset = self._draw_anomaly_section(frame, panel_x, y_offset, 
+                                            analysis_data.get('anomaly', {}))
+        
         # Gráfico de tendencias
         y_offset = self._draw_trend_graph(frame, panel_x, y_offset)
         
@@ -134,7 +142,7 @@ class AnalysisDashboard:
     
     def _draw_main_title(self, frame, x, y, data):
         """Dibuja el título principal del dashboard"""
-        title = "═══ ANÁLISIS INTEGRADO ═══"
+        title = "SISTEMA DE ANALISIS INTEGRADO"
         
         # Calcular ancho del texto para centrarlo
         text_size = cv2.getTextSize(title, self.fonts['title'], 
@@ -156,7 +164,7 @@ class AnalysisDashboard:
             color = assessment.get('color', self.colors['text_secondary'])
             
             # Título de sección
-            cv2.putText(frame, "CONDICIÓN GENERAL", (x + 10, y),
+            cv2.putText(frame, "CONDICION GENERAL", (x + 10, y),
                        self.fonts['subtitle'], self.font_scales['subtitle'],
                        self.colors['text_secondary'], 1)
             
@@ -192,13 +200,6 @@ class AnalysisDashboard:
             # Emoción dominante
             dominant = emotion_data.get('dominant_emotion', 'neutral')
             wellbeing = emotion_data.get('wellbeing', 50)
-            
-            # Emoji mapping
-            emotion_emojis = {
-                'alegria': '😊', 'tristeza': '😢', 'enojo': '😠',
-                'neutral': '😐', 'frustracion': '😤', 'concentracion': '🤔',
-                'relajacion': '😌', 'desanimo': '😔'
-            }
             
             emotion_text = f"{dominant.upper()}"
             cv2.putText(frame, emotion_text, (x + 20, y),
@@ -262,7 +263,7 @@ class AnalysisDashboard:
         # Estrés
         if 'stress' in data:
             stress_level = data['stress']['stress_level']
-            indicators.append(('Estrés', stress_level, '%'))
+            indicators.append(('Estres', stress_level, '%'))
             self.stress_history.append({'time': time.time(), 'value': stress_level})
         
         # Fatiga
@@ -277,10 +278,8 @@ class AnalysisDashboard:
             indicators.append(('Pulso', pulse_bpm, 'BPM'))
             self.pulse_history.append({'time': time.time(), 'value': pulse_bpm})
         
-        # Anomalías
-        if 'anomaly' in data:
-            anomaly_score = data['anomaly']['anomaly_score']
-            indicators.append(('Anomalías', anomaly_score, '%'))
+        
+        # Anomalías (ahora incluido en vital indicators)
         
         # Dibujar indicadores en formato grid
         for i, (name, value, unit) in enumerate(indicators):
@@ -347,7 +346,7 @@ class AnalysisDashboard:
         # Leyenda
         legend_y = graph_y + graph_height + 10
         legends = [
-            ('Estrés', (0, 0, 255)),
+            ('Estres', (0, 0, 255)),
             ('Fatiga', (0, 165, 255)),
             ('Bienestar', (0, 255, 0))
         ]
@@ -392,36 +391,46 @@ class AnalysisDashboard:
     
     def _draw_alerts_section(self, frame, x, y, alerts):
         """Dibuja la sección de alertas activas"""
-        if not alerts:
+        # Recolectar todas las alertas (incluyendo anomalías)
+        all_alerts = list(alerts) if alerts else []
+        
+        # Si hay datos de anomalías con alertas, agregarlas
+        if hasattr(self, '_current_anomaly_data') and self._current_anomaly_data:
+            if 'alerts' in self._current_anomaly_data:
+                all_alerts.extend(self._current_anomaly_data['alerts'])
+        
+        if not all_alerts:
             return y
         
-        cv2.putText(frame, "⚠️ ALERTAS ACTIVAS", (x + 10, y),
+        cv2.putText(frame, "ALERTAS ACTIVAS", (x + 10, y),
                    self.fonts['subtitle'], self.font_scales['subtitle'],
                    self.colors['warning'], 1)
         
         y += 25
         
-        # Mostrar máximo 3 alertas
-        for alert in alerts[:3]:
-            severity = alert.get('severity', 'medium')
+        # Mostrar máximo 4 alertas
+        for alert in all_alerts[:4]:
+            severity = alert.get('severity', alert.get('level', 'medium'))
             message = alert.get('message', '')
             
             # Color según severidad
-            if severity == 'critical':
+            if severity in ['critical', 'CRITICAL']:
                 color = self.colors['danger']
-            elif severity == 'high':
+            elif severity in ['high', 'HIGH']:
                 color = self.colors['warning']
             else:
                 color = self.colors['text_secondary']
             
-            # Icono de alerta
-            cv2.circle(frame, (x + 25, y - 3), 3, color, -1)
+            # Punto de alerta en lugar de círculo
+            cv2.putText(frame, "[!]", (x + 20, y),
+                       self.fonts['small'], self.font_scales['small'],
+                       color, 1)
             
             # Mensaje (dividir si es muy largo)
             if len(message) > 35:
                 message = message[:32] + "..."
             
-            cv2.putText(frame, message, (x + 35, y),
+            cv2.putText(frame, message, (x + 40, y),
                        self.fonts['small'], self.font_scales['small'],
                        color, 1)
             
@@ -438,7 +447,7 @@ class AnalysisDashboard:
         if not recommendations:
             return y
         
-        cv2.putText(frame, "💡 RECOMENDACIONES", (x + 10, y),
+        cv2.putText(frame, "RECOMENDACIONES", (x + 10, y),
                    self.fonts['subtitle'], self.font_scales['subtitle'],
                    self.colors['text_primary'], 1)
         
@@ -463,7 +472,7 @@ class AnalysisDashboard:
             
             # Dibujar cada línea
             for line in lines[:2]:  # Máximo 2 líneas por recomendación
-                cv2.putText(frame, f"• {line}", (x + 20, y),
+                cv2.putText(frame, f"* {line}", (x + 20, y),
                            self.fonts['small'], self.font_scales['small'],
                            self.colors['text_secondary'], 1)
                 y += 15
@@ -472,14 +481,71 @@ class AnalysisDashboard:
         
         return y
     
+    def _draw_anomaly_section(self, frame, x, y, anomaly_data):
+        """Dibuja la sección de detección de anomalías"""
+        cv2.putText(frame, "DETECCION DE ANOMALIAS", (x + 10, y),
+                   self.fonts['subtitle'], self.font_scales['subtitle'],
+                   self.colors['text_secondary'], 1)
+        
+        y += 25
+        
+        if anomaly_data and 'indicators' in anomaly_data:
+            indicators = anomaly_data['indicators']
+            
+            # Intoxicación
+            if 'intoxication' in indicators:
+                intox = indicators['intoxication']
+                level = intox['level']
+                status = intox['status']
+                color = self._get_value_color(level, inverse=False)
+                
+                cv2.putText(frame, f"Intoxicacion: {level}% [{status}]", (x + 20, y),
+                           self.fonts['body'], self.font_scales['body'],
+                           color, 1)
+                self._draw_mini_bar(frame, x + 180, y - 8, level, 100)
+                y += 20
+            
+            # Riesgo neurológico
+            if 'neurological' in indicators:
+                neuro = indicators['neurological']
+                level = neuro['level']
+                status = neuro['status']
+                color = self._get_value_color(level, inverse=False)
+                
+                cv2.putText(frame, f"Riesgo Neurol.: {level}% [{status}]", (x + 20, y),
+                           self.fonts['body'], self.font_scales['body'],
+                           color, 1)
+                self._draw_mini_bar(frame, x + 180, y - 8, level, 100)
+                y += 20
+            
+            # Comportamiento errático
+            if 'erratic' in indicators:
+                erratic = indicators['erratic']
+                level = erratic['level']
+                status = erratic['status']
+                color = self._get_value_color(level, inverse=False)
+                
+                cv2.putText(frame, f"Comp. Erratico: {level}% [{status}]", (x + 20, y),
+                           self.fonts['body'], self.font_scales['body'],
+                           color, 1)
+                self._draw_mini_bar(frame, x + 180, y - 8, level, 100)
+                y += 20
+        
+        y += 10
+        cv2.line(frame, (x + 20, y), (x + self.panel_width - 20, y),
+                self.colors['divider'], 1)
+        
+        return y + 15
+                
+        
     def _draw_mode_indicator(self, frame, x, y):
         """Dibuja indicador del modo actual"""
-        mode_text = "🌙 MODO NOCTURNO" if self.is_night_mode else "☀️ MODO DIURNO"
+        mode_text = "MODO NOCTURNO" if self.is_night_mode else "MODO DIURNO"
         mode_color = (0, 150, 255) if self.is_night_mode else (255, 200, 0)
         
         cv2.putText(frame, mode_text, (x + 10, y),
-                   self.fonts['small'], self.font_scales['small'],
-                   mode_color, 1)
+                self.fonts['small'], self.font_scales['small'],
+                mode_color, 1)
     
     def _draw_score_bar(self, frame, x, y, score, width, color):
         """Dibuja una barra de puntuación"""
@@ -536,7 +602,7 @@ class AnalysisDashboard:
     
     def _get_indicator_color(self, indicator_name, value):
         """Obtiene color específico para cada indicador"""
-        if indicator_name == 'Estrés':
+        if indicator_name == 'Estres':
             return self._get_value_color(value, inverse=False)
         elif indicator_name == 'Fatiga':
             return self._get_value_color(value, inverse=False)
@@ -547,7 +613,7 @@ class AnalysisDashboard:
                 return self.colors['warning']
             else:
                 return self.colors['danger']
-        elif indicator_name == 'Anomalías':
+        elif indicator_name == 'Anomalias':
             return self._get_value_color(value, inverse=False)
         else:
             return self.colors['text_secondary']

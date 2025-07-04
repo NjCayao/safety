@@ -4,20 +4,37 @@ Script de Prueba de Módulos de Análisis con Cámara Real
 Prueba los módulos usando detección facial real desde la cámara.
 """
 
+print("🔍 Iniciando test...")
+
 import cv2
 import numpy as np
 import sys
 import os
 import time
 import logging
-import dlib
-import face_recognition
+
+print("✅ Imports básicos completados")
+
+try:
+    import dlib
+    print("✅ dlib importado")
+except ImportError as e:
+    print(f"❌ Error importando dlib: {e}")
+    sys.exit(1)
+
+try:
+    import face_recognition
+    print("✅ face_recognition importado")
+except ImportError as e:
+    print(f"❌ Error importando face_recognition: {e}")
+    sys.exit(1)
 
 # Agregar el directorio actual al path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 # Importar los módulos a probar
 try:
+    print("📦 Intentando importar módulos de análisis...")
     from core.analysis import (
         EmotionAnalyzer,
         StressAnalyzer,
@@ -30,7 +47,11 @@ try:
     print("✅ Todos los módulos de análisis importados correctamente")
 except ImportError as e:
     print(f"❌ Error importando módulos de análisis: {e}")
+    import traceback
+    traceback.print_exc()
     sys.exit(1)
+
+print("✅ Todas las importaciones completadas")
 
 # Configurar logging
 logging.basicConfig(level=logging.INFO)
@@ -50,7 +71,17 @@ class CameraAnalysisTester:
         
         if not self.cap.isOpened():
             print("❌ Error: No se pudo abrir la cámara")
-            sys.exit(1)
+            # Intentar otros índices
+            for i in range(1, 5):
+                print(f"Intentando cámara en índice {i}...")
+                self.cap = cv2.VideoCapture(i)
+                if self.cap.isOpened():
+                    print(f"✅ Cámara encontrada en índice {i}")
+                    break
+            
+            if not self.cap.isOpened():
+                print("❌ No se encontró ninguna cámara")
+                sys.exit(1)
         
         # Configurar resolución
         self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
@@ -66,6 +97,7 @@ class CameraAnalysisTester:
             if not os.path.exists(model_path):
                 print(f"❌ Error: No se encuentra el modelo en {model_path}")
                 print("📥 Descarga el modelo de: http://dlib.net/files/shape_predictor_68_face_landmarks.dat.bz2")
+                print("   y descomprímelo en la carpeta assets/models/")
                 sys.exit(1)
             
             self.face_detector = dlib.get_frontal_face_detector()
@@ -228,7 +260,7 @@ class CameraAnalysisTester:
             # Mostrar recomendaciones si hay alertas
             if self.fatigue_stress_monitor.should_alert():
                 recommendations = self.fatigue_stress_monitor.get_recommendations()
-                y = 50
+                y = 150
                 for rec in recommendations:
                     cv2.putText(frame, rec, (10, y),
                                cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 165, 255), 2)
@@ -311,17 +343,6 @@ def main():
     print("🚀 Sistema de Prueba de Análisis Facial con Cámara Real")
     print("Versión 1.0")
     print()
-    
-    # Verificar dependencias
-    try:
-        import dlib
-        import face_recognition
-        print("✅ Dependencias verificadas")
-    except ImportError as e:
-        print(f"❌ Error: Falta instalar dependencias: {e}")
-        print("\nInstala con:")
-        print("  pip install dlib face_recognition")
-        return
     
     # Crear y ejecutar tester
     try:
