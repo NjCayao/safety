@@ -121,11 +121,11 @@ class IntegratedAnalysisSystem:
             'erratic_duration': 10
         }
         
-        # NUEVO: Control de reportes
+        #  Control de reportes
         self.last_report_time = {}
         self.condition_start_times = {}
         
-        # NUEVO: Frame actual para reportes
+        #  Frame actual para reportes
         self._current_frame = None
     
     def analyze_operator(self, frame, face_landmarks, face_location, operator_info=None):
@@ -141,11 +141,8 @@ class IntegratedAnalysisSystem:
         Returns:
             tuple: (frame_con_dashboard, resultados_análisis)
         """
-        # NUEVO: Guardar frame actual para reportes
+        #  Guardar frame actual para reportes
         self._current_frame = frame
-        
-        # NUEVO: Verificar condiciones para reportes
-        self._check_report_conditions(analysis_results)
 
         # Verificar si hay operador
         if not operator_info:
@@ -231,6 +228,9 @@ class IntegratedAnalysisSystem:
         # Renderizar dashboard si no es headless
         if self.dashboard and not self.headless:
             frame = self.dashboard.render(frame, analysis_results)
+
+        # NUEVO: Verificar condiciones para reportes DESPUÉS de tener los resultados
+        self._check_report_conditions(analysis_results)
         
         # Actualizar estadísticas
         self.stats['frames_analyzed'] += 1

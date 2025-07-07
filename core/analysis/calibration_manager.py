@@ -59,11 +59,24 @@ class CalibrationManager:
         self.current_operator_id = operator_id
         self.current_operator_name = operator_name
         
-        # Crear directorio del operador si no existe
+        # 1. Primero buscar analysis_baseline.json en baseline-json
+        analysis_baseline_path = os.path.join(self.operators_dir, "baseline-json", operator_id, "analysis_baseline.json")
+        
+        if os.path.exists(analysis_baseline_path):
+            try:
+                with open(analysis_baseline_path, 'r', encoding='utf-8') as f:
+                    self.current_baseline = json.load(f)
+                
+                self.logger.info(f"analysis_baseline.json cargado para {operator_name} ({operator_id})")
+                return True
+                
+            except Exception as e:
+                self.logger.error(f"Error cargando analysis_baseline: {e}")
+        
+        # 2. Si no existe, buscar baseline.json legacy en el directorio del operador
         operator_path = os.path.join(self.operators_dir, operator_id)
         os.makedirs(operator_path, exist_ok=True)
         
-        # Buscar baseline existente
         baseline_path = os.path.join(operator_path, "baseline.json")
         
         if os.path.exists(baseline_path):
@@ -79,13 +92,14 @@ class CalibrationManager:
                 if days_old > 30:
                     self.logger.warning(f"Baseline antiguo ({days_old} días) para {operator_name}")
                 
-                self.logger.info(f"Baseline cargado para {operator_name} ({operator_id})")
+                self.logger.info(f"Baseline legacy cargado para {operator_name} ({operator_id})")
                 return True
                 
             except Exception as e:
-                self.logger.error(f"Error cargando baseline: {e}")
-                
-        # No existe baseline, iniciar calibración
+                self.logger.error(f"Error cargando baseline legacy: {e}")
+        
+        # 3. Si no existe ningún baseline, iniciar calibración de 30 segundos
+        self.logger.info(f"No hay baselines previos, iniciando calibración para {operator_name}")
         self.start_calibration()
         return False
     

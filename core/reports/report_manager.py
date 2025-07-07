@@ -66,7 +66,7 @@ class ReportManager:
     
     def _create_directories(self):
         """Crea la estructura de directorios para reportes"""
-        modules = ['fatigue', 'behavior', 'distraction', 'yawn', 'general']
+        modules = ['fatigue', 'behavior', 'distraction', 'yawn', 'analysis', 'general']        
         
         for module in modules:
             module_dir = os.path.join(self.reports_dir, module)

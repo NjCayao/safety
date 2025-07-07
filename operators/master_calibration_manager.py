@@ -18,6 +18,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # Importar calibradores específicos cuando estén listos
 from core.fatigue.fatigue_calibration import FatigueCalibration
 from core.behavior.behavior_calibration import BehaviorCalibration
+from core.analysis.analysis_calibration import AnalysisCalibration
 # from core.distraction.distraction_calibration import DistractionCalibration
 # from core.yawn.yawn_calibration import YawnCalibration
 
@@ -43,6 +44,7 @@ class MasterCalibrationManager:
         self.calibrators = {
             'fatigue': FatigueCalibration(self.baseline_dir),
             'behavior': BehaviorCalibration(self.baseline_dir),
+            'analysis': AnalysisCalibration(self.baseline_dir),
             # 'distraction': DistractionCalibration(self.baseline_dir),
             # 'yawn': YawnCalibration(self.baseline_dir)
         }
@@ -454,6 +456,14 @@ class MasterCalibrationManager:
                 'face_areas': [m['face_area'] for m in all_metrics],
                 'nose_to_mouth': [m['nose_to_mouth'] for m in all_metrics],
                 'reference_landmarks': extracted_data.get('reference_landmarks', [])
+            }
+        
+        elif module_name == 'analysis':
+            # Para análisis integrado, enviar todas las métricas
+            return {
+                'metrics': all_metrics,
+                'operator_name': extracted_data.get('operator_name', 'Unknown'),
+                'timestamps': extracted_data.get('timestamps', [])
             }
         
         # Default: retornar todo
