@@ -1,0 +1,34 @@
+{
+  "id": "fatigue_session_summary_47469940_20250707044859",
+  "module": "fatigue",
+  "event_type": "session_summary",
+  "timestamp": "2025-07-07T04:48:59.289438",
+  "operator": {
+    "id": "47469940",
+    "name": "Operador Prueba"
+  },
+  "data": {
+    "session_start": 1751881664.57997,
+    "session_end": 1751881739.2894385,
+    "duration_seconds": 74.70946860313416,
+    "operators_monitored": [
+      "47469940"
+    ],
+    "total_detections": 383,
+    "total_microsleeps": 0,
+    "total_alerts": 0,
+    "detector_stats": {
+      "total_microsleeps": 0,
+      "total_blinks": 0,
+      "average_blink_rate": 0.0,
+      "analysis_duration": 73.75923156738281,
+      "recent_microsleeps": 0
+    },
+    "calibration_used": true
+  },
+  "metadata": {
+    "version": "1.0",
+    "generated_by": "ReportManager",
+    "environment": "production"
+  }
+}

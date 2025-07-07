@@ -1,0 +1,31 @@
+{
+  "id": "behavior_session_summary_47469940_20250707044859",
+  "module": "behavior",
+  "event_type": "session_summary",
+  "timestamp": "2025-07-07T04:48:59.291394",
+  "operator": {
+    "id": "47469940",
+    "name": "Operador Prueba"
+  },
+  "data": {
+    "session_start": 1751881666.5523827,
+    "session_end": 1751881739.2913942,
+    "duration_seconds": 72.73901152610779,
+    "operators_monitored": [
+      "47469940"
+    ],
+    "total_detections": 383,
+    "total_phone_alerts": 0,
+    "total_smoking_alerts": 0,
+    "behavior_summary": {
+      "phone_detection_rate": 0.0,
+      "smoking_detection_rate": 0.0
+    },
+    "calibration_used": true
+  },
+  "metadata": {
+    "version": "1.0",
+    "generated_by": "ReportManager",
+    "environment": "production"
+  }
+}

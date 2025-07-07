@@ -320,7 +320,7 @@ def main():
     required_files = [
         "core/analysis/__init__.py",
         "core/analysis/integrated_analysis_system.py",
-        "core/analysis/calibration_manager.py",
+        "core/analysis/analysis_calibration.py",
         "core/analysis/fatigue_detector.py",
         "core/analysis/stress_analyzer.py",
         "core/analysis/emotion_analyzer.py",

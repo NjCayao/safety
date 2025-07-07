@@ -6,7 +6,7 @@ Sistema integrado de análisis facial para detección de fatiga, estrés y anoma
 """
 
 # Importar en orden correcto para evitar dependencias circulares
-from .calibration_manager import CalibrationManager
+from .analysis_calibration import AnalysisCalibration  # CAMBIAR ESTA LÍNEA
 from .fatigue_detector import FatigueDetector
 from .stress_analyzer import StressAnalyzer
 from .pulse_estimator import PulseEstimator
@@ -18,7 +18,7 @@ from .analysis_dashboard import AnalysisDashboard
 from .integrated_analysis_system import IntegratedAnalysisSystem
 
 __all__ = [
-    'CalibrationManager',
+    'AnalysisCalibration',  # CAMBIAR ESTA LÍNEA
     'FatigueDetector',
     'StressAnalyzer', 
     'PulseEstimator',

@@ -1,0 +1,49 @@
+{
+  "operator_id": "47469940",
+  "calibration_info": {
+    "created_at": "2025-07-07T04:39:30.760141",
+    "photos_processed": 4,
+    "version": "2.0",
+    "source": "master_calibration"
+  },
+  "facial_metrics": {
+    "eye_measurements": {
+      "eye_openness_avg": 0.3465604445360368,
+      "eye_openness_std": 0.03678371094263717,
+      "eye_openness_min": 0.29962503609051405,
+      "eye_openness_max": 0.4025735082231022,
+      "blink_rate_per_minute": 15.0
+    },
+    "eyebrow_measurements": {
+      "eyebrow_distance_avg": 51.07968945760355,
+      "eyebrow_distance_std": 19.891933429153735
+    },
+    "mouth_measurements": {
+      "mouth_ratio_avg": 0.3572703325290784,
+      "mouth_ratio_std": 0.010913435299621311
+    },
+    "face_structure": {
+      "face_width_avg": 366.5,
+      "face_width_std": 139.43009000929462,
+      "jaw_tension_avg": 0.5
+    }
+  },
+  "thresholds": {
+    "fatigue": {
+      "microsleep_threshold": 0.20793626672162208,
+      "severe_fatigue_threshold": 0.13862417781441472,
+      "blink_duration_threshold": 0.3
+    },
+    "stress": {
+      "high_tension_threshold": 35.755782620322485,
+      "movement_threshold": 0.05,
+      "jaw_tension_threshold": 0.7
+    }
+  },
+  "environment_conditions": {
+    "lighting_average": 126.7197179930139,
+    "lighting_variation": 18.604177141556256,
+    "predominantly_dark": false
+  },
+  "quality_score": 0.77
+}

@@ -4,6 +4,7 @@ Sistema Integrado de Análisis - Versión Compatible
 Compatible con versiones anteriores de los módulos.
 """
 
+import os
 import time
 import logging
 
@@ -13,7 +14,7 @@ from .stress_analyzer import StressAnalyzer
 from .pulse_estimator import PulseEstimator
 from .emotion_analyzer import EmotionAnalyzer
 from .anomaly_detector import AnomalyDetector
-from .calibration_manager import CalibrationManager
+from .analysis_calibration import AnalysisCalibration
 from .analysis_dashboard import AnalysisDashboard
 
 class IntegratedAnalysisSystem:
@@ -30,7 +31,9 @@ class IntegratedAnalysisSystem:
         self.logger = logging.getLogger('IntegratedAnalysis')
         
         # Inicializar gestor de calibración
-        self.calibration_manager = CalibrationManager(operators_dir)
+        self.calibration_manager = AnalysisCalibration(
+            baseline_dir=os.path.join(operators_dir, "baseline-json")
+        )
         
         # Inicializar módulos de análisis con compatibilidad
         self.logger.info("Inicializando módulos de análisis...")
@@ -150,22 +153,7 @@ class IntegratedAnalysisSystem:
         
         # Verificar si cambió el operador
         if not self.current_operator or self.current_operator['id'] != operator_info['id']:
-            self._handle_operator_change(operator_info)
-        
-        # Si está calibrando
-        if self.calibration_manager.is_calibrating:
-            self.calibration_manager.add_calibration_sample(face_landmarks)
-            progress = self.calibration_manager.get_calibration_progress()
-            
-            # Mostrar progreso de calibración
-            if self.dashboard:
-                frame = self.dashboard.draw_calibration_progress(frame, progress, operator_info['name'])
-            
-            return frame, {
-                'status': 'calibrating',
-                'progress': progress,
-                'operator': operator_info
-            }       
+            self._handle_operator_change(operator_info)      
 
         # Análisis normal
         if not self.analysis_enabled:
@@ -268,8 +256,8 @@ class IntegratedAnalysisSystem:
         except:
             pass
         
-        # Cargar o crear baseline
-        self.is_calibrated = self.calibration_manager.load_or_create_baseline(
+        # Cargar baseline pregenerado
+        self.is_calibrated = self.calibration_manager.load_baseline(
             operator_info['id'],
             operator_info['name']
         )
@@ -278,17 +266,19 @@ class IntegratedAnalysisSystem:
         if self.is_calibrated:
             baseline = self.calibration_manager.get_current_baseline()
             
-            # Configurar cada módulo si tiene el método set_baseline
+            # Configurar cada módulo
             if hasattr(self.fatigue_detector, 'set_baseline'):
                 self.fatigue_detector.set_baseline(baseline)
                 
             if hasattr(self.stress_analyzer, 'set_baseline'):
                 self.stress_analyzer.set_baseline(baseline)
                 
+            if hasattr(self.emotion_analyzer, 'set_baseline'):
+                self.emotion_analyzer.set_baseline(baseline)
+                
             self.logger.info(f"Baseline cargado para {operator_info['name']}")
         else:
-            self.logger.info(f"Iniciando calibración para {operator_info['name']}")
-            self.stats['calibrations_completed'] += 1
+            self.logger.warning(f"No hay baseline para {operator_info['name']} - análisis con valores por defecto")
         
         # Limpiar historial
         self.analysis_history.clear()
@@ -553,13 +543,6 @@ class IntegratedAnalysisSystem:
         """Deshabilita el análisis temporalmente"""
         self.analysis_enabled = False
         self.logger.info("Análisis deshabilitado")
-    
-    def force_recalibration(self):
-        """Fuerza una recalibración del operador actual"""
-        if self.current_operator:
-            self.logger.info(f"Forzando recalibración para {self.current_operator['name']}")
-            return self.calibration_manager.force_recalibration()
-        return False
     
     def get_dashboard_config(self):
         """Obtiene la configuración actual del dashboard"""

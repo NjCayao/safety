@@ -459,10 +459,26 @@ class MasterCalibrationManager:
             }
         
         elif module_name == 'analysis':
-            # Para análisis integrado, enviar todas las métricas
+            # Para análisis integrado, enviar métricas específicas procesadas
             return {
+                # Métricas básicas
+                'ear_values': [m['avg_ear'] for m in all_metrics],
+                'left_ear_values': [m['left_ear'] for m in all_metrics],
+                'right_ear_values': [m['right_ear'] for m in all_metrics],
+                'mar_values': [m['mar'] for m in all_metrics],
+                'eyebrow_distances': [m['eyebrow_distance'] for m in all_metrics],
+                'face_widths': [m['face_width'] for m in all_metrics],
+                'face_heights': [m['face_height'] for m in all_metrics],
+                'light_levels': [m['light_level'] for m in all_metrics],
+                
+                # Métricas adicionales para análisis avanzado
+                'nose_to_mouth': [m['nose_to_mouth'] for m in all_metrics],
+                'eye_distances': [m['eye_distance'] for m in all_metrics],
+                'mouth_widths': [m['mouth_width'] for m in all_metrics],
+                'mouth_heights': [m['mouth_height'] for m in all_metrics],
+                
+                # Datos completos por si se necesitan
                 'metrics': all_metrics,
-                'operator_name': extracted_data.get('operator_name', 'Unknown'),
                 'timestamps': extracted_data.get('timestamps', [])
             }
         
