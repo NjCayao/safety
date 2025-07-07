@@ -657,25 +657,20 @@ class BehaviorDetectionModule:
         self.behavior_durations[behavior] = current_time - self.behavior_start_times[behavior]
         duration = self.behavior_durations[behavior]
         
-        # Alertas según duración (usando nombres de BD)
-        if duration >= self.config['phone_alert_threshold_1'] and not self.report_states["phone_3s"]:
-            alerts.append(("phone_3s", behavior, duration))
-            self.report_states["phone_3s"] = True
-
-            # Reproducir audio si está habilitado
-            if self.config['audio_enabled'] and not self.audio_states["phone_3s"]:
+        # CAMBIO: Solo generar alerta a los 7 segundos, no a los 3
+        # Alerta a los 3 segundos - SOLO para audio/visual, NO para reporte
+        if duration >= self.config['phone_alert_threshold_1'] and not self.audio_states["phone_3s"]:
+            # Solo reproducir audio de advertencia temprana, sin generar reporte
+            if self.config['audio_enabled']:
                 audio_file = self.audio_keys["phone_3s"]
-                # print(f"DEBUG: Intentando reproducir: {audio_file}")
-                # print(f"DEBUG: AlarmModule disponible: {self.alarm is not None}")
-                
                 try:
                     result = self.alarm.play_alarm_threaded(audio_file)
-                    # print(f"DEBUG: Resultado de reproducción: {result}")
                 except Exception as e:
                     print(f"ERROR reproduciendo audio: {e}")
-                    
-                self.audio_states["phone_3s"] = True
+            self.audio_states["phone_3s"] = True
+            # NO agregar alerta para reporte
         
+        # Alerta crítica a los 7 segundos - Esta SÍ genera reporte
         if duration >= self.config['phone_alert_threshold_2'] and not self.report_states["phone_7s"]:
             alerts.append(("phone_7s", behavior, duration))
             self.report_states["phone_7s"] = True

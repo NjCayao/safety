@@ -110,14 +110,22 @@ class IntegratedFatigueSystem:
         
         if thresholds.get('calibration_confidence', 0) > 0:
             self.is_calibrated = True
-            self.logger.info(f"Calibración personalizada cargada para {operator_id}")
+            self.logger.info(f"Calibración encontrada para {operator_id}")
         else:
             self.is_calibrated = False
-            self.logger.warning(f"Usando valores por defecto para {operator_id}")
+            self.logger.warning(f"Sin calibración para {operator_id}")
         
-        # Actualizar detector con nuevos umbrales
+        # IMPORTANTE: NO actualizar detector si queremos usar valores del config.yaml
+        # Comentar esta línea para mantener los valores del config.yaml
+        # self.detector.update_thresholds(thresholds)
+        
+        # En su lugar, solo loguear los valores actuales
+        self.logger.info(f"Manteniendo valores del config.yaml:")
+        self.logger.info(f"  - EAR threshold: {self.detector.EAR_THRESHOLD}")
+        self.logger.info(f"  - Microsleep threshold: {self.detector.EYE_CLOSED_THRESHOLD}s")
+        
+        # Guardar thresholds para referencia (sin aplicarlos)
         self.current_thresholds = thresholds
-        self.detector.update_thresholds(thresholds)
         
         # Resetear detector para nuevo operador
         self.detector.reset()

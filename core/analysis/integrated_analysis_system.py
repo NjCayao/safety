@@ -91,6 +91,42 @@ class IntegratedAnalysisSystem:
         }
         
         self.logger.info("Sistema de análisis integrado inicializado")
+
+        # NUEVO: Gestor de reportes
+        from core.reports.report_manager import get_report_manager
+        self.report_manager = get_report_manager()
+        
+        # NUEVO: Configuración de reportes
+        self.report_config = {
+            'enabled': True,
+            'cooldown_seconds': 60,  # 1 minuto entre reportes del mismo tipo
+            'include_frame': True,
+            
+            # Umbrales críticos (ambos deben cumplirse)
+            'critical_stress_threshold': 80,
+            'critical_fatigue_threshold': 80,
+            'critical_duration': 10,  # segundos
+            
+            # Umbrales para pulso
+            'pulse_high_threshold': 120,
+            'pulse_low_threshold': 50,
+            'pulse_duration': 10,  # segundos
+            
+            # Umbrales para anomalías
+            'intoxication_threshold': 40,
+            'intoxication_duration': 8,
+            'neurological_threshold': 30,
+            'neurological_duration': 5,
+            'erratic_threshold': 50,
+            'erratic_duration': 10
+        }
+        
+        # NUEVO: Control de reportes
+        self.last_report_time = {}
+        self.condition_start_times = {}
+        
+        # NUEVO: Frame actual para reportes
+        self._current_frame = None
     
     def analyze_operator(self, frame, face_landmarks, face_location, operator_info=None):
         """
@@ -105,6 +141,12 @@ class IntegratedAnalysisSystem:
         Returns:
             tuple: (frame_con_dashboard, resultados_análisis)
         """
+        # NUEVO: Guardar frame actual para reportes
+        self._current_frame = frame
+        
+        # NUEVO: Verificar condiciones para reportes
+        self._check_report_conditions(analysis_results)
+
         # Verificar si hay operador
         if not operator_info:
             return frame, {'status': 'no_operator'}
@@ -126,8 +168,8 @@ class IntegratedAnalysisSystem:
                 'status': 'calibrating',
                 'progress': progress,
                 'operator': operator_info
-            }
-        
+            }       
+
         # Análisis normal
         if not self.analysis_enabled:
             return frame, {'status': 'disabled'}
@@ -531,3 +573,184 @@ class IntegratedAnalysisSystem:
             self.dashboard.update_config(config)
             return True
         return False
+    
+    def _check_report_conditions(self, analysis_results):
+        """Verifica si se deben generar reportes basados en las condiciones"""
+        if not self.report_config['enabled'] or not self.current_operator:
+            return
+        
+        current_time = time.time()
+        analysis_data = analysis_results.get('analysis', {})
+        
+        # 1. Verificar condición crítica: Estrés >= 80% Y Fatiga >= 80%
+        if 'stress' in analysis_data and 'fatigue' in analysis_data:
+            stress_level = analysis_data['stress'].get('stress_level', 0)
+            fatigue_level = analysis_data['fatigue'].get('fatigue_percentage', 0)
+            
+            if (stress_level >= self.report_config['critical_stress_threshold'] and 
+                fatigue_level >= self.report_config['critical_fatigue_threshold']):
+                
+                # Iniciar o verificar duración
+                condition_key = 'critical_stress_fatigue'
+                if condition_key not in self.condition_start_times:
+                    self.condition_start_times[condition_key] = current_time
+                    self.logger.warning(f"Condición crítica iniciada: Estrés {stress_level}%, Fatiga {fatigue_level}%")
+                else:
+                    duration = current_time - self.condition_start_times[condition_key]
+                    if duration >= self.report_config['critical_duration']:
+                        # Verificar cooldown
+                        if self._check_cooldown(condition_key, current_time):
+                            self._generate_critical_report(
+                                'critical_stress_fatigue',
+                                {
+                                    'stress_level': stress_level,
+                                    'fatigue_level': fatigue_level,
+                                    'duration': duration
+                                }
+                            )
+                            # Reset timer
+                            del self.condition_start_times[condition_key]
+            else:
+                # Condición no se cumple, resetear timer
+                if 'critical_stress_fatigue' in self.condition_start_times:
+                    del self.condition_start_times['critical_stress_fatigue']
+        
+        # 2. Verificar pulso anormal
+        if 'pulse' in analysis_data:
+            pulse_data = analysis_data['pulse']
+            if pulse_data.get('is_valid', False):
+                bpm = pulse_data.get('bpm', 0)
+                
+                if (bpm > self.report_config['pulse_high_threshold'] or 
+                    (bpm < self.report_config['pulse_low_threshold'] and bpm > 0)):
+                    
+                    condition_key = 'abnormal_pulse'
+                    if condition_key not in self.condition_start_times:
+                        self.condition_start_times[condition_key] = current_time
+                        self.logger.warning(f"Pulso anormal detectado: {bpm} BPM")
+                    else:
+                        duration = current_time - self.condition_start_times[condition_key]
+                        if duration >= self.report_config['pulse_duration']:
+                            if self._check_cooldown(condition_key, current_time):
+                                self._generate_critical_report(
+                                    'abnormal_pulse',
+                                    {
+                                        'bpm': bpm,
+                                        'duration': duration,
+                                        'type': 'high' if bpm > 100 else 'low'
+                                    }
+                                )
+                                del self.condition_start_times[condition_key]
+                else:
+                    if 'abnormal_pulse' in self.condition_start_times:
+                        del self.condition_start_times['abnormal_pulse']
+        
+        # 3. Verificar anomalías
+        if 'anomaly' in analysis_data:
+            anomaly_data = analysis_data['anomaly']
+            indicators = anomaly_data.get('indicators', {})
+            
+            # Intoxicación
+            if 'intoxication' in indicators:
+                level = indicators['intoxication'].get('level', 0)
+                self._check_anomaly_condition(
+                    'intoxication', level,
+                    self.report_config['intoxication_threshold'],
+                    self.report_config['intoxication_duration'],
+                    current_time
+                )
+            
+            # Neurológico
+            if 'neurological' in indicators:
+                level = indicators['neurological'].get('level', 0)
+                self._check_anomaly_condition(
+                    'neurological', level,
+                    self.report_config['neurological_threshold'],
+                    self.report_config['neurological_duration'],
+                    current_time
+                )
+            
+            # Comportamiento errático
+            if 'erratic' in indicators:
+                level = indicators['erratic'].get('level', 0)
+                self._check_anomaly_condition(
+                    'erratic', level,
+                    self.report_config['erratic_threshold'],
+                    self.report_config['erratic_duration'],
+                    current_time
+                )
+    
+    def _check_anomaly_condition(self, anomaly_type, level, threshold, duration_required, current_time):
+        """Verifica una condición de anomalía específica"""
+        condition_key = f'anomaly_{anomaly_type}'
+        
+        if level >= threshold:
+            if condition_key not in self.condition_start_times:
+                self.condition_start_times[condition_key] = current_time
+                self.logger.warning(f"Anomalía {anomaly_type} iniciada: {level}%")
+            else:
+                duration = current_time - self.condition_start_times[condition_key]
+                if duration >= duration_required:
+                    if self._check_cooldown(condition_key, current_time):
+                        self._generate_critical_report(
+                            f'anomaly_{anomaly_type}',
+                            {
+                                'type': anomaly_type,
+                                'level': level,
+                                'duration': duration
+                            }
+                        )
+                        del self.condition_start_times[condition_key]
+        else:
+            if condition_key in self.condition_start_times:
+                del self.condition_start_times[condition_key]
+    
+    def _check_cooldown(self, report_type, current_time):
+        """Verifica si ha pasado suficiente tiempo desde el último reporte"""
+        last_time = self.last_report_time.get(report_type, 0)
+        if current_time - last_time >= self.report_config['cooldown_seconds']:
+            return True
+        return False
+    
+    def _generate_critical_report(self, event_type, event_data):
+        """Genera un reporte crítico con fotografía"""
+        if not self._current_frame is None and not self.current_operator:
+            return
+        
+        try:
+            # Preparar datos del evento
+            report_data = {
+                'event_type': event_type,
+                'event_data': event_data,
+                'timestamp': time.time(),
+                'operator_id': self.current_operator['id'],
+                'operator_name': self.current_operator['name'],
+                'analysis_summary': {
+                    'frames_analyzed': self.stats['frames_analyzed'],
+                    'session_duration': time.time() - self.stats['start_time']
+                }
+            }
+            
+            # Generar reporte con frame
+            report = self.report_manager.generate_report(
+                module_name='analysis',
+                event_type=event_type,
+                data=report_data,
+                frame=self._current_frame if self.report_config['include_frame'] else None,
+                operator_info=self.current_operator
+            )
+            
+            if report:
+                self.last_report_time[event_type] = time.time()
+                self.logger.info(f"Reporte crítico generado: {report['id']}")
+                self.stats['alerts_generated'] += 1
+                
+        except Exception as e:
+            self.logger.error(f"Error generando reporte: {e}")
+            import traceback
+            traceback.print_exc()
+    
+    def update_report_config(self, new_config):
+        """Actualiza la configuración de reportes"""
+        self.report_config.update(new_config)
+        self.logger.info("Configuración de reportes actualizada")

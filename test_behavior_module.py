@@ -298,10 +298,10 @@ class BehaviorModuleTest:
         print(f"Total detecciones: {total_detections}")
         print(f"Total alertas: {total_alerts}")
         
-        # Generar reporte final
-        report = self.behavior_system.generate_session_report()
-        if report:
-            print(f"Reporte de sesión guardado: {report.get('id', 'N/A')}")
+        # # Generar reporte final
+        # report = self.behavior_system.generate_session_report()
+        # if report:
+        #     print(f"Reporte de sesión guardado: {report.get('id', 'N/A')}")
         
         print("=============================")
     

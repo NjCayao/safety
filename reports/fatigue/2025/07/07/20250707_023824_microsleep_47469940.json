@@ -1,0 +1,15 @@
+{
+  "id": "fatigue_microsleep_47469940_20250707023824",
+  "module": "fatigue",
+  "event_type": "microsleep",
+  "timestamp": "2025-07-07T02:38:24.856068",
+  "operator": {
+    "id": "47469940",
+    "name": "Operador Prueba"
+  },
+  "data": {
+    "ear_value": 0.19312940605618317,
+    "ear_threshold": 0.2,
+    "eyes_closed_duration": 1.023409128189087,
+    "microsleep_count": 1,
+    "is_night_mode": 

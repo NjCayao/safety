@@ -42,8 +42,8 @@ class IntegratedBehaviorSystem:
         
         # Configuración de reportes
         self.report_config = {
-            'send_on_phone_3s': True,
-            'send_on_phone_7s': True,
+            'send_on_phone_3s': False,  # CAMBIO: Deshabilitado - no queremos reporte a los 3s
+            'send_on_phone_7s': True,   # Solo reporte a los 7 segundos
             'send_on_smoking': True,
             'include_frame': True,
             'cooldown_seconds': 30
@@ -142,9 +142,12 @@ class IntegratedBehaviorSystem:
         # Realizar detección
         detections, analyzed_frame, alerts = self.detector.detect_behaviors(frame, face_locations)
         
+        # IMPORTANTE: Guardar referencia al frame completo para reportes
+        self._last_full_frame = frame  # Frame original con dashboards
+        
         # Procesar alertas y generar reportes
         for alert in alerts:
-            self._handle_behavior_alert(alert, frame)
+            self._handle_behavior_alert(alert, frame)  # Usar frame completo
         
         # Crear resultado estructurado
         result = {
@@ -157,6 +160,11 @@ class IntegratedBehaviorSystem:
             'is_calibrated': self.is_calibrated,
             'is_night_mode': self.detector.is_night_mode,
             'light_level': self.detector.light_level,
+            'detector_info': {
+                'behavior_durations': self.detector.behavior_durations.copy(),
+                'cigarette_detections': len(self.detector.cigarette_detections),
+                'cigarette_pattern_threshold': self.detector.config['cigarette_pattern_threshold']
+            },
             'optimization_status': self.detector.get_optimization_status()
         }
         
@@ -171,7 +179,7 @@ class IntegratedBehaviorSystem:
         
         Args:
             alert: Tupla (alert_type, behavior, value)
-            frame: Frame actual
+            frame: Frame actual (ya procesado con overlays)
         """
         alert_type, behavior, value = alert
         current_time = time.time()
@@ -219,11 +227,12 @@ class IntegratedBehaviorSystem:
         if should_report:
             # Agregar información común
             event_data.update({
-                'is_night_mode': bool(self.detector.is_night_mode),  # Convertir bool_ a bool
-                'light_level': float(self.detector.light_level),     # Convertir a float nativo
-                'detection_timestamp': float(current_time)            # Asegurar float nativo
+                'is_night_mode': bool(self.detector.is_night_mode),
+                'light_level': float(self.detector.light_level),
+                'detection_timestamp': float(current_time)
             })
             
+            # IMPORTANTE: Usar el frame procesado que ya incluye los overlays
             report = self.report_manager.generate_report(
                 module_name='behavior',
                 event_type=alert_type,
@@ -235,6 +244,7 @@ class IntegratedBehaviorSystem:
             if report:
                 self.last_report_time[alert_type] = current_time
                 self.logger.info(f"Reporte de comportamiento generado: {report['id']}")
+                # El reporte ya está guardado localmente, no se intenta enviar
     
     def _update_history(self, result):
         """Actualiza el historial de detecciones"""
@@ -255,6 +265,18 @@ class IntegratedBehaviorSystem:
     
     def get_current_status(self):
         """Obtiene el estado actual del sistema"""
+        # Obtener estadísticas del report manager de forma segura
+        report_stats = {}
+        try:
+            report_stats = self.report_manager.get_statistics()
+        except:
+            # Si falla, usar valores por defecto
+            report_stats = {
+                'reports_generated': 0,
+                'reports_sent': 0,
+                'reports_failed': 0
+            }
+        
         return {
             'operator': self.current_operator,
             'is_calibrated': self.is_calibrated,
@@ -262,7 +284,7 @@ class IntegratedBehaviorSystem:
             'detector_config': self.detector.get_config(),
             'session_stats': self.session_stats,
             'history_size': len(self.detection_history),
-            'report_stats': self.report_manager.get_statistics()
+            'report_stats': report_stats
         }
     
     def generate_session_report(self):
@@ -289,7 +311,7 @@ class IntegratedBehaviorSystem:
                 'calibration_used': self.is_calibrated
             }
             
-            # Generar reporte
+            # Generar reporte (se guardará localmente)
             report = self.report_manager.generate_report(
                 module_name='behavior',
                 event_type='session_summary',

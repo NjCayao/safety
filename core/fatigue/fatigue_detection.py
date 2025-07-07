@@ -28,7 +28,7 @@ class FatigueDetector:
             self.ALARM_COOLDOWN = get_config('fatigue.alarm_cooldown', 5)
             
             # Umbral EAR (Eye Aspect Ratio)
-            self.EAR_THRESHOLD = get_config('fatigue.ear_threshold', 0.25)
+            self.EAR_THRESHOLD = get_config('fatigue.ear_threshold', 0.20)
             self.EAR_NIGHT_ADJUSTMENT = get_config('fatigue.ear_night_adjustment', 0.03)
             
             # Configuración de modo nocturno
@@ -237,7 +237,7 @@ class FatigueDetector:
                 if range_ear > 0.1:
                     new_threshold = self.min_ear_observed + (range_ear * 0.3)
                     print(f"Calibración completada. Nuevo umbral EAR: {new_threshold:.2f}")
-                    self.EAR_THRESHOLD = new_threshold
+                    # self.EAR_THRESHOLD = new_threshold
         
         # Añadir a valores recientes
         self.last_ear_values.append(ear)

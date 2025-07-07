@@ -1,3 +1,8 @@
+# Safety System
+⚠️ PROYECTO EN DESARROLLO - NO USAR EN PRODUCCIÓN
+© 2025 www.DevCayao.com - Todos los derechos reservados
+Código educacional - No autorizado para uso comercial.
+
 # INSTALAR PYTHON 3.9 
 INSTLAR CMAKE     https://cmake.org/download/
 Crear un entorno virtual de Python para el desarrollo: 

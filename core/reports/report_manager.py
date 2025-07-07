@@ -35,12 +35,12 @@ class ReportManager:
         # Configuración
         if CONFIG_AVAILABLE:
             self.server_url = server_url or get_config('server.url', 'http://localhost:5000')
-            self.auto_send = get_config('reports.auto_send', True)
+            self.auto_send = get_config('reports.auto_send', False)  # CAMBIO: False por defecto
             self.save_images = get_config('reports.save_images', True)
             self.retention_days = get_config('reports.retention_days', 30)
         else:
             self.server_url = server_url or 'http://localhost:5000'
-            self.auto_send = True
+            self.auto_send = False  # CAMBIO: Deshabilitado por defecto
             self.save_images = True
             self.retention_days = 30
         
@@ -60,9 +60,9 @@ class ReportManager:
             'last_report_time': None
         }
         
-        # Iniciar hilo de envío si está habilitado
+        # NO iniciar hilo de envío automáticamente
         if self.auto_send:
-            self._start_sender_thread()
+            self.logger.info("Envío automático deshabilitado - Los reportes se guardarán localmente")
     
     def _create_directories(self):
         """Crea la estructura de directorios para reportes"""
@@ -110,11 +110,11 @@ class ReportManager:
             }
             
             # Paths para archivos
-            date_path = timestamp.strftime("%Y/%m")
+            date_path = timestamp.strftime("%Y/%m/%d")  # Agregar día también
             base_dir = os.path.join(self.reports_dir, module_name, date_path)
             os.makedirs(base_dir, exist_ok=True)
             
-            base_filename = f"{timestamp.strftime('%Y%m%d_%H%M%S')}_{event_type}_{operator_info.get('id', 'unknown')}"
+            base_filename = f"{timestamp.strftime('%Y%m%d_%H%M%S')}_{event_type}_{operator_info.get('id', 'unknown') if operator_info else 'unknown'}"
             
             # Guardar imagen si se proporciona
             if frame is not None and self.save_images:
@@ -123,6 +123,8 @@ class ReportManager:
                 if success:
                     report['image_path'] = img_path
                     self.logger.debug(f"Imagen guardada: {img_path}")
+                else:
+                    self.logger.error(f"Error guardando imagen: {img_path}")
             
             # Guardar JSON del reporte
             json_path = os.path.join(base_dir, f"{base_filename}.json")
@@ -135,16 +137,17 @@ class ReportManager:
             self.stats['reports_generated'] += 1
             self.stats['last_report_time'] = timestamp
             
-            self.logger.info(f"Reporte generado: {report_id}")
+            self.logger.info(f"Reporte generado y guardado localmente: {report_id}")
             
-            # Agregar a cola de envío si está habilitado
-            if self.auto_send:
-                self.report_queue.put(report)
+            # NO agregar a cola de envío
+            # El servidor recogerá los archivos directamente
             
             return report
             
         except Exception as e:
             self.logger.error(f"Error generando reporte: {e}")
+            import traceback
+            traceback.print_exc()
             return None
     
     def _generate_report_id(self, module, event_type, timestamp, operator_info):
@@ -154,7 +157,7 @@ class ReportManager:
     
     def send_report(self, report):
         """
-        Envía un reporte al servidor.
+        Envía un reporte al servidor (solo si se llama explícitamente).
         
         Args:
             report: Diccionario con el reporte
@@ -162,95 +165,13 @@ class ReportManager:
         Returns:
             bool: True si se envió correctamente
         """
-        try:
-            import requests
-            
-            # Preparar datos para envío
-            send_data = {
-                'id': report['id'],
-                'module': report['module'],
-                'event_type': report['event_type'],
-                'timestamp': report['timestamp'],
-                'operator': report['operator'],
-                'data': report['data']
-            }
-            
-            # Enviar JSON
-            response = requests.post(
-                f"{self.server_url}/api/reports",
-                json=send_data,
-                timeout=10
-            )
-            
-            if response.status_code == 200:
-                self.stats['reports_sent'] += 1
-                self.logger.info(f"Reporte enviado: {report['id']}")
-                
-                # Si hay imagen, enviarla también
-                if 'image_path' in report and os.path.exists(report['image_path']):
-                    self._send_image(report['id'], report['image_path'])
-                
-                return True
-            else:
-                self.logger.error(f"Error enviando reporte: {response.status_code}")
-                return False
-                
-        except Exception as e:
-            self.logger.error(f"Error enviando reporte: {e}")
-            self.stats['reports_failed'] += 1
-            return False
-    
-    def _send_image(self, report_id, image_path):
-        """Envía imagen asociada al reporte"""
-        try:
-            import requests
-            
-            with open(image_path, 'rb') as f:
-                files = {'image': f}
-                data = {'report_id': report_id}
-                
-                response = requests.post(
-                    f"{self.server_url}/api/reports/image",
-                    files=files,
-                    data=data,
-                    timeout=30
-                )
-                
-                if response.status_code == 200:
-                    self.logger.debug(f"Imagen enviada para reporte: {report_id}")
-                else:
-                    self.logger.error(f"Error enviando imagen: {response.status_code}")
-                    
-        except Exception as e:
-            self.logger.error(f"Error enviando imagen: {e}")
+        # Esta función queda disponible pero no se usará automáticamente
+        self.logger.warning("Envío de reportes deshabilitado - Los reportes se guardan localmente")
+        return False
     
     def _start_sender_thread(self):
-        """Inicia el hilo para envío asíncrono de reportes"""
-        self.running = True
-        self.sender_thread = threading.Thread(target=self._sender_worker)
-        self.sender_thread.daemon = True
-        self.sender_thread.start()
-        self.logger.info("Hilo de envío de reportes iniciado")
-    
-    def _sender_worker(self):
-        """Worker para enviar reportes de forma asíncrona"""
-        while self.running:
-            try:
-                # Esperar por reportes con timeout
-                report = self.report_queue.get(timeout=1)
-                
-                # Intentar enviar
-                success = self.send_report(report)
-                
-                if not success:
-                    # Reintentar una vez después de esperar
-                    time.sleep(2)
-                    self.send_report(report)
-                
-            except queue.Empty:
-                continue
-            except Exception as e:
-                self.logger.error(f"Error en sender worker: {e}")
+        """NO iniciar hilo de envío"""
+        self.logger.info("Hilo de envío deshabilitado - Los reportes se guardarán solo localmente")
     
     def cleanup_old_reports(self):
         """Limpia reportes antiguos según política de retención"""
@@ -265,27 +186,17 @@ class ReportManager:
                 if not os.path.isdir(module_path):
                     continue
                 
-                # Recorrer años y meses
-                for year in os.listdir(module_path):
-                    year_path = os.path.join(module_path, year)
-                    if not os.path.isdir(year_path):
-                        continue
-                    
-                    for month in os.listdir(year_path):
-                        month_path = os.path.join(year_path, month)
-                        if not os.path.isdir(month_path):
-                            continue
+                # Recorrer estructura de directorios
+                for root, dirs, files in os.walk(module_path):
+                    for filename in files:
+                        file_path = os.path.join(root, filename)
                         
-                        # Verificar archivos
-                        for filename in os.listdir(month_path):
-                            file_path = os.path.join(month_path, filename)
-                            
-                            # Obtener fecha de modificación
-                            file_time = datetime.fromtimestamp(os.path.getmtime(file_path))
-                            
-                            if file_time < cutoff_date:
-                                os.remove(file_path)
-                                cleaned_count += 1
+                        # Obtener fecha de modificación
+                        file_time = datetime.fromtimestamp(os.path.getmtime(file_path))
+                        
+                        if file_time < cutoff_date:
+                            os.remove(file_path)
+                            cleaned_count += 1
             
             self.logger.info(f"Limpieza completada: {cleaned_count} archivos eliminados")
             
@@ -296,25 +207,13 @@ class ReportManager:
         """Obtiene estadísticas del gestor de reportes"""
         return {
             **self.stats,
-            'queue_size': self.report_queue.qsize() if self.report_queue else 0,
-            'sender_active': self.sender_thread.is_alive() if self.sender_thread else False
+            'queue_size': 0,  # Sin cola de envío
+            'sender_active': False  # Sin hilo de envío
         }
     
     def stop(self):
         """Detiene el gestor de reportes"""
         self.running = False
-        
-        if self.sender_thread:
-            self.sender_thread.join(timeout=5)
-        
-        # Procesar reportes pendientes
-        while not self.report_queue.empty():
-            try:
-                report = self.report_queue.get_nowait()
-                self.send_report(report)
-            except:
-                break
-        
         self.logger.info("Gestor de reportes detenido")
 
 # Singleton para uso global
