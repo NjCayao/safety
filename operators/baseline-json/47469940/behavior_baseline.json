@@ -1,0 +1,38 @@
+{
+  "operator_id": "47469940",
+  "calibration_info": {
+    "created_at": "2025-07-06T20:23:33.500163",
+    "photos_processed": 4,
+    "version": "1.0",
+    "source": "master_calibration"
+  },
+  "thresholds": {
+    "confidence_threshold": 0.4,
+    "night_confidence_threshold": 0.35,
+    "phone_alert_threshold_1": 3,
+    "phone_alert_threshold_2": 7,
+    "cigarette_pattern_window": 30,
+    "cigarette_pattern_threshold": 3,
+    "cigarette_continuous_threshold": 7,
+    "night_mode_threshold": 50,
+    "enable_night_mode": true,
+    "face_proximity_factor": 1.5,
+    "enable_optimization": true,
+    "processing_interval": 2,
+    "roi_enabled": true,
+    "roi_scale_factor": 0.6,
+    "calibration_confidence": 1.0
+  },
+  "statistics": {
+    "face_area_stats": {
+      "mean": 153763.0,
+      "std": 79754.01148531653,
+      "min": 15625.0,
+      "max": 199809.0
+    },
+    "face_geometry": {
+      "nose_mouth_distance_mean": 75.10717919985996,
+      "nose_mouth_distance_std": 29.515447356259454
+    }
+  }
+}

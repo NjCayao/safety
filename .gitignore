@@ -1,0 +1,10 @@
+@"
+venv/
+server/uploads/
+__pycache__/
+assets/models/
+assets/audio/
+output/logs/
+output/reports/
+server/logs/
+"@ | Out-File -FilePath .gitignore -Encoding UTF8

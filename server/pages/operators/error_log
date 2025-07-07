@@ -1,0 +1,21 @@
+[24-Jun-2025 10:03:48 America/Lima] PHP Warning:  Undefined variable $alert in /home1/ntohdchg/safetysystem.devcayao.com/server/includes/footer.php on line 81
+[24-Jun-2025 10:03:48 America/Lima] PHP Warning:  Trying to access array offset on value of type null in /home1/ntohdchg/safetysystem.devcayao.com/server/includes/footer.php on line 81
+[24-Jun-2025 10:03:48 America/Lima] PHP Warning:  Undefined variable $alert in /home1/ntohdchg/safetysystem.devcayao.com/server/includes/footer.php on line 82
+[24-Jun-2025 10:03:48 America/Lima] PHP Warning:  Trying to access array offset on value of type null in /home1/ntohdchg/safetysystem.devcayao.com/server/includes/footer.php on line 82
+[24-Jun-2025 15:03:54 UTC] PHP Warning:  Undefined variable $alert in /home1/ntohdchg/safetysystem.devcayao.com/server/includes/footer.php on line 81
+[24-Jun-2025 15:03:54 UTC] PHP Warning:  Trying to access array offset on value of type null in /home1/ntohdchg/safetysystem.devcayao.com/server/includes/footer.php on line 81
+[24-Jun-2025 15:03:54 UTC] PHP Warning:  Undefined variable $alert in /home1/ntohdchg/safetysystem.devcayao.com/server/includes/footer.php on line 82
+[24-Jun-2025 15:03:54 UTC] PHP Warning:  Trying to access array offset on value of type null in /home1/ntohdchg/safetysystem.devcayao.com/server/includes/footer.php on line 82
+[24-Jun-2025 10:04:20 America/Lima] PHP Warning:  Undefined variable $alert in /home1/ntohdchg/safetysystem.devcayao.com/server/includes/footer.php on line 81
+[24-Jun-2025 10:04:20 America/Lima] PHP Warning:  Trying to access array offset on value of type null in /home1/ntohdchg/safetysystem.devcayao.com/server/includes/footer.php on line 81
+[24-Jun-2025 10:04:20 America/Lima] PHP Warning:  Undefined variable $alert in /home1/ntohdchg/safetysystem.devcayao.com/server/includes/footer.php on line 82
+[24-Jun-2025 10:04:20 America/Lima] PHP Warning:  Trying to access array offset on value of type null in /home1/ntohdchg/safetysystem.devcayao.com/server/includes/footer.php on line 82
+[24-Jun-2025 15:04:29 UTC] PHP Warning:  Undefined array key "operator_dni" in /home1/ntohdchg/safetysystem.devcayao.com/server/includes/footer.php on line 82
+[24-Jun-2025 10:04:36 America/Lima] PHP Warning:  Undefined variable $alert in /home1/ntohdchg/safetysystem.devcayao.com/server/includes/footer.php on line 81
+[24-Jun-2025 10:04:36 America/Lima] PHP Warning:  Trying to access array offset on value of type null in /home1/ntohdchg/safetysystem.devcayao.com/server/includes/footer.php on line 81
+[24-Jun-2025 10:04:36 America/Lima] PHP Warning:  Undefined variable $alert in /home1/ntohdchg/safetysystem.devcayao.com/server/includes/footer.php on line 82
+[24-Jun-2025 10:04:36 America/Lima] PHP Warning:  Trying to access array offset on value of type null in /home1/ntohdchg/safetysystem.devcayao.com/server/includes/footer.php on line 82
+[24-Jun-2025 15:04:38 UTC] PHP Warning:  Undefined variable $alert in /home1/ntohdchg/safetysystem.devcayao.com/server/includes/footer.php on line 81
+[24-Jun-2025 15:04:38 UTC] PHP Warning:  Trying to access array offset on value of type null in /home1/ntohdchg/safetysystem.devcayao.com/server/includes/footer.php on line 81
+[24-Jun-2025 15:04:38 UTC] PHP Warning:  Undefined variable $alert in /home1/ntohdchg/safetysystem.devcayao.com/server/includes/footer.php on line 82
+[24-Jun-2025 15:04:38 UTC] PHP Warning:  Trying to access array offset on value of type null in /home1/ntohdchg/safetysystem.devcayao.com/server/includes/footer.php on line 82

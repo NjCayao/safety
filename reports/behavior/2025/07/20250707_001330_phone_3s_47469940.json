@@ -1,0 +1,25 @@
+{
+  "id": "behavior_phone_3s_47469940_20250707001330",
+  "module": "behavior",
+  "event_type": "phone_3s",
+  "timestamp": "2025-07-07T00:13:30.533076",
+  "operator": {
+    "id": "47469940",
+    "name": "Operador Prueba"
+  },
+  "data": {
+    "behavior": "cell phone",
+    "duration": 3.005831003189087,
+    "threshold": 3,
+    "severity": "warning",
+    "is_night_mode": false,
+    "light_level": 112.17098958333334,
+    "detection_timestamp": 1751865210.5330768
+  },
+  "metadata": {
+    "version": "1.0",
+    "generated_by": "ReportManager",
+    "environment": "production"
+  },
+  "image_path": "reports\\behavior\\2025/07\\20250707_001330_phone_3s_47469940.jpg"
+}

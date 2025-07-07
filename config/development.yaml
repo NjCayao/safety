@@ -1,0 +1,117 @@
+# config/development.yaml
+# Configuración específica para entorno de desarrollo (Windows)
+
+system:
+  enable_gui: true               # Habilitar ventanas gráficas
+  log_level: "DEBUG"             # Logs detallados para debugging
+  debug_mode: true               # Activar modo debug
+  performance_monitoring: true   # Monitorear rendimiento
+
+camera:
+  # Configuración optimizada para desarrollo
+  fps: 15                        # FPS más bajo para debugging cómodo
+  width: 640                     # Resolución estándar
+  height: 480
+  
+  # Para testing y desarrollo
+  use_threading: false           # Threading puede complicar debugging
+  warmup_time: 1                 # Menor tiempo de calentamiento
+
+fatigue:
+  # Umbrales más sensibles para testing rápido
+  eye_closed_threshold: 1.0      # Más sensible para testing
+  calibration_period: 15         # Calibración más rápida
+  
+  # Debugging
+  enable_night_mode: true        # Para probar ambos modos
+
+yawn:
+  # Configuración para testing
+  duration_threshold: 2.0        # Más sensible para pruebas
+  max_yawns_before_alert: 2      # Menos bostezos para testing
+  
+  # Debug
+  enable_sounds: true            # Verificar audio en desarrollo
+
+distraction:
+  # Más sensible para testing
+  level1_time: 2                 # Alertas más rápidas para testing
+  level2_time: 3
+  
+  # Debug
+  audio_enabled: true
+
+behavior:
+  # Más sensible para detectar en testing
+  confidence_threshold: 0.15      # Más sensible
+  phone_alert_threshold_1: 2     # Alertas más rápidas
+  phone_alert_threshold_2: 4
+  night_confidence_threshold: 0.10  # Umbral nocturno más bajo
+  
+  # Debug visual
+  audio_enabled: true
+
+audio:
+  # Configuración para desarrollo
+  volume: 0.7                    # Un poco más bajo para no molestar
+  enabled: true                  # Verificar que funciona
+
+sync:
+  # Configuración para desarrollo local
+  server_url: "http://localhost/safety_system"
+  
+  # Más frecuente para testing
+  auto_sync_interval: 60         # 1 minuto para ver resultados rápido
+  batch_size: 10                 # Lotes más pequeños para testing
+  
+  # Timeouts más cortos para desarrollo
+  connection_timeout: 5
+  read_timeout: 15
+
+logging:
+  # Logging detallado para desarrollo
+  level: "DEBUG"
+  
+  # Más detalle en módulos específicos
+  modules:
+    camera: "DEBUG"
+    fatigue: "DEBUG"
+    behavior: "DEBUG"
+    sync: "DEBUG"
+    config: "DEBUG"
+
+alerts:
+  # Alertas más frecuentes para testing
+  cooldown_time: 2               # Menos tiempo entre alertas para testing
+
+reports:
+  # Más reportes para ver funcionamiento
+  include_metadata: true
+  auto_cleanup: false            # No limpiar en desarrollo para revisar
+
+# Configuraciones específicas de desarrollo
+development:
+  # Ventanas de visualización
+  window_size:
+    width: 800
+    height: 600
+  
+  # Testing automático
+  enable_test_mode: false        # Para simular condiciones
+  simulate_conditions:
+    fatigue: false
+    distraction: false
+    behavior: false
+  
+  # Debugging visual
+  show_debug_info: true          # Mostrar información de debug en pantalla
+  show_fps: true                 # Mostrar FPS
+  show_detection_confidence: true # Mostrar confianza de detecciones
+  
+  # Configuración de archivos temporales
+  temp_dir: "temp"
+  save_debug_frames: false       # Guardar frames para análisis posterior
+  
+  # Configuración de pruebas
+  test_data_dir: "test_data"
+  enable_performance_profiling: false

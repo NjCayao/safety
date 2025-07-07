@@ -1,0 +1,228 @@
+# config/production.yaml - FASE 3: Optimizado para Raspberry Pi
+# Configuración específica para entorno de producción (Raspberry Pi)
+
+system:
+  enable_gui: false              # SIN interfaz gráfica
+  log_level: "INFO"              # Logs moderados para no llenar disco
+  debug_mode: false              # Sin debug en producción
+  performance_monitoring: true   # CRÍTICO: Monitorear en campo
+  auto_optimization: true        # 🆕 NUEVO: Optimización automática habilitada
+
+camera:
+  # Configuración ultra-optimizada para Raspberry Pi
+  fps: 4                         # FPS muy bajo para ahorrar CPU
+  width: 320                     # Resolución muy baja para mejor rendimiento  
+  height: 240
+  
+  # Optimización agresiva para hardware limitado
+  use_threading: true            # Threading para mejor rendimiento
+  warmup_time: 3                 # Más tiempo de calentamiento en Pi
+  buffer_size: 1                 # Buffer mínimo para latencia baja
+  
+  # 🆕 NUEVO: Configuraciones específicas para Pi
+  brightness: 10                 # Ajuste para cámaras de Pi
+  contrast: 15                   # Mejorar contraste en condiciones pobres
+  exposure: -6                   # Exposure más agresivo
+
+fatigue:
+  # Configuración optimizada para recursos limitados
+  eye_closed_threshold: 1.8      # Más permisivo para evitar falsos positivos
+  calibration_period: 90         # Calibración más larga para estabilidad en Pi
+  frames_to_confirm: 3           # Más frames para confirmar (más estable)
+  
+  # Configuración crítica para campo
+  enable_night_mode: true        # ESENCIAL para trabajo nocturno
+  night_mode_threshold: 35       # Más sensible para condiciones de campo
+  ear_night_adjustment: 0.05     # Ajuste más agresivo para modo nocturno
+
+yawn:
+  # Configuración conservadora para producción
+  duration_threshold: 3.0        # Más permisivo para evitar falsos positivos
+  max_yawns_before_alert: 3      # Valor conservador
+  frames_to_confirm: 4           # Más frames para estabilidad
+  
+  # Audio crítico en campo
+  enable_sounds: true
+  enable_auto_calibration: true
+  calibration_frames: 90         # Más frames para calibración estable
+
+distraction:
+  # Tiempos optimizados para Pi
+  level1_time: 4                 # Un poco más permisivo
+  level2_time: 6                 # Tiempo extendido
+  camera_fps: 4                  # Sincronizado con FPS de cámara
+  
+  # Configuración específica para Pi
+  confidence_threshold: 0.8      # Más alto para evitar falsos positivos
+  frames_without_face_limit: 8   # Más tolerante en Pi
+  
+  # Audio esencial pero optimizado
+  audio_enabled: true
+  level1_volume: 0.9             # Volumen alto para ruido de máquinas
+  level2_volume: 1.0
+
+behavior:
+  # 🆕 NUEVO: Configuración ultra-optimizada para Raspberry Pi
+  
+  # Configuración básica más conservadora
+  confidence_threshold: 0.5      # Más alto para evitar falsos positivos
+  night_confidence_threshold: 0.4 # Ajustado para condiciones nocturnas
+  
+  # 🆕 OPTIMIZACIONES ESPECÍFICAS PARA PI
+  enable_optimization: true      # Habilitar todas las optimizaciones
+  processing_interval: 3         # Procesar solo cada 3 frames para ahorrar CPU
+  
+  # 🆕 ROI (Región de Interés) para reducir área de procesamiento
+  roi_enabled: true              # Activar ROI para ahorrar muchísimo CPU
+  roi_scale_factor: 0.5          # ROI más pequeño = menos procesamiento
+  
+  # 🆕 YOLO ultra-optimizado para Pi
+  yolo_input_size: 256           # Tamaño muy pequeño para Pi (vs 416 normal)
+  nms_threshold: 0.6             # NMS más agresivo
+  max_detections: 5              # Máximo 5 detecciones por frame
+  
+  # 🆕 Gestión de memoria crítica para Pi
+  memory_optimization: true     # Activar limpieza agresiva de memoria
+  frame_skip_threshold: 5       # Saltar frames si CPU está saturado
+  
+  # 🆕 Cache de predicciones para evitar recomputación
+  enable_prediction_cache: true # Cache para frames similares
+  cache_size: 3                 # Cache pequeño para Pi
+  similarity_threshold: 0.9     # Umbral alto para usar cache
+  
+  # Configuración de iluminación para Pi
+  night_mode_threshold: 40      # Más sensible para Pi sin luz ambiente
+  night_image_alpha: 1.2        # Ajuste más suave para Pi
+  night_image_beta: 30          # Offset menor para Pi
+  
+  # Tiempos estándar pero optimizados
+  phone_alert_threshold_1: 4    # Un poco más permisivo en Pi
+  phone_alert_threshold_2: 8    # Extendido para evitar falsas alarmas
+  
+  # Configuración de cigarro optimizada
+  cigarette_pattern_window: 25  # Ventana más pequeña para ahorrar memoria
+  cigarette_pattern_threshold: 2 # Menos detecciones necesarias
+  cigarette_continuous_threshold: 8 # Tiempo extendido
+  
+  # Audio crítico pero controlado
+  audio_enabled: true
+
+audio:
+  # Configuración para entorno industrial con Pi
+  volume: 1.0                    # Volumen máximo para superar ruido
+  enabled: true                  # CRÍTICO en producción
+  
+  # Configuración optimizada para Pi
+  frequency: 22050               # 🆕 Frecuencia más baja para Pi
+  channels: 1                    # 🆕 Mono para ahorrar recursos
+  buffer: 4096                   # 🆕 Buffer más grande para estabilidad
+
+#sync:
+  # Configuración para conexión de campo (posiblemente inestable)
+  #server_url: "https://safetysystem.devcayao.com"
+  
+  # Configuración ultra-robusta para Pi
+  #auto_sync_interval: 600        # 10 minutos - balance para Pi lento
+  #batch_size: 25                 # Lotes más pequeños para Pi
+  
+  # Timeouts más largos para Pi y conexiones lentas
+  #connection_timeout: 20
+  #read_timeout: 60
+  #max_retries: 8                 # Más reintentos para conexiones inestables
+  #retry_delay: 15
+
+logging:
+  # Logging ultra-optimizado para Pi
+  level: "WARNING"               # Solo errores importantes para ahorrar disco
+  
+  # Rotación agresiva de logs para Pi
+  file_max_size: 2097152         # 2MB máximo por archivo
+  file_backup_count: 2           # Solo 2 archivos de backup
+  
+  # Logging específico por módulo (muy reducido)
+  modules:
+    camera: "ERROR"              # Solo errores críticos
+    fatigue: "WARNING"
+    behavior: "WARNING"          # Importante para comportamientos
+    sync: "INFO"                 # Mantener info de sync
+
+alerts:
+  # Configuración conservadora para producción en Pi
+  cooldown_time: 8               # Más tiempo entre alertas para Pi
+
+reports:
+  # Configuración optimizada para almacenamiento limitado de Pi
+  image_quality: 60              # Calidad muy baja para ahorrar espacio
+  auto_cleanup: true             # CRÍTICO: limpiar automáticamente
+  max_age_days: 15               # Mantener solo 15 días en Pi
+
+# 🆕 NUEVO: Configuraciones específicas de optimización para Pi
+production:
+  # 🆕 Monitoreo crítico del sistema Pi
+  enable_system_monitoring: true
+  cpu_threshold: 75              # % CPU máximo antes de optimizar (más estricto)
+  memory_threshold: 70           # % memoria máxima (más estricto)
+  temperature_threshold: 65      # °C máxima antes de reducir rendimiento (más estricto)
+  
+  # 🆕 Gestión de energía para Pi
+  enable_power_management: true
+  reduce_performance_on_low_battery: true
+  enable_thermal_throttling: true # Reducir rendimiento si se calienta mucho
+  
+  # 🆕 Configuración de red optimizada para Pi
+  connection_types: ["ethernet", "wifi", "cellular"]
+  preferred_connection: "ethernet"
+  network_timeout: 45            # Timeout más largo para Pi
+  enable_offline_mode: true      # CRÍTICO: funcionar sin internet
+  
+  # 🆕 Recuperación automática optimizada para Pi
+  auto_restart_on_error: true
+  max_restart_attempts: 5        # Más intentos para Pi inestable
+  restart_delay: 45              # Más tiempo entre reintentos
+  
+  # 🆕 Heartbeat optimizado para Pi
+  heartbeat_interval: 120        # Cada 2 minutos para ahorrar ancho de banda
+  heartbeat_timeout: 20
+  
+  # 🆕 Configuración de almacenamiento crítica para Pi
+  max_disk_usage: 70             # % máximo más estricto para microSD
+  cleanup_on_disk_full: true
+  enable_log_compression: true   # Comprimir logs automáticamente
+  
+  # 🆕 Configuración específica de Raspberry Pi
+  raspberry_pi:
+    # 🆕 Optimizaciones de hardware Pi
+    enable_hardware_pwm: false   # Desactivar PWM para ahorrar recursos
+    gpu_memory_split: 32         # Mínimo para GPU (más RAM para sistema)
+    disable_camera_led: true     # Desactivar LED para ahorrar energía
+    disable_bluetooth: true      # Desactivar Bluetooth para ahorrar recursos
+    disable_wifi_power_save: true # Desactivar ahorro energía WiFi para estabilidad
+    
+    # 🆕 Optimizaciones de rendimiento agresivas
+    arm_freq: 1400               # Frecuencia ARM reducida para estabilidad
+    gpu_freq: 400                # Frecuencia GPU reducida
+    over_voltage: 0              # Sin overvolting para estabilidad
+    
+    # 🆕 Configuración de cámara específica para Pi
+    camera_module: "usb"         # Tipo de cámara
+    camera_auto_exposure: true
+    camera_auto_white_balance: true
+    
+    # 🆕 Configuraciones de sistema Pi
+    enable_watchdog: true        # Watchdog para recuperación automática
+    watchdog_timeout: 30         # Timeout del watchdog
+    
+    # 🆕 Gestión térmica específica
+    thermal_throttle_temp: 65    # Temperatura para reducir rendimiento
+    thermal_shutdown_temp: 80    # Temperatura de apagado de emergencia
+
+  # Configuración de sincronización con el servidor
+  sync:
+    enabled: true
+    server_url: "https://safetysystem.devcayao.com/server"
+    device_id: "RPI50001"
+    api_key: "fe02131d43d2cd8099f09ad78ab13bce4f26d2cd2e2a1e7611986775e1636905"
+    auto_sync_interval: 300
+    batch_size: 25
+    connection_timeout: 20
+    max_retries: 5

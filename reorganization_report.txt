@@ -1,0 +1,106 @@
+=== REPORTE DE REORGANIZACIÓN ===
+Fecha: 2025-07-03 10:17:14
+Backup creado en: C:\xampp\htdocs\safety_system_backup_20250703_101642
+
+MOVIMIENTOS REALIZADOS:
+  - camera_module.py -> core/
+  - face_recognition_module.py -> core/
+  - fatigue_detection.py -> core/
+  - bostezo_detection.py -> core/
+  - distraction_detection.py -> core/
+  - behavior_detection_module.py -> core/
+  - alarm_module.py -> core/
+  - report_generator.py -> core/
+  - behavior_detection_wrapper.py -> sync/wrappers/
+  - fatigue_detection_wrapper.py -> sync/wrappers/
+  - face_recognition_wrapper.py -> sync/wrappers/
+  - register_operator.py -> scripts/
+  - process_photos.py -> scripts/
+  - audio/ -> assets/audio/
+  - models/ -> assets/models/
+  - operators/ -> assets/operators/
+  - reports/ -> output/reports/
+  - logs/ -> output/logs/
+
+NUEVA ESTRUCTURA:
+
+safety_system/
+├── core/                    # Módulos principales
+├── sync/                    # Sistema de sincronización
+│   └── wrappers/           # Wrappers para sincronización
+├── config/                  # Configuración (sin cambios)
+├── client/                  # Cliente de sincronización (sin cambios)
+├── server/                  # Dashboard PHP (sin cambios)
+├── scripts/                 # Scripts auxiliares
+├── assets/                  # Recursos
+│   ├── audio/
+│   ├── models/
+│   └── operators/
+├── output/                  # Salidas del sistema
+│   ├── reports/
+│   └── logs/
+├── main_system.py          # Sistema principal
+└── main_system_wrapper.py  # Sistema con sincronización
+
+
+
+core/analysis/
+├── integrated_analysis_system.py   → 🧠 CEREBRO: Coordina todo
+├── calibration_manager.py         → 📏 Calibra cada operador (30 seg)
+├── fatigue_detector.py           → 😴 Detecta fatiga/microsueños
+├── stress_analyzer.py            → 😰 Detecta estrés/tensión
+├── pulse_estimator.py           → ❤️  Mide pulso sin contacto
+├── emotion_analyzer.py          → 😊 Detecta 7 emociones
+├── anomaly_detector.py          → ⚠️  Detecta intoxicación/problemas
+└── analysis_dashboard.py        → 📺 Panel visual (solo si hay pantalla)
+
+
+core/
+├── analysis/                    (YA EXISTE - modelo a seguir)
+│   ├── integrated_analysis_system.py
+│   ├── analysis_dashboard.py
+│   └── calibration_manager.py
+│
+├── fatigue/                     
+│   ├── integrated_fatigue_system.py
+│   ├── fatigue_dashboard.py
+│   ├── fatigue_calibration.py
+│   └── fatigue_detection.py
+│
+├── behavior/                    
+│   ├── integrated_behavior_system.py
+│   ├── behavior_dashboard.py
+│   ├── behavior_calibration.py
+│   └── behavior_detector.py
+│
+├── distraction/                 
+│   ├── integrated_distraction_system.py
+│   ├── distraction_dashboard.py
+│   ├── distraction_calibration.py
+│   └── distraction_detector.py
+│
+├── yawn/                        
+│   ├── integrated_yawn_system.py
+│   ├── yawn_dashboard.py
+│   ├── yawn_calibration.py
+│   └── yawn_detector.py
+│
+└── face_recognition/            
+    ├── integrated_recognition_system.py
+    ├── recognition_dashboard.py
+    └── face_recognizer.py
+
+/ (raíz del proyecto)
+├── master_dashboard.py          (ÚNICO ARCHIVO NUEVO EN RAÍZ)
+└── main_system.py              (se conecta con master_dashboard)
+
+
+Flujo de Datos
+main_system.py
+    ↓ (frame + datos)
+master_dashboard.py
+    ├→ fatigue_dashboard.py
+    ├→ behavior_dashboard.py
+    ├→ distraction_dashboard.py
+    ├→ yawn_dashboard.py
+    └→ recognition_dashboard.py

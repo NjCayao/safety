@@ -1,0 +1,266 @@
+# config/default.yaml
+# Configuración por defecto del Sistema de Seguridad
+# Estos valores son seguros y funcionan en la mayoría de entornos
+
+system:
+  name: "Safety System"
+  version: "1.0.0"
+  enable_gui: true
+  log_level: "INFO"
+  debug_mode: false
+  
+  # Control de rendimiento
+  performance_monitoring: true
+  auto_optimization: true
+  
+  # Timeouts y reintentos
+  startup_timeout: 30
+  module_init_timeout: 10
+
+camera:
+  # Configuración básica de cámara
+  index: 0
+  width: 640
+  height: 480
+  fps: 30
+  
+  # Configuración avanzada
+  brightness: 0      # -100 a 100
+  contrast: 0        # -100 a 100
+  saturation: 0      # -100 a 100
+  exposure: -1       # Auto exposure
+  
+  # Buffer y latencia
+  buffer_size: 1
+  capture_timeout: 5
+  
+  # Configuración para Raspberry Pi
+  use_threading: true
+  warmup_time: 2
+
+fatigue:
+  # Detección de fatiga/microsueños
+  eye_closed_threshold: 1.5      # FIJO: 1.5 segundos (médicamente correcto)
+  ear_threshold: 0.20            # Eye Aspect Ratio threshold (se personaliza por operador)
+  ear_night_adjustment: 0.03     # Ajuste para modo nocturno
+  
+  # Ventana de tiempo y contadores
+  window_size: 600               # 10 minutos en segundos
+  frames_to_confirm: 4           # AUMENTADO: Frames para confirmar estado (reduce falsos positivos)
+  calibration_period: 30         # Frames para calibración automática
+  
+  # Umbrales de alerta
+  alarm_cooldown: 5              # Segundos entre alarmas
+  multiple_fatigue_threshold: 3  # Episodios para alerta crítica
+  
+  # Modo nocturno
+  night_mode_threshold: 50       # Umbral de luz para modo nocturno
+  enable_night_mode: true
+  
+  # NUEVO: Configuración anti-falsos positivos
+  blink_detection_enabled: true  # Detectar parpadeos naturales
+  head_pose_validation: true     # Validar orientación de cabeza
+  ear_stability_threshold: 0.02  # Varianza máxima para considerar estable
+
+yawn:
+  # Detección de bostezos
+  mouth_threshold: 0.7           # Umbral de apertura de boca
+  duration_threshold: 2.5        # Duración mínima del bostezo
+  window_size: 600               # Ventana de tiempo en segundos (10 min)
+  frames_to_confirm: 3           # Frames consecutivos para confirmar
+  
+  # Alertas
+  alert_cooldown: 5.0            # Tiempo entre alertas
+  max_yawns_before_alert: 3      # Número de bostezos para alerta
+  report_delay: 2.0              # Tiempo para mantener estado de reporte
+  
+  # Calibración automática
+  enable_auto_calibration: true
+  calibration_frames: 60
+  calibration_factor: 0.4
+  
+  # Audio
+  enable_sounds: true
+  audio_frequency: 44100
+  audio_channels: 2
+  audio_buffer: 2048
+
+distraction:
+  # Detección de distracciones
+  rotation_threshold_day: 2.6    # Umbral día
+  rotation_threshold_night: 2.8  # Umbral noche
+  extreme_rotation_threshold: 2.5
+  
+  # Temporización de alertas
+  level1_time: 3                 # Segundos para primer nivel
+  level2_time: 5                 # Segundos para segundo nivel
+  
+  # Sensibilidad y detección
+  visibility_threshold: 15       # Píxeles mínimos de visibilidad
+  frames_without_face_limit: 5   # Frames sin cara antes de asumir giro extremo
+  confidence_threshold: 0.7      # Umbral de confianza
+  
+  # Configuración
+  prediction_buffer_size: 10     # Tamaño del buffer de predicciones
+  distraction_window: 600        # Ventana de 10 minutos
+  min_frames_for_reset: 10       # Frames mínimos antes de resetear
+  
+  # Audio y control
+  audio_enabled: true
+  level1_volume: 0.8
+  level2_volume: 1.0
+  camera_fps: 4                  # Para cálculos de temporización
+
+behavior:
+  # Detección de comportamientos peligrosos
+  confidence_threshold: 0.2      # Umbral de confianza diurno
+  night_confidence_threshold: 0.15  # Umbral nocturno
+
+  # Configuración de iluminación
+  night_mode_threshold: 50       # Umbral para modo nocturno
+  night_image_alpha: 1.3         # Factor de brillo nocturno
+  night_image_beta: 40           # Offset de brillo nocturno
+  
+  # Tiempos para celular
+  phone_alert_threshold_1: 3     # Segundos para primera alerta
+  phone_alert_threshold_2: 7     # Segundos para alerta crítica
+  
+  # Configuración para cigarro
+  cigarette_pattern_window: 30   # Ventana de tiempo en segundos
+  cigarette_pattern_threshold: 3 # Número de detecciones para patrón
+  cigarette_continuous_threshold: 7  # Segundos para alerta continua
+  
+  # Configuración general
+  face_proximity_factor: 3.0       # Factor de distancia facial
+  detection_timeout: 1.0         # Segundos sin detección para limpiar
+  
+  # Audio
+  audio_enabled: true
+
+audio:
+  # Configuración de audio/alarmas
+  enabled: true
+  volume: 1.0                    # Volumen general (0.0 - 1.0)
+  
+  # Configuración de pygame
+  frequency: 44100
+  size: -16
+  channels: 2
+  buffer: 2048
+  
+  # Archivos de audio
+  files:
+    greeting: "alarma.mp3"
+    fatigue: "alarma.mp3"
+    cell_phone: "alarma.mp3"
+    cigarette: "alarma.mp3"
+    unauthorized: "alarma.mp3"
+    yawn: "alarma.mp3"
+    recommendation: "recomendacion_pausas_activas.mp3"
+    
+    # Comportamientos específicos
+    telefono: "telefono.mp3"
+    cigarro: "cigarro.mp3"
+    comportamiento10s: "comportamiento10s.mp3"
+    
+    # Bostezos progresivos
+    bostezo1: "bostezo1.mp3"
+    bostezo2: "bostezo2.mp3"
+    bostezo3: "bostezo3.mp3"
+    
+    # Distracciones
+    vadelante1: "vadelante1.mp3"
+    distraction: "distraction.mp3"
+
+face_recognition:
+  # Reconocimiento facial
+  tolerance: 0.6                 # Tolerancia para reconocimiento
+  operators_dir: "operators"
+  
+  # Configuración de análisis
+  enable_expression_analysis: true
+  enable_fatigue_analysis: true
+  enable_stress_analysis: true
+  
+  # Umbrales de análisis
+  expression_sensitivity: 0.7
+  expression_memory_frames: 10
+  expression_threshold: 0.65
+  
+  # Detección de fatiga facial
+  fatigue_ear_threshold: 0.25
+  fatigue_time_window: 60
+  
+  # Análisis de estrés
+  stress_facial_tension_threshold: 0.6
+  stress_micro_movement_threshold: 0.3
+  stress_time_window: 30
+  
+  # Modo nocturno
+  night_mode_threshold: 50
+  enable_sounds: false           # Controlado por audio.enabled
+
+sync:
+  # Configuración de sincronización
+  enabled: true
+  server_url: "http://localhost/safety_system"
+  
+  # Timeouts y reintentos
+  connection_timeout: 10
+  read_timeout: 30
+  max_retries: 3
+  retry_delay: 5
+  
+  # Sincronización automática
+  auto_sync_interval: 300        # 5 minutos
+  batch_size: 50                 # Eventos por lote
+  
+  # Almacenamiento local
+  max_local_events: 10000
+  cleanup_days: 30               # Días para limpiar eventos antiguos
+
+logging:
+  # Configuración de logging
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  
+  # Archivos de log
+  file_enabled: true
+  file_max_size: 10485760        # 10MB
+  file_backup_count: 5
+  
+  # Logging específico por módulo
+  modules:
+    camera: "INFO"
+    fatigue: "INFO"
+    behavior: "INFO"
+    sync: "INFO"
+    
+alerts:
+  # Configuración de alertas
+  cooldown_time: 5               # Segundos entre alertas del mismo tipo
+  
+  # Prioridades de alerta
+  priorities:
+    fatigue: "high"
+    multiple_fatigue: "critical"
+    yawn: "medium"
+    multiple_yawns: "high"
+    distraction: "medium"
+    cell_phone: "high"
+    cigarette: "high"
+    unauthorized: "critical"
+
+reports:
+  # Configuración de reportes
+  enabled: true
+  directory: "reports"
+  
+  # Formato de archivos
+  image_format: "jpg"
+  image_quality: 85
+  include_metadata: true
+  
+  # Limpieza automática
+  auto_cleanup: true
+  max_age_days: 90

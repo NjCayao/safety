@@ -1,0 +1,7 @@
+opencv-python==4.5.5.64
+dlib
+numpy
+scipy
+PyYAML>=6.0
+psutil
+pygame

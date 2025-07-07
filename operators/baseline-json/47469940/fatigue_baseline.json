@@ -1,0 +1,33 @@
+{
+  "operator_id": "47469940",
+  "calibration_info": {
+    "created_at": "2025-07-06T20:23:33.500163",
+    "photos_processed": 4,
+    "version": "1.0",
+    "source": "master_calibration"
+  },
+  "thresholds": {
+    "ear_threshold": 0.33647853044283754,
+    "ear_night_adjustment": 0.018391855471318583,
+    "microsleep_threshold": 1.5,
+    "blink_rate_normal": 15,
+    "calibration_confidence": 1.0
+  },
+  "statistics": {
+    "ear_stats": {
+      "mean": 0.3465604445360368,
+      "std": 0.03678371094263717,
+      "min": 0.29962503609051405,
+      "max": 0.4025735082231022,
+      "percentiles": {
+        "25": 0.3284903754639591,
+        "50": 0.34202161691526545,
+        "75": 0.3600916859873432
+      }
+    },
+    "lighting_stats": {
+      "mean": 126.7197179930139,
+      "std": 18.604177141556256
+    }
+  }
+}
