@@ -31,7 +31,7 @@ except ImportError:
 
 # Importar módulos individuales
 from core.camera_module import CameraModule
-from core.face_recognition_module import FaceRecognitionModule
+from core.face_recognition.face_recognition_module import FaceRecognitionModule
 from core.fatigue.fatigue_detection import FatigueDetector
 from core.bostezo_detection import BostezosDetector
 from core.distraction_detection import DistractionDetector

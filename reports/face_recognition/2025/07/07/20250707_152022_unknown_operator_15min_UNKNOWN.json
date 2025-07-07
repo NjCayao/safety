@@ -1,0 +1,24 @@
+{
+  "id": "face_recognition_unknown_operator_15min_UNKNOWN_20250707152022",
+  "module": "face_recognition",
+  "event_type": "unknown_operator_15min",
+  "timestamp": "2025-07-07T15:20:22.733898",
+  "operator": {
+    "id": "UNKNOWN",
+    "name": "No Registrado"
+  },
+  "data": {
+    "event_type": "unknown_operator",
+    "duration_seconds": 22.08063507080078,
+    "duration_minutes": 0.36801058451334634,
+    "threshold_minutes": 15.0,
+    "timestamp": 1751919622.7338986,
+    "message": "Operador no registrado detectado por 0.4 minutos"
+  },
+  "metadata": {
+    "version": "1.0",
+    "generated_by": "ReportManager",
+    "environment": "production"
+  },
+  "image_path": "reports\\face_recognition\\2025/07/07\\20250707_152022_unknown_operator_15min_UNKNOWN.jpg"
+}

@@ -1,0 +1,15 @@
+{
+  "id": "fatigue_microsleep_47469940_20250707154601",
+  "module": "fatigue",
+  "event_type": "microsleep",
+  "timestamp": "2025-07-07T15:46:01.659662",
+  "operator": {
+    "id": "47469940",
+    "name": "Operador: Nilson Cayao"
+  },
+  "data": {
+    "ear_value": 0.13103237885503305,
+    "ear_threshold": 0.2,
+    "eyes_closed_duration": 1.4392814636230469,
+    "microsleep_count": 1,
+    "is_night_mode": 

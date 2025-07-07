@@ -19,6 +19,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from core.fatigue.fatigue_calibration import FatigueCalibration
 from core.behavior.behavior_calibration import BehaviorCalibration
 from core.analysis.analysis_calibration import AnalysisCalibration
+from core.face_recognition.face_recognition_calibration import FaceRecognitionCalibration
 # from core.distraction.distraction_calibration import DistractionCalibration
 # from core.yawn.yawn_calibration import YawnCalibration
 
@@ -45,6 +46,7 @@ class MasterCalibrationManager:
             'fatigue': FatigueCalibration(self.baseline_dir),
             'behavior': BehaviorCalibration(self.baseline_dir),
             'analysis': AnalysisCalibration(self.baseline_dir),
+            'face_recognition': FaceRecognitionCalibration(self.baseline_dir),
             # 'distraction': DistractionCalibration(self.baseline_dir),
             # 'yawn': YawnCalibration(self.baseline_dir)
         }
@@ -432,6 +434,26 @@ class MasterCalibrationManager:
                 'right_ear_values': [m['right_ear'] for m in all_metrics],
                 'light_levels': [m['light_level'] for m in all_metrics],
                 'eye_distances': [m['eye_distance'] for m in all_metrics]
+            }
+        
+        elif module_name == 'face_recognition':
+            # Métricas para reconocimiento facial            
+            # Calcular variabilidad de encodings faciales
+            face_encodings_std = []
+            if len(all_metrics) > 1:
+                # Simular variabilidad basada en cambios en landmarks
+                for i in range(1, len(all_metrics)):
+                    if 'landmarks' in all_metrics[i] and 'landmarks' in all_metrics[i-1]:
+                        # Calcular diferencia entre landmarks consecutivos
+                        landmarks1 = np.array(all_metrics[i-1]['landmarks'])
+                        landmarks2 = np.array(all_metrics[i]['landmarks'])
+                        diff = np.mean(np.abs(landmarks1 - landmarks2))
+                        face_encodings_std.append(diff / 100)  # Normalizar
+            
+            return {
+                'face_areas': [m['face_area'] for m in all_metrics],
+                'light_levels': [m['light_level'] for m in all_metrics],
+                'face_encodings_std': face_encodings_std
             }
             
         elif module_name == 'yawn':

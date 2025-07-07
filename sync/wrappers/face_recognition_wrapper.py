@@ -1,6 +1,6 @@
 import time
 import logging
-from core.face_recognition_module import FaceRecognizer as OriginalFaceRecognizer
+from core.face_recognition.face_recognition_module import FaceRecognizer as OriginalFaceRecognizer
 from client.utils.event_manager import EventManager
 
 logger = logging.getLogger('face_recognizer_wrapper')
