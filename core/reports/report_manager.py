@@ -12,6 +12,7 @@ import logging
 import threading
 import queue
 import time
+import numpy as np
 
 # Importar configuración si está disponible
 try:
@@ -19,6 +20,21 @@ try:
     CONFIG_AVAILABLE = True
 except ImportError:
     CONFIG_AVAILABLE = False
+
+class NumpyEncoder(json.JSONEncoder):
+    """Encoder personalizado para manejar tipos numpy"""
+    def default(self, obj):
+        if isinstance(obj, np.bool_):
+            return bool(obj)
+        elif isinstance(obj, np.integer):
+            return int(obj)
+        elif isinstance(obj, np.floating):
+            return float(obj)
+        elif isinstance(obj, np.ndarray):
+            return obj.tolist()
+        elif isinstance(obj, np.void):
+            return None
+        return super(NumpyEncoder, self).default(obj)
 
 class ReportManager:
     def __init__(self, reports_dir="reports", server_url=None):
@@ -66,7 +82,7 @@ class ReportManager:
     
     def _create_directories(self):
         """Crea la estructura de directorios para reportes"""
-        modules = ['fatigue', 'behavior', 'distraction', 'yawn', 'analysis', 'general']        
+        modules = ['fatigue', 'behavior', 'distraction', 'yawn', 'analysis', 'general', 'face_recognition']        
         
         for module in modules:
             module_dir = os.path.join(self.reports_dir, module)
@@ -94,14 +110,38 @@ class ReportManager:
             # Crear identificador único
             report_id = self._generate_report_id(module_name, event_type, timestamp, operator_info)
             
+            # Función para convertir tipos numpy
+            def convert_numpy_types(obj):
+                if isinstance(obj, np.bool_):
+                    return bool(obj)
+                elif isinstance(obj, np.integer):
+                    return int(obj)
+                elif isinstance(obj, np.floating):
+                    return float(obj)
+                elif isinstance(obj, np.ndarray):
+                    return obj.tolist()
+                elif isinstance(obj, dict):
+                    return {key: convert_numpy_types(value) for key, value in obj.items()}
+                elif isinstance(obj, list):
+                    return [convert_numpy_types(item) for item in obj]
+                elif isinstance(obj, tuple):
+                    return tuple(convert_numpy_types(item) for item in obj)
+                elif isinstance(obj, set):
+                    return list(obj)  # Convertir sets a listas
+                return obj
+            
+            # Convertir datos antes de crear el reporte
+            clean_data = convert_numpy_types(data)
+            clean_operator_info = convert_numpy_types(operator_info) if operator_info else None
+            
             # Crear estructura de reporte
             report = {
                 'id': report_id,
                 'module': module_name,
                 'event_type': event_type,
                 'timestamp': timestamp.isoformat(),
-                'operator': operator_info,
-                'data': data,
+                'operator': clean_operator_info,
+                'data': clean_data,
                 'metadata': {
                     'version': '1.0',
                     'generated_by': 'ReportManager',
@@ -129,7 +169,7 @@ class ReportManager:
             # Guardar JSON del reporte
             json_path = os.path.join(base_dir, f"{base_filename}.json")
             with open(json_path, 'w', encoding='utf-8') as f:
-                json.dump(report, f, indent=2, ensure_ascii=False)
+                json.dump(report, f, indent=2, ensure_ascii=False, cls=NumpyEncoder)
             
             report['json_path'] = json_path
             

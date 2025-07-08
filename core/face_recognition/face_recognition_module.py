@@ -4,8 +4,8 @@ import numpy as np
 import pickle
 import os
 import logging
-import pygame
 import time
+from core.alarm_module import AlarmModule
 
 # Importar configuración si está disponible
 try:
@@ -47,9 +47,16 @@ class FaceRecognitionModule:
                 'calibration_confidence': 0.0
             }
 
-        # Variables internas
-        self.ultimo_operador_id = None
-        self.last_welcome_time = 0
+        # ========== NUEVO CONTROL DE SESIÓN ==========
+        # Control mejorado de sesiones de operadores
+        self.operator_sessions = {}  # {operator_id: {'last_seen': timestamp, 'welcomed': bool}}
+        self.SESSION_TIMEOUT = 600   # 10 minutos (600 segundos)
+        self.MIN_ABSENCE_TIME = 10   # Mínimo 10 segundos ausente para considerar ausencia
+        
+        # Para operadores no registrados
+        self.unknown_last_seen = None
+        self.unknown_welcomed = False
+        # ============================================
         
         # Estado de iluminación
         self.is_night_mode = False
@@ -63,18 +70,22 @@ class FaceRecognitionModule:
             'background': (0, 0, 0)         # Negro para fondo
         }
         
-        # Inicializar pygame para audio (si está habilitado)
+        # Inicializar AlarmModule para audio
         if self.config['enable_sounds']:
             try:
-                pygame.mixer.init()
+                self.alarm_module = AlarmModule()
+                self.alarm_module.initialize()
                 self.audio_initialized = True
+                self.logger.info("Sistema de audio inicializado a través de AlarmModule")
             except:
                 self.logger.warning("No se pudo inicializar el sistema de audio")
                 self.audio_initialized = False
+                self.alarm_module = None
         else:
             self.audio_initialized = False
+            self.alarm_module = None
 
-        self.logger.info(f"FaceRecognitionModule inicializado (SOLO RECONOCIMIENTO)")
+        self.logger.info(f"FaceRecognitionModule inicializado con control de sesión mejorado")
 
     def update_config(self, new_config):
         """
@@ -86,25 +97,25 @@ class FaceRecognitionModule:
         self.config.update(new_config)
         self.logger.info("Configuración actualizada")
 
-    def reproducir_audio(self, ruta):
-        """Reproduce un archivo de audio si los sonidos están habilitados"""
-        if not self.config['enable_sounds'] or not self.audio_initialized:
+    def reproducir_audio(self, audio_key):
+        """Reproduce un archivo de audio usando AlarmModule"""
+        if not self.config['enable_sounds'] or not self.audio_initialized or not self.alarm_module:
             return
             
         try:
-            current_time = time.time()
+            # Mapeo de rutas antiguas a claves del AlarmModule
+            audio_map = {
+                "assets/audio/bienvenido.mp3": "bienvenido",
+                "assets/audio/no_registrado.mp3": "no_registrado"
+            }
             
-            # Verificar delay entre audios de bienvenida
-            if "bienvenido" in ruta:
-                if current_time - self.last_welcome_time < self.config['welcome_delay']:
-                    return
-                self.last_welcome_time = current_time
+            # Si es una ruta antigua, convertir a clave
+            if audio_key in audio_map:
+                audio_key = audio_map[audio_key]
             
-            if os.path.exists(ruta):
-                pygame.mixer.music.load(ruta)
-                pygame.mixer.music.play()
-            else:
-                self.logger.warning(f"Archivo de audio no encontrado: {ruta}")
+            # Usar AlarmModule para reproducir
+            self.alarm_module.play_audio(audio_key)
+            
         except Exception as e:
             self.logger.error(f"Error al reproducir audio: {e}")
 
@@ -133,7 +144,7 @@ class FaceRecognitionModule:
 
     def identify_operator(self, frame):
         """
-        Identifica al operador en el frame actual (SOLO RECONOCIMIENTO).
+        Identifica al operador en el frame actual con control de sesión mejorado.
         
         Returns:
             dict: Información del operador o None si no se reconoce
@@ -158,10 +169,7 @@ class FaceRecognitionModule:
         face_locations = face_recognition.face_locations(rgb_small_frame)
 
         if not face_locations:
-            # No hay rostro detectado
-            if self.ultimo_operador_id is not None:
-                self.ultimo_operador_id = None
-                # No reproducir audio cuando no hay rostro
+            # No hay rostro detectado - NO reproducir audio
             return None
 
         try:
@@ -189,7 +197,7 @@ class FaceRecognitionModule:
                 face_landmarks = face_landmarks_list[i] if i < len(face_landmarks_list) else None
                 
                 if matches[best_match_index] and confidence >= self.config['min_confidence']:
-                    # OPERADOR RECONOCIDO
+                    # ========== OPERADOR REGISTRADO ==========
                     operator_id = self.known_face_ids[best_match_index]
                     operator_info = self.operators[operator_id].copy()
                     operator_info['confidence'] = confidence
@@ -204,21 +212,51 @@ class FaceRecognitionModule:
                     operator_info['face_location'] = (top, right, bottom, left)
                     operator_info['face_area'] = (right - left) * (bottom - top)
                     
-                    # Agregar landmarks (escalados al tamaño original)
+                    # Agregar landmarks
                     if face_landmarks:
                         scaled_landmarks = {}
                         for feature, points in face_landmarks.items():
                             scaled_landmarks[feature] = [(p[0] * 4, p[1] * 4) for p in points]
                         operator_info['face_landmarks'] = scaled_landmarks
 
-                    # Audio de bienvenida
-                    if self.ultimo_operador_id != operator_id:
+                    # ========== CONTROL DE SESIÓN MEJORADO ==========
+                    current_time = time.time()
+                    
+                    # Verificar si tenemos historial de este operador
+                    if operator_id in self.operator_sessions:
+                        session_info = self.operator_sessions[operator_id]
+                        time_since_last_seen = current_time - session_info['last_seen']
+                        
+                        # Determinar si debemos dar bienvenida
+                        if time_since_last_seen > self.SESSION_TIMEOUT:
+                            # Ausente más de 10 minutos - Nueva sesión
+                            self.reproducir_audio("assets/audio/bienvenido.mp3")
+                            self.logger.info(f"Nueva sesión para {operator_info['name']} después de {time_since_last_seen/60:.1f} minutos")
+                            session_info['welcomed'] = True
+                        elif time_since_last_seen >= self.MIN_ABSENCE_TIME and not session_info['welcomed']:
+                            # Caso especial: si nunca fue bienvenido en esta sesión
+                            self.reproducir_audio("assets/audio/bienvenido.mp3")
+                            session_info['welcomed'] = True
+                        # Si ausente menos de 10 segundos o ya fue bienvenido - no hacer nada
+                        
+                        session_info['last_seen'] = current_time
+                    else:
+                        # Primera vez que vemos a este operador
                         self.reproducir_audio("assets/audio/bienvenido.mp3")
-                        self.ultimo_operador_id = operator_id
+                        self.logger.info(f"Primera detección de {operator_info['name']}")
+                        self.operator_sessions[operator_id] = {
+                            'last_seen': current_time,
+                            'welcomed': True
+                        }
+                    
+                    # Reset el estado de operador desconocido
+                    self.unknown_last_seen = None
+                    self.unknown_welcomed = False
 
                     return operator_info
+                    
                 else:
-                    # ROSTRO DETECTADO PERO NO RECONOCIDO
+                    # ========== OPERADOR NO REGISTRADO ==========
                     top, right, bottom, left = face_locations[0]
                     top *= 4
                     right *= 4
@@ -242,10 +280,29 @@ class FaceRecognitionModule:
                             scaled_landmarks[feature] = [(p[0] * 4, p[1] * 4) for p in points]
                         unknown_info['face_landmarks'] = scaled_landmarks
                     
-                    # Audio de no registrado - Primera vez
-                    if self.ultimo_operador_id != 'UNKNOWN':
+                    # ========== CONTROL DE SESIÓN PARA NO REGISTRADO ==========
+                    current_time = time.time()
+                    
+                    if self.unknown_last_seen is not None:
+                        time_since_last_seen = current_time - self.unknown_last_seen
+                        
+                        if time_since_last_seen > self.SESSION_TIMEOUT:
+                            # Ausente más de 10 minutos
+                            self.reproducir_audio("assets/audio/no_registrado.mp3")
+                            self.logger.warning(f"Operador no registrado detectado nuevamente después de {time_since_last_seen/60:.1f} minutos")
+                            self.unknown_welcomed = True
+                        elif time_since_last_seen >= self.MIN_ABSENCE_TIME and not self.unknown_welcomed:
+                            # Primera vez en esta sesión
+                            self.reproducir_audio("assets/audio/no_registrado.mp3")
+                            self.unknown_welcomed = True
+                        # Si menos de 10 segundos o ya avisado - no hacer nada
+                    else:
+                        # Primera vez detectando operador no registrado
                         self.reproducir_audio("assets/audio/no_registrado.mp3")
-                        self.ultimo_operador_id = 'UNKNOWN'
+                        self.logger.warning("Operador no registrado detectado por primera vez")
+                        self.unknown_welcomed = True
+                    
+                    self.unknown_last_seen = current_time
                     
                     return unknown_info
 
@@ -269,7 +326,7 @@ class FaceRecognitionModule:
         if previous_mode != self.is_night_mode:
             mode_str = "NOCTURNO" if self.is_night_mode else "DIURNO"
             self.logger.info(f"Cambio a modo {mode_str} (Nivel de luz: {self.light_level:.1f})")
-        
+    
     def draw_operator_info(self, frame, operator_info):
         """
         Dibuja los puntos faciales (landmarks) usados para reconocimiento.
@@ -379,5 +436,7 @@ class FaceRecognitionModule:
             'calibration_confidence': self.config.get('calibration_confidence', 0),
             'current_tolerance': self.config['face_tolerance'] + (
                 self.config['night_tolerance_adjustment'] if self.is_night_mode else 0
-            )
+            ),
+            'active_sessions': len(self.operator_sessions),
+            'session_timeout_minutes': self.SESSION_TIMEOUT / 60
         }

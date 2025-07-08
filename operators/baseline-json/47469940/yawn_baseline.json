@@ -1,0 +1,41 @@
+{
+  "operator_id": "47469940",
+  "calibration_info": {
+    "created_at": "2025-07-08T17:24:34.471889",
+    "photos_processed": 4,
+    "version": "1.0",
+    "source": "master_calibration"
+  },
+  "thresholds": {
+    "mar_threshold": 0.6,
+    "duration_threshold": 2.0,
+    "frames_to_confirm": 2,
+    "night_mode_threshold": 50,
+    "night_adjustment": 0.05,
+    "enable_night_mode": true,
+    "max_yawns_before_alert": 3,
+    "window_size": 600,
+    "calibration_confidence": 1.0
+  },
+  "statistics": {
+    "mar_stats": {
+      "mean": 0.3572703325290784,
+      "std": 0.010913435299621311,
+      "min": 0.3467499960880697,
+      "max": 0.373971515371544,
+      "percentiles": {
+        "20": 0.34771699929819644,
+        "50": 0.35417990932835,
+        "80": 0.36558749647966904
+      }
+    },
+    "mouth_width_stats": {
+      "mean": 125.06037543594533,
+      "std": 47.50949900620294
+    },
+    "mouth_height_stats": {
+      "mean": 42.02475232584326,
+      "std": 16.33769236922802
+    }
+  }
+}

@@ -6,7 +6,7 @@ import logging
 import time
 
 class AlarmModule:
-    def __init__(self, audio_dir="audio"):
+    def __init__(self, audio_dir="assets/audio"):
         self.audio_dir = audio_dir
         self.logger = logging.getLogger('AlarmModule')
         self.initialized = False
@@ -36,25 +36,47 @@ class AlarmModule:
             if not self.initialize():
                 return False
         
-        # Mapeo interno para compatibilidad con código antiguo
+        # Mapeo interno para todos los módulos
         audio_mapping = {
-            "greeting": "alarma.mp3",
+            # === FACE RECOGNITION ===
+            "bienvenido": "bienvenido.mp3",
+            "no_registrado": "no_registrado.mp3",
+            
+            # === FATIGUE DETECTION ===
             "fatigue": "alarma.mp3",
+            "fatigue_1": "fatigue_1.mp3",
+            "fatigue_2": "fatigue_2.mp3",
+            "fatigue_3": "fatigue_3.mp3",
+            
+            # === YAWN DETECTION ===
+            "bostezo1": "bostezo1.mp3",
+            "bostezo2": "bostezo2.mp3", 
+            "bostezo3": "bostezo3.mp3",
+            # QUITAMOS: "yawn": "alarma.mp3",  # Esto podría interferir
+            
+            # === BEHAVIOR ===
+            "telefono": "telefono.mp3",
+            "cigarro": "cigarro.mp3",
+            "comportamiento10s": "comportamiento10s.mp3",
+            
+            # === GENERAL ===
+            "alarma": "alarma.mp3",
+            "greeting": "alarma.mp3",
             "cell phone": "alarma.mp3",
             "cigarette": "alarma.mp3",
             "break": "alarma.mp3",
-            "unauthorized": "alarma.mp3",           
-            "yawn": "alarma.mp3",
+            "unauthorized": "alarma.mp3",
             "nodding": "alarma.mp3",
-            "recomendacion": "recomendacion_pausas_activas.mp3",
-            
-            # Mapeo de comportamientos
-            "telefono": "telefono.mp3",
-            "cigarro": "cigarro.mp3",
-            "comportamiento10s": "comportamiento10s.mp3"
+            "recomendacion": "recomendacion_pausas.mp3",
+            "recomendacion_pausas": "recomendacion_pausas.mp3"
         }
         
         try:
+            # DEBUG para bostezo3
+            if "bostezo3" in audio_identifier.lower():
+                self.logger.info(f"=== DEBUG BOSTEZO3 ===")
+                self.logger.info(f"Audio identifier recibido: '{audio_identifier}'")
+            
             # 1. Si es una ruta absoluta, usarla directamente
             if os.path.isabs(audio_identifier) and os.path.exists(audio_identifier):
                 audio_path = audio_identifier
@@ -90,6 +112,10 @@ class AlarmModule:
             # Reproducir el audio
             self.logger.info(f"Reproduciendo: {audio_path}")
             
+            # DEBUG específico para bostezo3
+            if "bostezo3" in audio_path:
+                self.logger.info(f"=== CONFIRMADO: Reproduciendo bostezo3.mp3 ===")
+            
             # No reiniciar mixer si no es necesario (evita cortes)
             if pygame.mixer.music.get_busy():
                 pygame.mixer.music.stop()
@@ -98,14 +124,14 @@ class AlarmModule:
             pygame.mixer.music.load(audio_path)
             pygame.mixer.music.play()
             
-            # Casos especiales (como fatiga que reproduce dos audios)
-            if audio_identifier in ["fatigue", "yawn"]:
+            # Casos especiales - SOLO PARA FATIGUE
+            if audio_identifier == "fatigue":
                 # Esperar a que termine
                 while pygame.mixer.music.get_busy():
                     time.sleep(0.1)
                 
                 # Reproducir recomendación
-                recommendation_path = os.path.join(self.audio_dir, "recomendacion_pausas_activas.mp3")
+                recommendation_path = os.path.join(self.audio_dir, "recomendacion_pausas.mp3")
                 if os.path.exists(recommendation_path):
                     pygame.mixer.music.load(recommendation_path)
                     pygame.mixer.music.play()

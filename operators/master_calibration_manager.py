@@ -20,8 +20,8 @@ from core.fatigue.fatigue_calibration import FatigueCalibration
 from core.behavior.behavior_calibration import BehaviorCalibration
 from core.analysis.analysis_calibration import AnalysisCalibration
 from core.face_recognition.face_recognition_calibration import FaceRecognitionCalibration
+from core.yawn.yawn_calibration import YawnCalibration
 # from core.distraction.distraction_calibration import DistractionCalibration
-# from core.yawn.yawn_calibration import YawnCalibration
 
 class MasterCalibrationManager:
     def __init__(self, operators_dir="operators", model_path="assets/models/shape_predictor_68_face_landmarks.dat"):
@@ -47,8 +47,9 @@ class MasterCalibrationManager:
             'behavior': BehaviorCalibration(self.baseline_dir),
             'analysis': AnalysisCalibration(self.baseline_dir),
             'face_recognition': FaceRecognitionCalibration(self.baseline_dir),
+            'yawn': YawnCalibration(self.baseline_dir)
             # 'distraction': DistractionCalibration(self.baseline_dir),
-            # 'yawn': YawnCalibration(self.baseline_dir)
+            
         }
         
         # Buffer para métricas extraídas
@@ -502,6 +503,15 @@ class MasterCalibrationManager:
                 # Datos completos por si se necesitan
                 'metrics': all_metrics,
                 'timestamps': extracted_data.get('timestamps', [])
+            }
+        
+        elif module_name == 'yawn':
+            # Métricas para bostezos
+            return {
+                'mar_values': [m['mar'] for m in all_metrics],
+                'mouth_widths': [m['mouth_width'] for m in all_metrics],
+                'mouth_heights': [m['mouth_height'] for m in all_metrics],
+                'light_levels': [m['light_level'] for m in all_metrics]  # AGREGADO
             }
         
         # Default: retornar todo

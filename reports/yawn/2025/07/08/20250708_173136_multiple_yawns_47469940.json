@@ -1,0 +1,121 @@
+{
+  "id": "yawn_multiple_yawns_47469940_20250708173136",
+  "module": "yawn",
+  "event_type": "multiple_yawns",
+  "timestamp": "2025-07-08T17:31:36.150686",
+  "operator": {
+    "id": "47469940",
+    "name": "Operador Real"
+  },
+  "data": {
+    "yawn_count": 3,
+    "window_minutes": 10,
+    "max_allowed": 3,
+    "yawn_times": [
+      1752013865.2950108,
+      1752013886.413758,
+      1752013896.150687
+    ],
+    "detection_details": {
+      "mar_value": 0.4221961615350868,
+      "smooth_mar": 0.4927919789386619,
+      "mar_threshold": 0.6,
+      "is_yawning": false,
+      "yawn_detected": true,
+      "yawn_duration": 3.6917428970336914,
+      "is_night_mode": false,
+      "light_level": 151.28912109375,
+      "mouth_points": [
+        [
+          573,
+          356
+        ],
+        [
+          585,
+          338
+        ],
+        [
+          600,
+          328
+        ],
+        [
+          613,
+          332
+        ],
+        [
+          626,
+          329
+        ],
+        [
+          645,
+          339
+        ],
+        [
+          663,
+          357
+        ],
+        [
+          644,
+          364
+        ],
+        [
+          626,
+          367
+        ],
+        [
+          612,
+          367
+        ],
+        [
+          598,
+          366
+        ],
+        [
+          584,
+          363
+        ],
+        [
+          581,
+          354
+        ],
+        [
+          600,
+          346
+        ],
+        [
+          613,
+          347
+        ],
+        [
+          626,
+          347
+        ],
+        [
+          653,
+          356
+        ],
+        [
+          625,
+          346
+        ],
+        [
+          612,
+          346
+        ],
+        [
+          599,
+          345
+        ]
+      ],
+      "timestamp": 1752013896.150687
+    },
+    "is_calibrated": true,
+    "analysis_timestamp": 1752013896.150687
+  },
+  "metadata": {
+    "version": "1.0",
+    "generated_by": "ReportManager",
+    "environment": "production"
+  },
+  "image_path": "reports\\yawn\\2025/07/08\\20250708_173136_multiple_yawns_47469940.jpg"
+}
