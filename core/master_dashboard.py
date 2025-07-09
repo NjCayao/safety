@@ -1,7 +1,7 @@
 """
-Master Dashboard con Reconocimiento Facial
-=========================================
-Dashboard principal que integra todos los módulos incluyendo reconocimiento facial.
+Master Dashboard Profesional - Diseño Mejorado
+=============================================
+Dashboard elegante y profesional con diseño moderno y mejor legibilidad.
 """
 
 import cv2
@@ -10,12 +10,12 @@ import time
 from collections import deque
 
 class MasterDashboard:
-    def __init__(self, width=300, position='left', enable_analysis_dashboard=True):
+    def __init__(self, width=350, position='left', enable_analysis_dashboard=True):
         """
-        Inicializa el dashboard maestro.
+        Inicializa el dashboard maestro con diseño profesional.
         
         Args:
-            width: Ancho del panel del dashboard (default: 300px)
+            width: Ancho del panel del dashboard (default: 350px)
             position: Posición del dashboard ('left' o 'right', default: 'left')
             enable_analysis_dashboard: Si habilitar el dashboard de análisis
         """
@@ -33,68 +33,76 @@ class MasterDashboard:
             except ImportError:
                 print("AnalysisDashboard no disponible - continuando sin él")
         
-        # Colores del tema
+        # Colores del tema profesional (más suaves y elegantes)
         self.colors = {
-            'background': (20, 20, 20),
-            'panel_bg': (30, 30, 30),
-            'section_bg': (25, 25, 25),
-            'text_primary': (255, 255, 255),
-            'text_secondary': (180, 180, 180),
-            'success': (0, 255, 0),
-            'warning': (0, 165, 255),
-            'danger': (0, 0, 255),
-            'accent': (255, 255, 0),
-            'fatigue_color': (255, 150, 150),
-            'behavior_color': (150, 150, 255),
-            'face_color': (150, 255, 150),  # Color para reconocimiento facial
-            'graph_bg': (40, 40, 40),
-            'graph_line': (0, 255, 255)
+            'background': (25, 25, 25),      # Gris oscuro más suave
+            'panel_bg': (35, 35, 35),        # Gris panel
+            'section_bg': (30, 30, 30),      # Gris sección
+            'header_bg': (45, 45, 45),       # Gris encabezado
+            'text_primary': (240, 240, 240), # Blanco suave
+            'text_secondary': (160, 160, 160), # Gris claro
+            'text_dim': (100, 100, 100),     # Gris muy suave
+            'success': (46, 204, 113),       # Verde moderno
+            'warning': (241, 196, 15),       # Amarillo elegante
+            'danger': (231, 76, 60),         # Rojo moderno
+            'info': (52, 152, 219),          # Azul informativo
+            'accent': (155, 89, 182),        # Púrpura acento
+            'graph_bg': (40, 40, 40),        # Fondo gráfico
+            'graph_grid': (60, 60, 60),      # Líneas grid
+            'divider': (50, 50, 50)          # Líneas divisoras
         }
         
-        # Fuentes - Tamaño pequeño para texto compacto
+        # Fuentes profesionales
         self.font = cv2.FONT_HERSHEY_SIMPLEX
+        self.font_bold = cv2.FONT_HERSHEY_DUPLEX
         self.font_sizes = {
-            'title': 0.5,      # ~12px
-            'section': 0.45,   # ~11px
-            'body': 0.4,       # ~10px
-            'small': 0.35      # ~9px
+            'header': 0.7,     # Título principal
+            'title': 0.6,      # Títulos de sección
+            'subtitle': 0.5,   # Subtítulos
+            'body': 0.45,      # Texto normal
+            'small': 0.4,      # Texto pequeño
+            'tiny': 0.35       # Texto muy pequeño
+        }
+        
+        # Iconos (representados con símbolos Unicode)
+        self.icons = {
+            'face': '◉',
+            'fatigue': '◐',
+            'behavior': '◈',
+            'distraction': '◎',
+            'yawn': '◑',
+            'alert': '⚠',
+            'check': '✓',
+            'warning': '!',
+            'info': 'i'
         }
         
         # Historiales para gráficos
-        self.fatigue_history = deque(maxlen=60)
-        self.behavior_history = deque(maxlen=60)
-        self.face_confidence_history = deque(maxlen=60)  # NUEVO
-        self.alert_history = deque(maxlen=10)
+        self.fatigue_history = deque(maxlen=50)
+        self.behavior_history = deque(maxlen=50)
+        self.face_confidence_history = deque(maxlen=50)
+        self.distraction_history = deque(maxlen=50)
+        self.yawn_history = deque(maxlen=50)
+        self.alert_history = deque(maxlen=5)
         
-        # Secciones del dashboard (ACTUALIZADO)
+        # Configuración de secciones con nuevo diseño
         self.sections = {
-            'header': {'height': 40},
-            'operator': {'height': 80},      # Aumentado para incluir info de reconocimiento
-            'face_recognition': {'height': 100},  # NUEVA SECCIÓN
-            'fatigue': {'height': 150},      # Reducido
-            'behavior': {'height': 150},     # Reducido
-            'statistics': {'height': 100},   # Reducido
-            'alerts': {'height': 80}         # Reducido
+            'header': {'height': 60, 'padding': 10},
+            'operator': {'height': 90, 'padding': 10},
+            'modules': {'height': 280, 'padding': 10},  # Todos los módulos en una sección
+            'statistics': {'height': 100, 'padding': 10},
+            'alerts': {'height': 80, 'padding': 10}
         }
         
-        # Calcular altura total necesaria
-        self.height = sum(s['height'] for s in self.sections.values()) + (len(self.sections) + 1) * 5
+        # Estado de animaciones
+        self.animation_counters = {}
+        self.pulse_effect = 0
         
-    def render(self, frame, fatigue_result=None, behavior_result=None, face_result=None, analysis_data=None):
+    def render(self, frame, fatigue_result=None, behavior_result=None, face_result=None, 
+               distraction_result=None, yawn_result=None, analysis_data=None):
         """
-        Renderiza el dashboard en el frame.
-        
-        Args:
-            frame: Frame de video original
-            fatigue_result: Resultado del análisis de fatiga
-            behavior_result: Resultado del análisis de comportamientos
-            face_result: Resultado del reconocimiento facial (NUEVO)
-            analysis_data: Datos del análisis facial (para AnalysisDashboard)
-            
-        Returns:
-            numpy.ndarray: Frame con dashboard integrado
+        Renderiza el dashboard con diseño profesional.
         """
-        # Primero renderizar el dashboard principal (izquierdo)
         h, w = frame.shape[:2]
         
         # Determinar posición X del dashboard
@@ -103,47 +111,46 @@ class MasterDashboard:
         else:
             dashboard_x = w - self.width - self.margin
         
-        # Crear overlay para el dashboard
+        # Crear overlay para el dashboard con bordes redondeados simulados
         overlay = frame.copy()
         
-        # Fondo principal del dashboard
-        cv2.rectangle(overlay, 
-                     (dashboard_x, self.margin), 
-                     (dashboard_x + self.width, h - self.margin),
-                     self.colors['background'], -1)
+        # Fondo principal con efecto de sombra
+        self._draw_panel_background(overlay, dashboard_x, self.margin, 
+                                   self.width, h - 2*self.margin)
         
-        # Aplicar transparencia
-        cv2.addWeighted(overlay, 0.9, frame, 0.1, 0, frame)
+        # Aplicar transparencia elegante
+        cv2.addWeighted(overlay, 0.92, frame, 0.08, 0, frame)
         
-        # Actualizar historiales
-        self._update_histories(fatigue_result, behavior_result, face_result)
+        # Actualizar historiales y animaciones
+        self._update_histories(fatigue_result, behavior_result, face_result, 
+                             distraction_result, yawn_result)
+        self.pulse_effect = (self.pulse_effect + 5) % 360
         
-        # Renderizar secciones del dashboard principal
-        y_offset = self.margin + 5
+        # Renderizar secciones con nuevo diseño
+        y_offset = self.margin + 10
         
-        # 1. Header
-        y_offset = self._draw_header(frame, dashboard_x, y_offset)
+        # 1. Header elegante
+        y_offset = self._draw_header_section(frame, dashboard_x, y_offset)
         
-        # 2. Información del operador (actualizada con reconocimiento facial)
-        y_offset = self._draw_operator_section(frame, dashboard_x, y_offset, face_result)
+        # 2. Información del operador mejorada
+        y_offset = self._draw_operator_card(frame, dashboard_x, y_offset, face_result)
         
-        # 3. Módulo de Reconocimiento Facial (NUEVO)
-        y_offset = self._draw_face_recognition_section(frame, dashboard_x, y_offset, face_result)
+        # 3. Módulos en grid compacto
+        y_offset = self._draw_modules_grid(frame, dashboard_x, y_offset,
+                                         fatigue_result, behavior_result, face_result,
+                                         distraction_result, yawn_result)
         
-        # 4. Módulo de Fatiga
-        y_offset = self._draw_fatigue_section(frame, dashboard_x, y_offset, fatigue_result)
+        # 4. Estadísticas resumidas
+        y_offset = self._draw_statistics_summary(frame, dashboard_x, y_offset,
+                                               fatigue_result, behavior_result, face_result,
+                                               distraction_result, yawn_result)
         
-        # 5. Módulo de Comportamientos
-        y_offset = self._draw_behavior_section(frame, dashboard_x, y_offset, behavior_result)
+        # 5. Centro de alertas
+        y_offset = self._draw_alert_center(frame, dashboard_x, y_offset)
         
-        # 6. Estadísticas combinadas
-        y_offset = self._draw_statistics_section(frame, dashboard_x, y_offset, fatigue_result, behavior_result, face_result)
-        
-        # 7. Alertas recientes
-        y_offset = self._draw_alerts_section(frame, dashboard_x, y_offset)
-        
-        # Indicadores visuales en el video principal
-        self._draw_video_overlays(frame, fatigue_result, behavior_result, face_result)
+        # Indicadores visuales mejorados en el video
+        self._draw_elegant_overlays(frame, fatigue_result, behavior_result, face_result,
+                                   distraction_result, yawn_result)
         
         # Renderizar AnalysisDashboard si está disponible
         if self.analysis_dashboard and analysis_data:
@@ -151,463 +158,566 @@ class MasterDashboard:
         
         return frame
     
-    def _draw_header(self, frame, x, y):
-        """Dibuja el encabezado del dashboard"""
-        # Fondo de sección
-        section_height = self.sections['header']['height']
-        cv2.rectangle(frame, (x + 5, y), (x + self.width - 5, y + section_height),
-                     self.colors['section_bg'], -1)
+    def _draw_panel_background(self, frame, x, y, width, height):
+        """Dibuja el fondo del panel con efecto de profundidad"""
+        # Sombra
+        shadow_offset = 3
+        cv2.rectangle(frame, 
+                     (x + shadow_offset, y + shadow_offset), 
+                     (x + width + shadow_offset, y + height + shadow_offset),
+                     (0, 0, 0), -1)
         
-        # Título
+        # Panel principal
+        cv2.rectangle(frame, (x, y), (x + width, y + height),
+                     self.colors['background'], -1)
+        
+        # Borde sutil
+        cv2.rectangle(frame, (x, y), (x + width, y + height),
+                     self.colors['divider'], 1)
+    
+    def _draw_header_section(self, frame, x, y):
+        """Dibuja el header con diseño elegante"""
+        height = self.sections['header']['height']
+        
+        # Fondo del header con gradiente simulado
+        cv2.rectangle(frame, (x + 5, y), (x + self.width - 5, y + height),
+                     self.colors['header_bg'], -1)
+        
+        # Título principal centrado
         title = "SISTEMA DE MONITOREO"
-        text_size = cv2.getTextSize(title, self.font, self.font_sizes['title'], 1)[0]
+        subtitle = "Control Integral de Operadores"
+        
+        # Título con efecto
+        text_size = cv2.getTextSize(title, self.font_bold, self.font_sizes['header'], 2)[0]
         text_x = x + (self.width - text_size[0]) // 2
         cv2.putText(frame, title, (text_x, y + 25),
-                   self.font, self.font_sizes['title'],
-                   self.colors['accent'], 1)
+                   self.font_bold, self.font_sizes['header'],
+                   self.colors['text_primary'], 2)
         
-        # Hora actual
-        time_str = time.strftime("%H:%M:%S")
-        cv2.putText(frame, time_str, (x + self.width - 60, y + 25),
-                   self.font, self.font_sizes['body'],
-                   self.colors['text_secondary'], 1)
-        
-        return y + section_height + 5
-    
-    def _draw_operator_section(self, frame, x, y, face_result):
-        """Dibuja la sección de información del operador (actualizada)"""
-        section_height = self.sections['operator']['height']
-        
-        # Título de sección
-        cv2.putText(frame, "OPERADOR", (x + 10, y + 15),
-                   self.font, self.font_sizes['section'],
-                   self.colors['text_secondary'], 1)
-        
-        # Línea separadora
-        cv2.line(frame, (x + 10, y + 20), (x + self.width - 10, y + 20),
-                self.colors['text_secondary'], 1)
-        
-        if face_result and face_result.get('operator_info'):
-            operator_info = face_result['operator_info']
-            
-            # Nombre
-            name = operator_info.get('name', 'Desconocido').replace('ñ', 'n')
-            is_registered = operator_info.get('is_registered', False)
-            
-            # Color según estado
-            name_color = self.colors['success'] if is_registered else self.colors['danger']
-            
-            cv2.putText(frame, f"Nombre: {name}", (x + 15, y + 35),
-                       self.font, self.font_sizes['body'],
-                       name_color, 1)
-            
-            # ID
-            cv2.putText(frame, f"ID: {operator_info.get('id', 'N/A')}", (x + 15, y + 48),
-                       self.font, self.font_sizes['small'],
-                       self.colors['text_secondary'], 1)
-            
-            # Estado de registro
-            if not is_registered:
-                cv2.putText(frame, "NO REGISTRADO", (x + 15, y + 62),
-                           self.font, self.font_sizes['body'],
-                           self.colors['danger'], 2)
-                
-                # Tiempo como desconocido
-                if hasattr(face_result, 'unknown_operator_time'):
-                    unknown_time = face_result.get('unknown_operator_time', 0)
-                    minutes = int(unknown_time / 60)
-                    seconds = int(unknown_time % 60)
-                    cv2.putText(frame, f"Tiempo: {minutes}:{seconds:02d}", (x + 150, y + 62),
-                               self.font, self.font_sizes['small'],
-                               self.colors['warning'], 1)
-        else:
-            cv2.putText(frame, "No identificado", (x + 15, y + 35),
-                       self.font, self.font_sizes['body'],
-                       self.colors['warning'], 1)
-        
-        return y + section_height + 5
-    
-    def _draw_face_recognition_section(self, frame, x, y, result):
-        """Dibuja la sección de reconocimiento facial (NUEVA)"""
-        section_height = self.sections['face_recognition']['height']
-        
-        # Fondo de sección
-        cv2.rectangle(frame, (x + 5, y), (x + self.width - 5, y + section_height),
-                     self.colors['section_bg'], -1)
-        
-        # Título con indicador
-        has_unknown = False
-        if result and result.get('operator_info'):
-            has_unknown = not result['operator_info'].get('is_registered', True)
-        
-        status_color = self.colors['danger'] if has_unknown else self.colors['success']
-        
-        cv2.putText(frame, "RECONOCIMIENTO FACIAL", (x + 10, y + 15),
-                   self.font, self.font_sizes['section'],
-                   self.colors['face_color'], 1)
-        
-        cv2.circle(frame, (x + self.width - 20, y + 12), 4, status_color, -1)
-        
-        if not result:
-            cv2.putText(frame, "Sin datos", (x + 15, y + 35),
-                       self.font, self.font_sizes['body'],
-                       self.colors['text_secondary'], 1)
-            return y + section_height + 5
-        
-        y_offset = y + 30
-        
-        # Confianza de reconocimiento
-        if result.get('operator_info'):
-            confidence = result['operator_info'].get('confidence', 0)
-            conf_color = self._get_level_color(confidence * 100, [40, 60, 80])
-            cv2.putText(frame, f"Confianza: {confidence:.2%}", (x + 15, y_offset),
-                       self.font, self.font_sizes['body'],
-                       conf_color, 1)
-            
-            # Barra de confianza
-            y_offset += 15
-            self._draw_progress_bar(frame, x + 15, y_offset, self.width - 30, 6,
-                                   confidence, 0.7, conf_color, max_value=1.0)
-        
-        # Estado de calibración
-        y_offset += 15
-        is_calibrated = result.get('is_calibrated', False)
-        calib_text = "Calibracion: PERSONALIZADA" if is_calibrated else "Calibracion: DEFAULT"
-        calib_color = self.colors['success'] if is_calibrated else self.colors['warning']
-        cv2.putText(frame, calib_text, (x + 15, y_offset),
+        # Subtítulo
+        text_size = cv2.getTextSize(subtitle, self.font, self.font_sizes['small'], 1)[0]
+        text_x = x + (self.width - text_size[0]) // 2
+        cv2.putText(frame, subtitle, (text_x, y + 42),
                    self.font, self.font_sizes['small'],
-                   calib_color, 1)
-        
-        # Mini gráfico de confianza
-        y_offset += 20
-        self._draw_mini_graph(frame, x + 15, y_offset, self.width - 30, 25,
-                            self.face_confidence_history, "Historial confianza",
-                            self.colors['face_color'])
-        
-        return y + section_height + 5
-    
-    def _draw_fatigue_section(self, frame, x, y, result):
-        """Dibuja la sección de fatiga (versión compacta)"""
-        section_height = self.sections['fatigue']['height']
-        
-        # Fondo de sección
-        cv2.rectangle(frame, (x + 5, y), (x + self.width - 5, y + section_height),
-                     self.colors['section_bg'], -1)
-        
-        # Título con indicador de estado
-        status_color = self.colors['success']
-        if result and result.get('is_critical', False):
-            status_color = self.colors['danger']
-        elif result and result.get('microsleep_count', 0) > 0:
-            status_color = self.colors['warning']
-        
-        cv2.putText(frame, "MODULO FATIGA", (x + 10, y + 15),
-                   self.font, self.font_sizes['section'],
-                   self.colors['fatigue_color'], 1)
-        
-        # Indicador de estado
-        cv2.circle(frame, (x + self.width - 20, y + 12), 4, status_color, -1)
-        
-        if not result:
-            cv2.putText(frame, "Sin datos", (x + 15, y + 35),
-                       self.font, self.font_sizes['body'],
-                       self.colors['text_secondary'], 1)
-            return y + section_height + 5
-        
-        y_offset = y + 30
-        
-        # EAR compacto
-        ear_value = result.get('ear_value', 0)
-        ear_threshold = result.get('ear_threshold', 0.25)
-        ear_color = self.colors['danger'] if ear_value < ear_threshold else self.colors['success']
-        cv2.putText(frame, f"EAR: {ear_value:.3f}/{ear_threshold:.3f}", (x + 15, y_offset),
-                   self.font, self.font_sizes['body'], ear_color, 1)
-        
-        # Nivel de fatiga
-        y_offset += 20
-        fatigue_pct = result.get('fatigue_percentage', 0)
-        fatigue_color = self._get_level_color(fatigue_pct, [40, 60, 80])
-        cv2.putText(frame, f"Fatiga: {fatigue_pct}%", (x + 15, y_offset),
-                   self.font, self.font_sizes['body'], fatigue_color, 1)
-        
-        # Barra de fatiga
-        y_offset += 15
-        self._draw_progress_bar(frame, x + 15, y_offset, self.width - 30, 8,
-                               fatigue_pct, 60, fatigue_color, max_value=100)
-        
-        # Microsueños
-        y_offset += 20
-        microsleeps = result.get('microsleep_count', 0)
-        ms_color = self._get_level_color(microsleeps, [1, 2, 3])
-        cv2.putText(frame, f"Microsuenos: {microsleeps}/3", (x + 15, y_offset),
-                   self.font, self.font_sizes['body'], ms_color, 1)
-        
-        # Mini gráfico
-        y_offset += 20
-        self._draw_mini_graph(frame, x + 15, y_offset, self.width - 30, 30,
-                            self.fatigue_history, "Historial", self.colors['fatigue_color'])
-        
-        return y + section_height + 5
-    
-    def _draw_behavior_section(self, frame, x, y, result):
-        """Dibuja la sección de comportamientos (versión compacta)"""
-        section_height = self.sections['behavior']['height']
-        
-        # Fondo de sección
-        cv2.rectangle(frame, (x + 5, y), (x + self.width - 5, y + section_height),
-                     self.colors['section_bg'], -1)
-        
-        # Título con indicador
-        has_alerts = result and len(result.get('alerts', [])) > 0
-        status_color = self.colors['danger'] if has_alerts else self.colors['success']
-        
-        cv2.putText(frame, "MODULO COMPORTAMIENTOS", (x + 10, y + 15),
-                   self.font, self.font_sizes['section'],
-                   self.colors['behavior_color'], 1)
-        
-        cv2.circle(frame, (x + self.width - 20, y + 12), 4, status_color, -1)
-        
-        if not result:
-            cv2.putText(frame, "Sin datos", (x + 15, y + 35),
-                       self.font, self.font_sizes['body'],
-                       self.colors['text_secondary'], 1)
-            return y + section_height + 5
-        
-        y_offset = y + 30
-        
-        # Detecciones
-        detections = result.get('detections', [])
-        phone_detected = any(d[0] == 'cell phone' for d in detections)
-        cigarette_detected = any(d[0] == 'cigarette' for d in detections)
-        
-        # Estado compacto
-        phone_status = "TEL: SI" if phone_detected else "TEL: NO"
-        phone_color = self.colors['danger'] if phone_detected else self.colors['text_secondary']
-        
-        cig_status = "CIG: SI" if cigarette_detected else "CIG: NO"
-        cig_color = self.colors['warning'] if cigarette_detected else self.colors['text_secondary']
-        
-        cv2.putText(frame, phone_status, (x + 15, y_offset),
-                   self.font, self.font_sizes['body'], phone_color, 1)
-        cv2.putText(frame, cig_status, (x + 100, y_offset),
-                   self.font, self.font_sizes['body'], cig_color, 1)
-        
-        # Duraciones si existen
-        detector_info = result.get('detector_info', {})
-        durations = detector_info.get('behavior_durations', {})
-        
-        if 'cell phone' in durations:
-            y_offset += 20
-            duration = durations['cell phone']
-            cv2.putText(frame, f"Tel tiempo: {duration:.1f}s", (x + 15, y_offset),
-                       self.font, self.font_sizes['small'],
-                       self._get_level_color(duration, [3, 5, 7]), 1)
-        
-        # Mini gráfico
-        y_offset = y + 100
-        self._draw_mini_graph(frame, x + 15, y_offset, self.width - 30, 30,
-                            self.behavior_history, "Actividad", self.colors['behavior_color'])
-        
-        return y + section_height + 5
-    
-    def _draw_statistics_section(self, frame, x, y, fatigue_result, behavior_result, face_result):
-        """Dibuja estadísticas combinadas (actualizada)"""
-        section_height = self.sections['statistics']['height']
-        
-        # Título
-        cv2.putText(frame, "ESTADISTICAS", (x + 10, y + 15),
-                   self.font, self.font_sizes['section'],
                    self.colors['text_secondary'], 1)
         
-        cv2.line(frame, (x + 10, y + 20), (x + self.width - 10, y + 20),
-                self.colors['text_secondary'], 1)
+        # Hora con formato elegante
+        time_str = time.strftime("%H:%M:%S")
+        date_str = time.strftime("%d/%m/%Y")
         
-        y_offset = y + 35
+        # Contenedor de tiempo
+        time_box_width = 80
+        cv2.rectangle(frame, 
+                     (x + self.width - time_box_width - 15, y + 5),
+                     (x + self.width - 10, y + 30),
+                     self.colors['section_bg'], -1)
         
-        # Estado general
-        status_parts = []
-        if fatigue_result and fatigue_result.get('is_critical', False):
-            status_parts.append("FATIGA CRITICA")
-        if behavior_result and behavior_result.get('alerts'):
-            status_parts.append("ALERTA COMPORTAMIENTO")
-        if face_result and face_result.get('operator_info') and not face_result['operator_info'].get('is_registered', True):
-            status_parts.append("OPERADOR NO REGISTRADO")
-        
-        if not status_parts:
-            status_text = "Estado: NORMAL"
-            status_color = self.colors['success']
-        else:
-            status_text = "Estado: ALERTA"
-            status_color = self.colors['danger']
-        
-        cv2.putText(frame, status_text, (x + 15, y_offset),
-                   self.font, self.font_sizes['body'],
-                   status_color, 1)
-        
-        # Módulos activos
-        y_offset += 20
-        active_modules = []
-        if fatigue_result: active_modules.append("FAT")
-        if behavior_result: active_modules.append("COMP")
-        if face_result: active_modules.append("ROSTRO")
-        
-        modules_text = "Modulos: " + "/".join(active_modules)
-        cv2.putText(frame, modules_text, (x + 15, y_offset),
+        cv2.putText(frame, time_str, (x + self.width - time_box_width - 5, y + 20),
                    self.font, self.font_sizes['small'],
                    self.colors['text_primary'], 1)
         
-        # Tiempo de sesión
-        y_offset += 20
-        session_time = time.strftime("%M:%S", time.gmtime(time.time() % 3600))
-        cv2.putText(frame, f"Tiempo: {session_time}", (x + 15, y_offset),
-                   self.font, self.font_sizes['small'],
-                   self.colors['text_secondary'], 1)
+        # Línea divisora elegante
+        self._draw_gradient_line(frame, x + 20, y + height - 5, 
+                                self.width - 40, self.colors['accent'])
         
-        return y + section_height + 5
+        return y + height + 10
     
-    def _draw_alerts_section(self, frame, x, y):
-        """Dibuja las alertas recientes (versión compacta)"""
-        section_height = self.sections['alerts']['height']
+    def _draw_operator_card(self, frame, x, y, face_result):
+        """Dibuja la tarjeta del operador con diseño mejorado"""
+        height = self.sections['operator']['height']
+        padding = 15
         
-        # Fondo de sección
-        cv2.rectangle(frame, (x + 5, y), (x + self.width - 5, y + section_height),
+        # Fondo de la tarjeta
+        cv2.rectangle(frame, (x + padding, y), 
+                     (x + self.width - padding, y + height),
+                     self.colors['section_bg'], -1)
+        
+        # Título de sección con icono
+        self._draw_section_title(frame, "OPERADOR", x + padding + 10, y + 20,
+                                self.colors['info'])
+        
+        if face_result and face_result.get('operator_info'):
+            operator_info = face_result['operator_info']
+            is_registered = operator_info.get('is_registered', False)
+            
+            # Foto placeholder o inicial
+            photo_size = 50
+            photo_x = x + padding + 15
+            photo_y = y + 35
+            
+            # Marco de foto
+            if is_registered:
+                cv2.circle(frame, (photo_x + photo_size//2, photo_y + photo_size//2),
+                          photo_size//2 + 2, self.colors['success'], 2)
+            else:
+                cv2.circle(frame, (photo_x + photo_size//2, photo_y + photo_size//2),
+                          photo_size//2 + 2, self.colors['danger'], 2)
+            
+            # Inicial en el círculo
+            name = operator_info.get('name', 'Desconocido')
+            initial = name[0].upper() if name != 'Desconocido' else '?'
+            text_size = cv2.getTextSize(initial, self.font_bold, 0.8, 2)[0]
+            cv2.putText(frame, initial,
+                       (photo_x + photo_size//2 - text_size[0]//2,
+                        photo_y + photo_size//2 + text_size[1]//2),
+                       self.font_bold, 0.8, self.colors['text_primary'], 2)
+            
+            # Información del operador
+            info_x = photo_x + photo_size + 15
+            
+            # Nombre
+            cv2.putText(frame, name, (info_x, photo_y + 15),
+                       self.font_bold, self.font_sizes['subtitle'],
+                       self.colors['text_primary'], 1)
+            
+            # ID con formato
+            id_text = f"ID: {operator_info.get('id', 'N/A')}"
+            cv2.putText(frame, id_text, (info_x, photo_y + 35),
+                       self.font, self.font_sizes['small'],
+                       self.colors['text_secondary'], 1)
+            
+            # Estado con badge
+            if is_registered:
+                self._draw_badge(frame, info_x, photo_y + 45, "REGISTRADO", 
+                               self.colors['success'], 80)
+            else:
+                self._draw_badge(frame, info_x, photo_y + 45, "NO REGISTRADO", 
+                               self.colors['danger'], 100)
+        else:
+            # Sin operador detectado
+            cv2.putText(frame, "Esperando detección...", 
+                       (x + self.width//2 - 70, y + height//2),
+                       self.font, self.font_sizes['body'],
+                       self.colors['text_dim'], 1)
+        
+        return y + height + 10
+    
+    def _draw_modules_grid(self, frame, x, y, fatigue_result, behavior_result, 
+                          face_result, distraction_result, yawn_result):
+        """Dibuja los módulos en un grid compacto y elegante"""
+        height = self.sections['modules']['height']
+        padding = 15
+        
+        # Fondo de la sección
+        cv2.rectangle(frame, (x + padding, y), 
+                     (x + self.width - padding, y + height),
                      self.colors['section_bg'], -1)
         
         # Título
+        self._draw_section_title(frame, "MODULOS ACTIVOS", x + padding + 10, y + 20,
+                                self.colors['accent'])
+        
+        # Grid 2x3 para los módulos
+        module_width = (self.width - 2*padding - 20) // 2
+        module_height = 75
+        spacing = 10
+        start_y = y + 40
+        
+        modules = [
+            ("RECONOCIMIENTO", face_result, self.colors['info'], 
+             self._get_face_status(face_result)),
+            ("FATIGA-SUENO", fatigue_result, self.colors['warning'],
+             self._get_fatigue_status(fatigue_result)),
+            ("COMPORTAMIENTO", behavior_result, self.colors['danger'],
+             self._get_behavior_status(behavior_result)),
+            ("DISTRACCIONES", distraction_result, self.colors['warning'],
+             self._get_distraction_status(distraction_result)),
+            ("BOSTEZOS", yawn_result, self.colors['info'],
+             self._get_yawn_status(yawn_result))
+        ]
+        
+        for i, (name, result, color, status) in enumerate(modules):
+            row = i // 2
+            col = i % 2
+            
+            mod_x = x + padding + 10 + (module_width + spacing) * col
+            mod_y = start_y + (module_height + spacing) * row
+            
+            self._draw_module_card(frame, mod_x, mod_y, module_width, module_height,
+                                  name, status, color, result is not None)
+        
+        return y + height + 10
+    
+    def _draw_module_card(self, frame, x, y, width, height, name, status, color, active):
+        """Dibuja una tarjeta de módulo individual"""
+        # Fondo con borde
+        bg_color = self.colors['panel_bg'] if active else self.colors['background']
+        cv2.rectangle(frame, (x, y), (x + width, y + height), bg_color, -1)
+        cv2.rectangle(frame, (x, y), (x + width, y + height), 
+                     color if active else self.colors['divider'], 1)
+        
+        # Indicador de estado (círculo)
+        indicator_x = x + width - 15
+        indicator_y = y + 15
+        cv2.circle(frame, (indicator_x, indicator_y), 5,
+                  color if active and status['active'] else self.colors['text_dim'], -1)
+        
+        # Nombre del módulo
+        cv2.putText(frame, name, (x + 10, y + 20),
+                   self.font, self.font_sizes['small'],
+                   self.colors['text_primary'] if active else self.colors['text_dim'], 1)
+        
+        # Estado principal
+        if active:
+            cv2.putText(frame, status['text'], (x + 10, y + 40),
+                       self.font_bold, self.font_sizes['body'],
+                       status['color'], 1)
+            
+            # Información adicional
+            if status['info']:
+                cv2.putText(frame, status['info'], (x + 10, y + 58),
+                           self.font, self.font_sizes['tiny'],
+                           self.colors['text_secondary'], 1)
+    
+    def _draw_statistics_summary(self, frame, x, y, *results):
+        """Dibuja resumen de estadísticas con diseño limpio"""
+        height = self.sections['statistics']['height']
+        padding = 15
+        
+        # Fondo
+        cv2.rectangle(frame, (x + padding, y), 
+                     (x + self.width - padding, y + height),
+                     self.colors['section_bg'], -1)
+        
+        # Título
+        self._draw_section_title(frame, "RESUMEN DE SESION", x + padding + 10, y + 20,
+                                self.colors['text_secondary'])
+        
+        # Calcular estadísticas
+        stats = self._calculate_session_stats(*results)
+        
+        # Mostrar en dos columnas
+        col1_x = x + padding + 15
+        col2_x = x + self.width//2 + 10
+        stat_y = y + 40
+        
+        # Columna 1
+        cv2.putText(frame, f"Alertas totales: {stats['total_alerts']}", 
+                   (col1_x, stat_y),
+                   self.font, self.font_sizes['small'],
+                   self.colors['text_primary'], 1)
+        
+        cv2.putText(frame, f"Estado general: {stats['overall_status']}", 
+                   (col1_x, stat_y + 20),
+                   self.font, self.font_sizes['small'],
+                   stats['status_color'], 1)
+        
+        # Columna 2
+        cv2.putText(frame, f"Modulos OK: {stats['modules_ok']}/5", 
+                   (col2_x, stat_y),
+                   self.font, self.font_sizes['small'],
+                   self.colors['text_primary'], 1)
+        
+        cv2.putText(frame, f"Tiempo: {stats['session_time']}", 
+                   (col2_x, stat_y + 20),
+                   self.font, self.font_sizes['small'],
+                   self.colors['text_secondary'], 1)
+        
+        # Mini barra de progreso de salud general
+        self._draw_health_bar(frame, x + padding + 15, y + height - 20,
+                            self.width - 2*padding - 30, 10, stats['health_score'])
+        
+        return y + height + 10
+    
+    def _draw_alert_center(self, frame, x, y):
+        """Dibuja el centro de alertas con diseño moderno"""
+        height = self.sections['alerts']['height']
+        padding = 15
+        
+        # Fondo
+        cv2.rectangle(frame, (x + padding, y), 
+                     (x + self.width - padding, y + height),
+                     self.colors['section_bg'], -1)
+        
+        # Título con contador
         alert_count = len(self.alert_history)
         title_color = self.colors['danger'] if alert_count > 0 else self.colors['text_secondary']
-        cv2.putText(frame, f"ALERTAS ({alert_count})", (x + 10, y + 15),
-                   self.font, self.font_sizes['section'],
-                   title_color, 1)
+        self._draw_section_title(frame, f"CENTRO DE ALERTAS ({alert_count})", 
+                                x + padding + 10, y + 20, title_color)
         
         if not self.alert_history:
-            cv2.putText(frame, "Sin alertas", (x + 15, y + 35),
+            # Sin alertas - mostrar mensaje positivo
+            cv2.putText(frame, "Sistema operando normalmente", 
+                       (x + padding + 20, y + 45),
                        self.font, self.font_sizes['body'],
                        self.colors['success'], 1)
-            return y + section_height + 5
+        else:
+            # Mostrar alertas con diseño mejorado
+            alert_y = y + 35
+            for i, alert in enumerate(list(self.alert_history)[-2:]):  # Solo últimas 2
+                self._draw_alert_item(frame, x + padding + 15, alert_y, 
+                                    self.width - 2*padding - 30, alert)
+                alert_y += 20
         
-        # Mostrar últimas 3 alertas
-        y_offset = y + 30
-        for i, alert in enumerate(list(self.alert_history)[-3:]):
-            alert_type = alert['type']
-            time_ago = int(time.time() - alert['timestamp'])
-            
-            # Texto muy compacto
-            if alert_type == 'fatigue':
-                icon = "F"
-                color = self.colors['fatigue_color']
-            elif alert_type == 'behavior':
-                icon = "C"
-                color = self.colors['behavior_color']
-            else:
-                icon = "R"
-                color = self.colors['face_color']
-            
-            text = f"[{icon}] {alert['message'][:20]}... ({time_ago}s)"
-            cv2.putText(frame, text, (x + 15, y_offset),
-                       self.font, self.font_sizes['small'],
-                       color, 1)
-            y_offset += 15
-        
-        return y + section_height + 5
+        return y + height + 10
     
-    def _draw_video_overlays(self, frame, fatigue_result, behavior_result, face_result):
-        """Dibuja overlays en el video principal (actualizado)"""
+    def _draw_alert_item(self, frame, x, y, width, alert):
+        """Dibuja un item de alerta individual"""
+        # Icono según tipo
+        icon_map = {
+            'fatigue': ('◐', self.colors['warning']),
+            'behavior': ('◈', self.colors['danger']),
+            'face': ('◉', self.colors['info']),
+            'distraction': ('◎', self.colors['warning']),
+            'yawn': ('◑', self.colors['info'])
+        }
+        
+        icon, color = icon_map.get(alert['type'], ('!', self.colors['danger']))
+        
+        # Icono
+        cv2.putText(frame, icon, (x, y + 12),
+                   self.font, self.font_sizes['body'],
+                   color, 1)
+        
+        # Mensaje
+        time_ago = int(time.time() - alert['timestamp'])
+        msg = f"{alert['message'][:30]}... ({time_ago}s)"
+        cv2.putText(frame, msg, (x + 20, y + 12),
+                   self.font, self.font_sizes['tiny'],
+                   self.colors['text_primary'], 1)
+    
+    def _draw_elegant_overlays(self, frame, *results):
+        """Dibuja overlays elegantes en el video principal"""
         h, w = frame.shape[:2]
         
-        # Alerta de operador no registrado
-        if face_result and face_result.get('operator_info'):
-            operator_info = face_result['operator_info']
-            if not operator_info.get('is_registered', True):
-                # Marco rojo intermitente
-                if int(time.time() * 2) % 2 == 0:  # Parpadea cada 0.5s
-                    cv2.rectangle(frame, (2, 2), (w - 2, h - 2),
-                                 self.colors['danger'], 3)
-                
-                # Mensaje de alerta
-                msg = "OPERADOR NO REGISTRADO"
-                text_size = cv2.getTextSize(msg, self.font, self.font_sizes['title'], 2)[0]
-                text_x = (w - text_size[0]) // 2
-                cv2.putText(frame, msg, (text_x, 30),
-                           self.font, self.font_sizes['title'],
-                           self.colors['danger'], 2)
+        # Detectar condición crítica
+        critical_alert = None
         
-        # Alertas de fatiga crítica
-        elif fatigue_result and fatigue_result.get('is_critical', False):
-            cv2.rectangle(frame, (2, 2), (w - 2, h - 2),
-                         self.colors['danger'], 2)
+        # Verificar cada resultado
+        if results[2] and results[2].get('operator_info'):  # face_result
+            if not results[2]['operator_info'].get('is_registered', True):
+                critical_alert = ("OPERADOR NO REGISTRADO", self.colors['danger'])
+        
+        elif results[0] and results[0].get('is_critical'):  # fatigue_result
+            critical_alert = ("ALERTA: FATIGA CRÍTICA", self.colors['danger'])
+        
+        elif results[3] and results[3].get('detector_status', {}).get('total_distractions', 0) >= 3:
+            critical_alert = ("ALERTA: MÚLTIPLES DISTRACCIONES", self.colors['warning'])
+        
+        # Mostrar alerta crítica si existe
+        if critical_alert:
+            # Banner superior elegante
+            banner_height = 40
+            overlay = frame.copy()
+            cv2.rectangle(overlay, (0, 0), (w, banner_height), (0, 0, 0), -1)
+            cv2.addWeighted(overlay, 0.7, frame, 0.3, 0, frame)
             
-            msg = "FATIGA CRITICA DETECTADA"
-            text_size = cv2.getTextSize(msg, self.font, self.font_sizes['title'], 1)[0]
+            # Texto centrado
+            text, color = critical_alert
+            text_size = cv2.getTextSize(text, self.font_bold, self.font_sizes['title'], 2)[0]
             text_x = (w - text_size[0]) // 2
-            cv2.putText(frame, msg, (text_x, 60),
-                       self.font, self.font_sizes['title'],
-                       self.colors['danger'], 2)
-        
-        # Alertas de comportamiento
-        elif behavior_result and behavior_result.get('alerts'):
-            for alert in behavior_result['alerts']:
-                if '7s' in alert[0]:
-                    msg = "ALERTA: USO PROLONGADO TELEFONO"
-                    cv2.putText(frame, msg, (10, 90),
-                               self.font, self.font_sizes['body'],
-                               self.colors['danger'], 1)
+            cv2.putText(frame, text, (text_x, 25),
+                       self.font_bold, self.font_sizes['title'],
+                       color, 2)
     
-    def _draw_progress_bar(self, frame, x, y, width, height, value, threshold, color, max_value=10):
-        """Dibuja una barra de progreso compacta"""
+    # Métodos auxiliares
+    def _draw_section_title(self, frame, title, x, y, color):
+        """Dibuja un título de sección con estilo"""
+        cv2.putText(frame, title, (x, y),
+                   self.font_bold, self.font_sizes['subtitle'],
+                   color, 1)
+    
+    def _draw_badge(self, frame, x, y, text, color, width):
+        """Dibuja un badge/etiqueta"""
+        height = 20
+        cv2.rectangle(frame, (x, y), (x + width, y + height), color, -1)
+        
+        text_size = cv2.getTextSize(text, self.font, self.font_sizes['tiny'], 1)[0]
+        text_x = x + (width - text_size[0]) // 2
+        cv2.putText(frame, text, (text_x, y + 14),
+                   self.font, self.font_sizes['tiny'],
+                   self.colors['text_primary'], 1)
+    
+    def _draw_gradient_line(self, frame, x, y, width, color):
+        """Dibuja una línea con efecto gradiente"""
+        for i in range(width):
+            fade = 1.0 - abs(i - width/2) / (width/2)
+            line_color = tuple(int(c * fade) for c in color)
+            cv2.line(frame, (x + i, y), (x + i, y + 1), line_color, 1)
+    
+    def _draw_health_bar(self, frame, x, y, width, height, score):
+        """Dibuja una barra de salud general"""
         # Fondo
         cv2.rectangle(frame, (x, y), (x + width, y + height),
                      self.colors['graph_bg'], -1)
         
         # Valor
-        normalized = min(1.0, value / max_value)
-        value_width = int(width * normalized)
-        cv2.rectangle(frame, (x, y), (x + value_width, y + height),
-                     color, -1)
-        
-        # Línea de umbral
-        if threshold < max_value:
-            threshold_x = x + int(width * (threshold / max_value))
-            cv2.line(frame, (threshold_x, y - 2), (threshold_x, y + height + 2),
-                    self.colors['warning'], 1)
-    
-    def _draw_mini_graph(self, frame, x, y, width, height, data, title, color):
-        """Dibuja un gráfico miniatura"""
-        # Título
-        cv2.putText(frame, title, (x, y - 3),
-                   self.font, self.font_sizes['small'],
-                   self.colors['text_secondary'], 1)
-        
-        # Fondo del gráfico
-        cv2.rectangle(frame, (x, y), (x + width, y + height),
-                     self.colors['graph_bg'], -1)
-        
-        if len(data) < 2:
-            return
-        
-        # Dibujar línea
-        points = []
-        for i, value in enumerate(data):
-            px = x + int(i * width / len(data))
-            py = y + height - int(value * height)
-            points.append((px, py))
-        
-        for i in range(1, len(points)):
-            cv2.line(frame, points[i-1], points[i], color, 1)
-    
-    def _get_level_color(self, value, thresholds):
-        """Obtiene color según nivel"""
-        if value >= thresholds[2]:
-            return self.colors['danger']
-        elif value >= thresholds[1]:
-            return self.colors['warning']
-        elif value >= thresholds[0]:
-            return self.colors['text_primary']
+        fill_width = int(width * score / 100)
+        if score > 70:
+            color = self.colors['success']
+        elif score > 40:
+            color = self.colors['warning']
         else:
-            return self.colors['success']
+            color = self.colors['danger']
+        
+        cv2.rectangle(frame, (x, y), (x + fill_width, y + height), color, -1)
+        
+        # Texto
+        cv2.putText(frame, f"{score}%", (x + width//2 - 15, y - 3),
+                   self.font, self.font_sizes['tiny'],
+                   self.colors['text_secondary'], 1)
     
-    def _update_histories(self, fatigue_result, behavior_result, face_result):
-        """Actualiza los historiales (actualizado)"""
+    # Métodos de estado para cada módulo
+    def _get_face_status(self, result):
+        if not result or not result.get('operator_info'):
+            return {'active': False, 'text': 'Sin detección', 
+                   'color': self.colors['text_dim'], 'info': None}
+        
+        info = result['operator_info']
+        confidence = info.get('confidence', 0)
+        is_registered = info.get('is_registered', True)
+        
+        if not is_registered:
+            return {'active': True, 'text': 'NO REGISTRADO',
+                   'color': self.colors['danger'], 
+                   'info': f'Confianza: {confidence:.0%}'}
+        
+        return {'active': True, 'text': 'IDENTIFICADO',
+               'color': self.colors['success'],
+               'info': f'Confianza: {confidence:.0%}'}
+    
+    def _get_fatigue_status(self, result):
+        if not result:
+            return {'active': False, 'text': 'Inactivo',
+                   'color': self.colors['text_dim'], 'info': None}
+        
+        fatigue_pct = result.get('fatigue_percentage', 0)
+        microsleeps = result.get('microsleep_count', 0)
+        
+        if result.get('is_critical'):
+            return {'active': True, 'text': 'CRÍTICO',
+                   'color': self.colors['danger'],
+                   'info': f'Fatiga: {fatigue_pct}% | MS: {microsleeps}'}
+        elif microsleeps > 0:
+            return {'active': True, 'text': 'ALERTA',
+                   'color': self.colors['warning'],
+                   'info': f'Fatiga: {fatigue_pct}% | MS: {microsleeps}'}
+        
+        return {'active': True, 'text': 'NORMAL',
+               'color': self.colors['success'],
+               'info': f'Fatiga: {fatigue_pct}%'}
+    
+    def _get_behavior_status(self, result):
+        if not result:
+            return {'active': False, 'text': 'Inactivo',
+                   'color': self.colors['text_dim'], 'info': None}
+        
+        detections = result.get('detections', [])
+        alerts = result.get('alerts', [])
+        
+        phone = any(d[0] == 'cell phone' for d in detections)
+        cigarette = any(d[0] == 'cigarette' for d in detections)
+        
+        if alerts:
+            return {'active': True, 'text': 'ALERTA',
+                   'color': self.colors['danger'],
+                   'info': f'Tel: {"Sí" if phone else "No"} | Cig: {"Sí" if cigarette else "No"}'}
+        elif detections:
+            return {'active': True, 'text': 'DETECTADO',
+                   'color': self.colors['warning'],
+                   'info': f'Tel: {"Sí" if phone else "No"} | Cig: {"Sí" if cigarette else "No"}'}
+        
+        return {'active': True, 'text': 'NORMAL',
+               'color': self.colors['success'],
+               'info': 'Sin detecciones'}
+    
+    def _get_distraction_status(self, result):
+        if not result or not result.get('detector_status'):
+            return {'active': False, 'text': 'Inactivo',
+                   'color': self.colors['text_dim'], 'info': None}
+        
+        status = result['detector_status']
+        direction = status.get('direction', 'CENTRO')
+        count = status.get('total_distractions', 0)
+        
+        if direction == 'EXTREMO':
+            return {'active': True, 'text': 'GIRO EXTREMO',
+                   'color': self.colors['danger'],
+                   'info': f'Eventos: {count}/3'}
+        elif direction == 'SIN ROSTRO':
+            return {'active': True, 'text': 'SIN ROSTRO',
+                   'color': self.colors['warning'],
+                   'info': None}
+        elif direction == 'AUSENTE':
+            return {'active': True, 'text': 'AUSENTE',
+                   'color': self.colors['text_dim'],
+                   'info': None}
+        
+        return {'active': True, 'text': 'CENTRO',
+               'color': self.colors['success'],
+               'info': f'Eventos: {count}/3'}
+    
+    def _get_yawn_status(self, result):
+        if not result:
+            return {'active': False, 'text': 'Inactivo',
+                   'color': self.colors['text_dim'], 'info': None}
+        
+        detection = result.get('detection_result', {})
+        is_yawning = detection.get('is_yawning', False)
+        count = result.get('yawn_count', 0)
+        
+        if count >= 3:
+            return {'active': True, 'text': 'MÚLTIPLES',
+                   'color': self.colors['danger'],
+                   'info': f'Bostezos: {count}/3'}
+        elif is_yawning:
+            return {'active': True, 'text': 'BOSTEZANDO',
+                   'color': self.colors['warning'],
+                   'info': f'Bostezos: {count}/3'}
+        
+        return {'active': True, 'text': 'NORMAL',
+               'color': self.colors['success'],
+               'info': f'Bostezos: {count}/3'}
+    
+    def _calculate_session_stats(self, *results):
+        """Calcula estadísticas de la sesión"""
+        total_alerts = 0
+        modules_ok = 0
+        health_score = 100
+        
+        # Contar alertas y módulos OK
+        for result in results:
+            if result:
+                modules_ok += 1
+                
+                # Verificar alertas específicas
+                if isinstance(result, dict):
+                    if result.get('is_critical'):
+                        total_alerts += 1
+                        health_score -= 20
+                    elif result.get('alerts'):
+                        total_alerts += len(result.get('alerts', []))
+                        health_score -= 10
+                    elif result.get('detector_status', {}).get('is_distracted'):
+                        total_alerts += 1
+                        health_score -= 15
+        
+        # Estado general
+        if health_score > 70:
+            overall_status = "OPTIMO"
+            status_color = self.colors['success']
+        elif health_score > 40:
+            overall_status = "ACEPTABLE"
+            status_color = self.colors['warning']
+        else:
+            overall_status = "CRITICO"
+            status_color = self.colors['danger']
+        
+        # Tiempo de sesión
+        session_time = time.strftime("%M:%S", time.gmtime(time.time() % 3600))
+        
+        return {
+            'total_alerts': total_alerts,
+            'modules_ok': modules_ok,
+            'health_score': max(0, health_score),
+            'overall_status': overall_status,
+            'status_color': status_color,
+            'session_time': session_time
+        }
+    
+    def _update_histories(self, fatigue_result, behavior_result, face_result, 
+                        distraction_result, yawn_result):
+        """Actualiza los historiales"""
         # Fatiga
         if fatigue_result:
             self.fatigue_history.append(fatigue_result.get('fatigue_percentage', 0) / 100)
@@ -615,7 +725,7 @@ class MasterDashboard:
             if fatigue_result.get('microsleep_detected', False):
                 self.alert_history.append({
                     'type': 'fatigue',
-                    'message': 'Microsueno detectado',
+                    'message': 'Microsueño detectado',
                     'timestamp': time.time()
                 })
         
@@ -625,27 +735,18 @@ class MasterDashboard:
             self.behavior_history.append(1.0 if has_detection else 0.0)
             
             for alert in behavior_result.get('alerts', []):
-                alert_msg = {
-                    'phone_3s': 'Telefono 3s',
-                    'phone_7s': 'Telefono 7s critico',
-                    'smoking_pattern': 'Patron cigarrillo',
-                    'smoking_7s': 'Cigarrillo continuo'
-                }.get(alert[0], alert[0])
-                
                 self.alert_history.append({
                     'type': 'behavior',
-                    'message': alert_msg,
+                    'message': self._format_behavior_alert(alert[0]),
                     'timestamp': time.time()
                 })
         
-        # Reconocimiento facial (NUEVO)
+        # Reconocimiento facial
         if face_result and face_result.get('operator_info'):
             confidence = face_result['operator_info'].get('confidence', 0)
             self.face_confidence_history.append(confidence)
             
-            # Alertas de operador no registrado
             if not face_result['operator_info'].get('is_registered', True):
-                # Solo agregar alerta cada 30 segundos para no saturar
                 if not any(a['type'] == 'face' and time.time() - a['timestamp'] < 30 
                           for a in self.alert_history):
                     self.alert_history.append({
@@ -655,3 +756,47 @@ class MasterDashboard:
                     })
         else:
             self.face_confidence_history.append(0)
+        
+        # Distracciones
+        if distraction_result and 'detector_status' in distraction_result:
+            detector_status = distraction_result['detector_status']
+            is_distracted = detector_status.get('is_distracted', False)
+            self.distraction_history.append(1.0 if is_distracted else 0.0)
+            
+            if detector_status.get('total_distractions', 0) >= 3:
+                if not any(a['type'] == 'distraction' and time.time() - a['timestamp'] < 30
+                          for a in self.alert_history):
+                    self.alert_history.append({
+                        'type': 'distraction',
+                        'message': 'Múltiples giros extremos',
+                        'timestamp': time.time()
+                    })
+        else:
+            self.distraction_history.append(0)
+        
+        # Bostezos
+        if yawn_result and 'detection_result' in yawn_result:
+            detection = yawn_result['detection_result']
+            is_yawning = detection.get('is_yawning', False)
+            self.yawn_history.append(1.0 if is_yawning else 0.0)
+            
+            if yawn_result.get('yawn_count', 0) >= 3:
+                if not any(a['type'] == 'yawn' and time.time() - a['timestamp'] < 30
+                          for a in self.alert_history):
+                    self.alert_history.append({
+                        'type': 'yawn',
+                        'message': 'Múltiples bostezos detectados',
+                        'timestamp': time.time()
+                    })
+        else:
+            self.yawn_history.append(0)
+    
+    def _format_behavior_alert(self, alert_type):
+        """Formatea mensajes de alerta de comportamiento"""
+        formats = {
+            'phone_3s': 'Uso de teléfono (3s)',
+            'phone_7s': 'Uso prolongado teléfono',
+            'smoking_pattern': 'Patrón de fumar',
+            'smoking_7s': 'Fumando continuamente'
+        }
+        return formats.get(alert_type, alert_type)

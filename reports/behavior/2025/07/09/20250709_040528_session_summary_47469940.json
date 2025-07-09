@@ -1,0 +1,31 @@
+{
+  "id": "behavior_session_summary_47469940_20250709040528",
+  "module": "behavior",
+  "event_type": "session_summary",
+  "timestamp": "2025-07-09T04:05:28.076930",
+  "operator": {
+    "id": "47469940",
+    "name": "Operador: Nilson Cayao"
+  },
+  "data": {
+    "session_start": 1752051438.5965486,
+    "session_end": 1752051928.0769303,
+    "duration_seconds": 489.4803817272186,
+    "operators_monitored": [
+      "47469940"
+    ],
+    "total_detections": 981,
+    "total_phone_alerts": 0,
+    "total_smoking_alerts": 0,
+    "behavior_summary": {
+      "phone_detection_rate": 0.0,
+      "smoking_detection_rate": 0.0
+    },
+    "calibration_used": true
+  },
+  "metadata": {
+    "version": "1.0",
+    "generated_by": "ReportManager",
+    "environment": "production"
+  }
+}

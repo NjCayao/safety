@@ -1,7 +1,8 @@
 """
-Test Completo con Reconocimiento Facial
-=======================================
-Prueba del dashboard completo con todos los módulos integrados.
+Test Completo con TODOS los Módulos
+===================================
+Prueba del dashboard completo con reconocimiento facial, fatiga, comportamiento,
+distracciones y bostezos integrados.
 """
 
 import cv2
@@ -18,11 +19,13 @@ from core.master_dashboard import MasterDashboard
 from core.fatigue.integrated_fatigue_system import IntegratedFatigueSystem
 from core.behavior.integrated_behavior_system import IntegratedBehaviorSystem
 from core.face_recognition import IntegratedFaceSystem
+from core.distraction.integrated_distraction_system import IntegratedDistractionSystem
+from core.yawn.integrated_yawn_system import IntegratedYawnSystem
 
 class CompleteSystemTest:
     def __init__(self):
         print("=== TEST DEL SISTEMA COMPLETO ===")
-        print("    Fatiga + Comportamiento + Reconocimiento Facial\n")
+        print("    Todos los módulos integrados\n")
         
         # Configuración
         self.model_path = "assets/models/shape_predictor_68_face_landmarks.dat"
@@ -35,6 +38,8 @@ class CompleteSystemTest:
         self.fatigue_system = None
         self.behavior_system = None
         self.face_system = None
+        self.distraction_system = None  # NUEVO
+        self.yawn_system = None         # NUEVO
         self.face_detector = None
         self.landmark_predictor = None
         
@@ -53,7 +58,7 @@ class CompleteSystemTest:
         try:
             # Dashboard maestro con análisis
             self.master_dashboard = MasterDashboard(
-                width=300, 
+                width=320,  # Un poco más ancho para acomodar todos los módulos
                 position='left',
                 enable_analysis_dashboard=True
             )
@@ -62,9 +67,9 @@ class CompleteSystemTest:
             # Sistema de reconocimiento facial
             self.face_system = IntegratedFaceSystem(
                 operators_dir=self.operators_dir,
-                dashboard_position='none'  # No necesitamos su dashboard individual
+                dashboard_position='none'
             )
-            self.face_system.enable_dashboard(False)  # Deshabilitamos su dashboard
+            self.face_system.enable_dashboard(False)
             print("   ✓ Sistema de reconocimiento facial inicializado")
             
             # Sistema de fatiga
@@ -82,6 +87,22 @@ class CompleteSystemTest:
                 operators_dir=self.operators_dir
             )
             print("   ✓ Sistema de comportamientos inicializado")
+            
+            # Sistema de distracciones (NUEVO)
+            self.distraction_system = IntegratedDistractionSystem(
+                operators_dir=self.operators_dir,
+                dashboard_position='none'
+            )
+            self.distraction_system.enable_dashboard(False)
+            print("   ✓ Sistema de distracciones inicializado")
+            
+            # Sistema de bostezos (NUEVO)
+            self.yawn_system = IntegratedYawnSystem(
+                operators_dir=self.operators_dir,
+                dashboard_position='none'
+            )
+            self.yawn_system.enable_dashboard(False)
+            print("   ✓ Sistema de bostezos inicializado")
             
             # Detectores faciales
             self.face_detector = dlib.get_frontal_face_detector()
@@ -105,6 +126,8 @@ class CompleteSystemTest:
         print("   - 'q': Salir")
         print("   - 's': Ver estadísticas")
         print("   - 'r': Forzar reporte de operador desconocido")
+        print("   - 'd': Forzar reporte de múltiples distracciones")
+        print("   - 'y': Forzar reporte de múltiples bostezos")
         print("   - 'n': Alternar modo nocturno")
         
         # Inicializar cámara
@@ -120,7 +143,7 @@ class CompleteSystemTest:
         print("\n   ✓ Sistema activo\n")
         
         # Crear ventana
-        window_name = "Sistema Completo - Reconocimiento + Fatiga + Comportamiento"
+        window_name = "Sistema Completo - Todos los Módulos"
         cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
         cv2.resizeWindow(window_name, self.window_width, self.window_height)
         
@@ -151,36 +174,47 @@ class CompleteSystemTest:
                         'name': operator_info['name']
                     }
                     
-                    # Si cambió el operador, actualizar otros sistemas
+                    # Si cambió el operador, actualizar TODOS los sistemas
                     if (not last_operator_info or 
                         last_operator_info.get('id') != operator_info['id']):
                         print(f"\n   → Operador detectado: {current_operator['name']} (ID: {current_operator['id']})")
                         self.fatigue_system.set_operator(current_operator)
                         self.behavior_system.set_operator(current_operator)
+                        self.distraction_system.set_operator(current_operator)  # NUEVO
+                        self.yawn_system.set_operator(current_operator)        # NUEVO
                         last_operator_info = operator_info
                 else:
                     # Operador no registrado
                     print(f"\r   ⚠️  Operador NO REGISTRADO detectado", end='')
             
-            # 2. ANÁLISIS DE FATIGA (solo si hay rostro)
-            fatigue_result = None
+            # 2. DETECCIÓN DE ROSTRO Y LANDMARKS
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             faces = self.face_detector(gray)
             
+            landmarks = None
             if faces:
                 face = faces[0]
                 landmarks = self.landmark_predictor(gray, face)
+            
+            # 3. ANÁLISIS DE FATIGA
+            fatigue_result = None
+            if landmarks:
                 fatigue_result = self.fatigue_system.analyze_frame(frame, landmarks)
             
-            # 3. ANÁLISIS DE COMPORTAMIENTO
+            # 4. ANÁLISIS DE COMPORTAMIENTO
             face_locations = [(face.top(), face.right(), face.bottom(), face.left())] if faces else None
             behavior_result = self.behavior_system.analyze_frame(frame, face_locations)
             
-            # 4. PREPARAR DATOS DE ANÁLISIS (simulados)
+            # 5. ANÁLISIS DE DISTRACCIONES (NUEVO)
+            distraction_result = self.distraction_system.analyze_frame(frame, landmarks)
+            
+            # 6. ANÁLISIS DE BOSTEZOS (NUEVO)
+            yawn_result = self.yawn_system.analyze_frame(frame, landmarks)
+            
+            # 7. PREPARAR DATOS DE ANÁLISIS
             analysis_data = self._generate_analysis_data() if faces else None
             
-            # 5. RENDERIZAR DASHBOARD COMPLETO
-            # Agregar información del tiempo de operador desconocido
+            # 8. RENDERIZAR DASHBOARD COMPLETO CON TODOS LOS MÓDULOS
             if face_result and hasattr(self.face_system, 'unknown_operator_start_time'):
                 if self.face_system.unknown_operator_start_time:
                     face_result['unknown_operator_time'] = time.time() - self.face_system.unknown_operator_start_time
@@ -190,15 +224,19 @@ class CompleteSystemTest:
                 fatigue_result,
                 behavior_result,
                 face_result,
+                distraction_result,  # NUEVO
+                yawn_result,         # NUEVO
                 analysis_data
             )
             
-            # 6. MANEJAR ALERTAS CON FRAME COMPLETO
+            # 9. MANEJAR ALERTAS
             if fatigue_result and fatigue_result.get('microsleep_detected'):
                 self._handle_fatigue_alert(fatigue_result, dashboard_frame)
             
             if behavior_result and behavior_result.get('alerts'):
                 self._handle_behavior_alerts(behavior_result, dashboard_frame)
+            
+            # Las alertas de distracción y bostezos se manejan internamente
             
             # Redimensionar para mostrar
             display_frame = cv2.resize(dashboard_frame, (self.window_width, self.window_height))
@@ -226,6 +264,18 @@ class CompleteSystemTest:
                     print("\n   📨 Reporte de operador desconocido generado")
                 else:
                     print("\n   ⚠️  No hay operador desconocido activo")
+            elif key == ord('d'):
+                # Forzar reporte de distracciones (NUEVO)
+                if self.distraction_system.force_distraction_report(dashboard_frame):
+                    print("\n   📨 Reporte de múltiples distracciones generado")
+                else:
+                    print("\n   ⚠️  No hay distracciones para reportar")
+            elif key == ord('y'):
+                # Forzar reporte de bostezos (NUEVO)
+                if self.yawn_system.force_yawn_report(dashboard_frame):
+                    print("\n   📨 Reporte de múltiples bostezos generado")
+                else:
+                    print("\n   ⚠️  No hay bostezos para reportar")
             elif key == ord('n'):
                 simulated_night = not simulated_night
                 print(f"\n   Modo {'nocturno' if simulated_night else 'diurno'} activado")
@@ -346,6 +396,22 @@ class CompleteSystemTest:
         print(f"  - Alertas teléfono: {behavior_status['session_stats']['total_phone_alerts']}")
         print(f"  - Alertas cigarrillo: {behavior_status['session_stats']['total_smoking_alerts']}")
         
+        # Estadísticas de distracciones (NUEVO)
+        distraction_status = self.distraction_system.get_current_status()
+        print(f"\nDISTRACCIONES:")
+        print(f"  - Giros extremos: {distraction_status['distraction_count']}/3")
+        print(f"  - Total detecciones: {distraction_status['session_stats']['total_detections']}")
+        print(f"  - Eventos nivel 2: {distraction_status['session_stats']['level2_events']}")
+        print(f"  - Reportes generados: {distraction_status['session_stats']['reports_generated']}")
+        
+        # Estadísticas de bostezos (NUEVO)
+        yawn_status = self.yawn_system.get_current_status()
+        print(f"\nBOSTEZOS:")
+        print(f"  - Bostezos: {yawn_status['yawn_count']}/3")
+        print(f"  - Total detecciones: {yawn_status['session_stats']['total_detections']}")
+        print(f"  - Total bostezos: {yawn_status['session_stats']['total_yawns']}")
+        print(f"  - Reportes generados: {yawn_status['session_stats']['reports_generated']}")
+        
         print("="*60 + "\n")
     
     def _print_summary(self):
@@ -371,6 +437,9 @@ class CompleteSystemTest:
             behavior_report = self.behavior_system.generate_session_report()
             if behavior_report:
                 print(f"  ✓ Reporte de comportamiento: {behavior_report['id']}")
+            
+            # Los sistemas de distracción y bostezos generan reportes por eventos,
+            # no por sesión
         
         print("\n✓ Sesión completada exitosamente")
         print("="*70)

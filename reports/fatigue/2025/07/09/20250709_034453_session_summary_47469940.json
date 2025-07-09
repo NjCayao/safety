@@ -1,0 +1,34 @@
+{
+  "id": "fatigue_session_summary_47469940_20250709034453",
+  "module": "fatigue",
+  "event_type": "session_summary",
+  "timestamp": "2025-07-09T03:44:53.954381",
+  "operator": {
+    "id": "47469940",
+    "name": "Operador: Nilson Cayao"
+  },
+  "data": {
+    "session_start": 1752050499.289416,
+    "session_end": 1752050693.9543812,
+    "duration_seconds": 194.66496515274048,
+    "operators_monitored": [
+      "47469940"
+    ],
+    "total_detections": 385,
+    "total_microsleeps": 0,
+    "total_alerts": 0,
+    "detector_stats": {
+      "total_microsleeps": 0,
+      "total_blinks": 0,
+      "average_blink_rate": 0.0,
+      "analysis_duration": 193.7332055568695,
+      "recent_microsleeps": 0
+    },
+    "calibration_used": true
+  },
+  "metadata": {
+    "version": "1.0",
+    "generated_by": "ReportManager",
+    "environment": "production"
+  }
+}

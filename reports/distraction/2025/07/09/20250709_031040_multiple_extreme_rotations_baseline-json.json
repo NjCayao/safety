@@ -1,0 +1,30 @@
+{
+  "id": "distraction_multiple_extreme_rotations_baseline-json_20250709031040",
+  "module": "distraction",
+  "event_type": "multiple_extreme_rotations",
+  "timestamp": "2025-07-09T03:10:40.081040",
+  "operator": {
+    "id": "baseline-json",
+    "name": "Operador de Prueba"
+  },
+  "data": {
+    "extreme_rotation_count": 3,
+    "window_minutes": 10,
+    "actual_cycle_minutes": 1.1,
+    "event_times": [
+      1752048575.7659233,
+      1752048605.7312865,
+      1752048640.0757422
+    ],
+    "operator_id": "baseline-json",
+    "operator_name": "Operador de Prueba",
+    "severity": "HIGH",
+    "recommendation": "Verificar estado del operador inmediatamente"
+  },
+  "metadata": {
+    "version": "1.0",
+    "generated_by": "ReportManager",
+    "environment": "production"
+  },
+  "image_path": "reports\\distraction\\2025/07/09\\20250709_031040_multiple_extreme_rotations_baseline-json.jpg"
+}

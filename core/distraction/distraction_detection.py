@@ -103,9 +103,12 @@ class DistractionDetector:
         self.last_metrics = {}             
         self._last_log_time = 0
         
-        # Para dibujar contornos
+        # Para dibujar líneas faciales
         self.last_landmarks = None
         self.last_face_rect = None
+        
+        # Info de última detección
+        self.last_detection_info = {}
         
         self.logger.info("Detector de Distracciones inicializado (basado en tiempo)")
         
@@ -134,19 +137,41 @@ class DistractionDetector:
         if landmarks is None or landmarks.num_parts == 0:
             self.frames_without_face += 1
             
-            # Si perdemos la cara por muchos frames, asumir giro extremo
-            if self.frames_without_face > self.config['frames_without_face_limit']:
-                self.direction = "EXTREMO"
-                self.detection_confidence = 0.7
+            # Lógica mejorada para distinguir entre ausencia y giro extremo
+            if self.frames_without_face <= 2:
+                # Muy pocos frames: mantener último estado
+                if not hasattr(self, 'last_known_direction'):
+                    self.last_known_direction = "CENTRO"
+                self.direction = self.last_known_direction
+                self.detection_confidence = max(0.3, self.detection_confidence - 0.1)
+            elif self.frames_without_face <= 10:
+                # Pérdida breve: mostrar sin rostro temporalmente
+                self.direction = "SIN ROSTRO"
+                self.detection_confidence = 0.3
+            elif self.frames_without_face <= 30:  # ~7.5 segundos
+                # Pérdida mediana: verificar si había indicios de giro antes
+                if hasattr(self, 'last_detection_info') and self.last_detection_info.get('ear_visibility', 0) > 0.4:
+                    # Había visibilidad de perfil antes: probablemente giro extremo
+                    self.direction = "EXTREMO"
+                    self.detection_confidence = 0.6
+                else:
+                    # No había perfil visible: mantener sin rostro
+                    self.direction = "SIN ROSTRO"
+                    self.detection_confidence = 0.2
             else:
-                # Si no hay cara y no ha pasado suficiente tiempo, no hay distracción
-                self.direction = "CENTRO"
-                self.detection_confidence = 0.0
+                # Pérdida muy prolongada: asumir ausencia real
+                self.direction = "AUSENTE"
+                self.detection_confidence = 0.1
+                # Resetear para no contar como distracción
+                if self.distraction_start_time:
+                    self.distraction_start_time = None
+                    self.current_alert_level = 0
             
             return self._handle_distraction_timing(frame)
         
-        # Si recuperamos la cara, resetear contador
+        # Si recuperamos la cara, resetear contador y actualizar dirección conocida
         self.frames_without_face = 0
+        self.last_known_direction = "CENTRO"  # Actualizar última dirección conocida
         
         # SOLO verificar si es un giro extremo
         is_extreme_rotation = self._check_extreme_rotation(landmarks, frame)
@@ -180,6 +205,21 @@ class DistractionDetector:
             # Guardar rectángulo de la cara
             self.last_face_rect = (leftmost, topmost, rightmost, bottommost)
             
+            # NUEVA LÓGICA: Detectar visibilidad de oreja
+            # Los puntos 0-3 y 13-16 del contorno corresponden a las zonas cerca de las orejas
+            left_ear_region = jaw_points[0:4]   # Cerca de oreja izquierda
+            right_ear_region = jaw_points[13:17] # Cerca de oreja derecha
+            
+            # Calcular cuánto del perfil lateral es visible
+            face_center_x = (leftmost + rightmost) / 2
+            
+            # Distancia de los puntos de oreja al centro
+            left_ear_distance = abs(left_ear_region[0][0] - face_center_x)
+            right_ear_distance = abs(right_ear_region[-1][0] - face_center_x)
+            
+            # Si un lado está muy extendido, significa que vemos más perfil (oreja visible)
+            ear_visibility_ratio = max(left_ear_distance, right_ear_distance) / face_width if face_width > 0 else 0
+            
             # En giros extremos, el rostro se ve mucho más estrecho
             aspect_ratio = face_width / face_height if face_height > 0 else 1
             
@@ -200,16 +240,22 @@ class DistractionDetector:
             
             # Verificar si un lado de la cara está casi oculto
             nose_x = nose.x
-            face_center_x = (leftmost + rightmost) / 2
             nose_offset = abs(nose_x - face_center_x) / face_width if face_width > 0 else 0
             
-            # Criterios para giro extremo usando configuración
+            # CRITERIOS MEJORADOS para giro extremo
+            # Debe verse parte del perfil (oreja) para confirmar que es giro y no ausencia
             is_extreme = (
-                aspect_ratio < 0.5 or  
-                eye_visibility_ratio < 0.5 or  
-                nose_offset > 0.4 or  
-                face_width < self.config['visibility_threshold']
+                (aspect_ratio < 0.5 or eye_visibility_ratio < 0.5 or nose_offset > 0.4) and
+                ear_visibility_ratio > 0.45  # Vemos bastante del perfil lateral
             )
+            
+            # Guardar información de detección
+            self.last_detection_info = {
+                'aspect_ratio': aspect_ratio,
+                'ear_visibility': ear_visibility_ratio,
+                'eye_visibility': eye_visibility_ratio,
+                'nose_offset': nose_offset
+            }
             
             if is_extreme:
                 # Determinar dirección del giro extremo
@@ -217,6 +263,7 @@ class DistractionDetector:
                     self.last_valid_direction = "IZQUIERDA"
                 else:
                     self.last_valid_direction = "DERECHA"
+                self.last_known_direction = "EXTREMO"  # Guardar que hubo giro extremo
             
             return is_extreme
             
@@ -226,6 +273,7 @@ class DistractionDetector:
     def _handle_distraction_timing(self, frame):
         """Maneja el timing de distracciones usando TIEMPO REAL"""
         
+        # Considerar distracción tanto en EXTREMO como cuando pierde rostro por mucho tiempo
         is_distracted = (self.direction == "EXTREMO")
         current_time = time.time()
         
@@ -293,8 +341,8 @@ class DistractionDetector:
         # Dibujar visualización solo si GUI está habilitada
         if self.show_gui and frame is not None:
             self._draw_enhanced_visualization(frame, is_distracted)
-            # Dibujar contornos
-            self._draw_face_contours(frame)
+            # Dibujar líneas faciales
+            self._draw_face_lines(frame)
         
         return is_distracted, multiple_distractions
     
@@ -339,54 +387,37 @@ class DistractionDetector:
         except Exception as e:
             self.logger.error(f"Error al reproducir audio: {e}")
     
-    def _draw_face_contours(self, frame):
-        """Dibuja contornos naranjas alrededor de la cara y puntos clave"""
+    def _draw_face_lines(self, frame):
+        """Dibuja solo puntos en las características faciales clave"""
         if self.last_landmarks is None:
             return
         
         try:
-            # Color naranja
-            orange_color = (0, 165, 255)
+            # Color para los puntos
+            point_color = (0, 165, 255)  # Naranja
+            point_radius = 4
             
-            # Dibujar contorno de la mandíbula
-            jaw_points = []
-            for i in range(0, 17):
-                x = self.last_landmarks.part(i).x
-                y = self.last_landmarks.part(i).y
-                jaw_points.append((x, y))
+            # Lista de puntos clave a dibujar
+            key_points = [
+                36,  # Ojo izquierdo externo
+                39,  # Ojo izquierdo interno
+                42,  # Ojo derecho interno
+                45,  # Ojo derecho externo
+                30,  # Punta de la nariz
+                48,  # Comisura izquierda de la boca
+                51,  # Centro superior de la boca
+                54,  # Comisura derecha de la boca
+                57,  # Centro inferior de la boca
+                3,   # Mejilla izquierda
+                13,  # Mejilla derecha
+                8    # Mentón
+            ]
             
-            # Dibujar líneas conectando los puntos de la mandíbula
-            for i in range(1, len(jaw_points)):
-                cv2.line(frame, jaw_points[i-1], jaw_points[i], orange_color, 2)
-            
-            # Dibujar puntos clave importantes
-            key_points = {
-                30: "Nariz",
-                8: "Mentón",
-                36: "Ojo Izq",
-                45: "Ojo Der",
-                48: "Boca Izq",
-                54: "Boca Der"
-            }
-            
-            for idx, label in key_points.items():
-                x = self.last_landmarks.part(idx).x
-                y = self.last_landmarks.part(idx).y
-                # Círculo en el punto
-                cv2.circle(frame, (x, y), 4, orange_color, -1)
-                # Etiqueta pequeña
-                cv2.putText(frame, label, (x + 5, y - 5),
-                           cv2.FONT_HERSHEY_SIMPLEX, 0.3, orange_color, 1)
-            
-            # Si hay rectángulo de cara, dibujarlo
-            if self.last_face_rect:
-                x1, y1, x2, y2 = self.last_face_rect
-                cv2.rectangle(frame, (x1, y1), (x2, y2), orange_color, 2)
-                
-                # Mostrar ancho de cara
-                face_width = x2 - x1
-                cv2.putText(frame, f"Ancho: {face_width}px", (x1, y1 - 10),
-                           cv2.FONT_HERSHEY_SIMPLEX, 0.5, orange_color, 1)
+            # Dibujar solo los puntos
+            for point_idx in key_points:
+                x = self.last_landmarks.part(point_idx).x
+                y = self.last_landmarks.part(point_idx).y
+                cv2.circle(frame, (x, y), point_radius, point_color, -1)
             
         except Exception as e:
             pass
@@ -402,6 +433,12 @@ class DistractionDetector:
         if self.direction == "EXTREMO":
             color = (0, 0, 255)
             direction_text = "GIRO EXTREMO"
+        elif self.direction == "SIN ROSTRO":
+            color = (255, 165, 0)  # Naranja
+            direction_text = "ROSTRO NO DETECTADO"
+        elif self.direction == "AUSENTE":
+            color = (128, 128, 128)  # Gris
+            direction_text = "CONDUCTOR AUSENTE"
         else:
             color = (0, 255, 0)
             direction_text = "MIRANDO: CENTRO"
