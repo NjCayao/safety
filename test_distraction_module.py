@@ -1,5 +1,5 @@
 """
-Test del Sistema de Detección de Bostezos
+Test del Sistema de Detección de Distracciones
 """
 
 import cv2
@@ -10,10 +10,10 @@ import dlib
 # Agregar el directorio raíz al path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from core.yawn import IntegratedYawnSystem
+from core.distraction import IntegratedDistractionSystem
 
 def main():
-    print("\n=== TEST SISTEMA DE DETECCIÓN DE BOSTEZOS ===")
+    print("\n=== TEST SISTEMA DE DETECCIÓN DE DISTRACCIONES ===")
     print("Inicializando...")
     
     # Verificar modelo de landmarks
@@ -27,18 +27,17 @@ def main():
     landmark_predictor = dlib.shape_predictor(model_path)
     
     # Crear instancia del sistema
-    yawn_system = IntegratedYawnSystem(
+    distraction_system = IntegratedDistractionSystem(
         operators_dir="operators",
-        dashboard_position='right'  # Puedes cambiar a 'left'
+        dashboard_position='right'
     )
     
     print(f"✅ Sistema inicializado")
     
-    # Configurar operador - CAMBIAR ESTE ID POR UNO REAL
-    # Puedes usar el ID de un operador que tengas calibrado
+    # Configurar operador
     test_operator = {
         'id': '47469940',  # Cambia esto por el DNI de un operador real
-        'name': 'Operador Real'  # Se actualizará con el nombre real si existe
+        'name': 'Operador Real'
     }
     
     # Intentar cargar información real del operador
@@ -51,9 +50,9 @@ def main():
                 if len(lines) > 1:
                     test_operator['name'] = lines[1].strip()
     
-    yawn_system.set_operator(test_operator)
+    distraction_system.set_operator(test_operator)
     
-    status = yawn_system.get_current_status()
+    status = distraction_system.get_current_status()
     print(f"✅ Operador: {test_operator['name']}")
     print(f"✅ Calibración: {'PERSONALIZADA' if status['is_calibrated'] else 'POR DEFECTO'}")
     
@@ -69,8 +68,8 @@ def main():
     print("  • q: Salir")
     print("  • d: Cambiar posición del dashboard")
     print("  • h: Ocultar/mostrar dashboard")
-    print("  • r: Reiniciar contador de bostezos")
-    print("  • f: Forzar reporte de múltiples bostezos (testing)")
+    print("  • r: Reiniciar contador de distracciones")
+    print("  • f: Forzar reporte de múltiples distracciones (testing)")
     print("\n")
     
     dashboard_visible = True
@@ -91,45 +90,39 @@ def main():
             face = faces[0]
             landmarks = landmark_predictor(gray, face)
         
-        # Procesar frame con el sistema de bostezos
-        result = yawn_system.analyze_frame(frame, landmarks)
+        # Procesar frame con el sistema de distracciones
+        result = distraction_system.analyze_frame(frame, landmarks)
         
         # Mostrar información en consola cada segundo (30 frames aprox)
         if frame_count % 30 == 0:
-            detection = result.get('detection_result', {})
+            detector_status = result.get('detector_status', {})
             
-            # NUEVO: Mostrar estado del contador de bostezos
-            yawn_count = result.get('yawn_count', 0)
-            
-            if detection.get('mar_value', 0) > 0:
-                if detection.get('is_yawning', False):
-                    duration = detection.get('yawn_duration', 0)
-                    print(f"\r🟡 BOSTEZANDO | "
-                          f"Duración: {duration:.1f}s | "
-                          f"MAR: {detection['mar_value']:.2f} | "
-                          f"Bostezos: {yawn_count}/3    ", end='')
+            if detector_status:
+                direction = detector_status.get('direction', 'CENTRO')
+                alert_level = detector_status.get('current_alert_level', 0)
+                distraction_time = detector_status.get('distraction_time', 0)
+                
+                if result.get('is_distracted', False):
+                    level_str = f"Nivel {alert_level}" if alert_level > 0 else "Iniciando"
+                    print(f"\r🟡 DISTRACCIÓN ({direction}) | "
+                          f"{level_str} | "
+                          f"Tiempo: {distraction_time:.1f}s | "
+                          f"Total: {result['total_distractions']}/{result['max_distractions']}    ", end='')
                 else:
-                    print(f"\r✅ Normal | "
-                          f"MAR: {detection['mar_value']:.2f} | "
-                          f"Umbral: {detection['mar_threshold']:.2f} | "
-                          f"Bostezos: {yawn_count}/3    ", end='')
+                    print(f"\r✅ Atento (CENTRO) | "
+                          f"Distracciones: {result['total_distractions']}/{result['max_distractions']}    ", end='')
             else:
-                print(f"\r⏸️  Sin detección de rostro | Bostezos: {yawn_count}/3                    ", end='')
+                print(f"\r⏸️  Sin detección de rostro                              ", end='')
         
-        # NUEVO: Log cuando se detecta un bostezo completo
-        if result.get('detection_result', {}).get('yawn_detected', False):
-            yawn_count = result.get('yawn_count', 0)
-            print(f"\n🎯 BOSTEZO #{yawn_count} COMPLETADO - Audio: bostezo{yawn_count}.mp3")
-            
-        # Mostrar alerta especial si hay múltiples bostezos
-        if result.get('multiple_yawns', False):
+        # Mostrar alerta especial si hay múltiples distracciones
+        if result.get('multiple_distractions', False):
             if frame_count % 15 == 0:  # Parpadeo cada medio segundo
-                print(f"\n⚠️  ALERTA FATIGA: {result['yawn_count']} bostezos detectados en {result['window_minutes']} minutos!")
+                print(f"\n⚠️  ALERTA: {result['total_distractions']} distracciones detectadas en {result['window_minutes']} minutos!")
         
         frame_count += 1
         
         # Mostrar frame con dashboard
-        cv2.imshow('Test Detección de Bostezos', result['frame'])
+        cv2.imshow('Test Detección de Distracciones', result['frame'])
         
         # Procesar teclas
         key = cv2.waitKey(1) & 0xFF
@@ -138,48 +131,50 @@ def main():
             break
         elif key == ord('d'):
             # Cambiar posición del dashboard
-            new_pos = 'left' if yawn_system.dashboard.position == 'right' else 'right'
-            yawn_system.set_dashboard_position(new_pos)
+            new_pos = 'left' if distraction_system.dashboard.position == 'right' else 'right'
+            distraction_system.set_dashboard_position(new_pos)
             print(f"\n📊 Dashboard movido a: {new_pos}")
         elif key == ord('h'):
             # Ocultar/mostrar dashboard
             dashboard_visible = not dashboard_visible
-            yawn_system.enable_dashboard(dashboard_visible)
+            distraction_system.enable_dashboard(dashboard_visible)
             print(f"\n📊 Dashboard: {'visible' if dashboard_visible else 'oculto'}")
         elif key == ord('r'):
             # Reiniciar contador
-            yawn_system.reset_yawn_counter()
-            print("\n🔄 Contador de bostezos reiniciado")
+            distraction_system.reset_distraction_counter()
+            print("\n🔄 Contador de distracciones reiniciado")
         elif key == ord('f'):
             # Forzar reporte
-            if yawn_system.force_yawn_report(result['frame']):
-                print("\n📨 REPORTE FORZADO: Se generó reporte de múltiples bostezos")
-                print("   Revisa la carpeta 'reports/yawn/'")
+            if distraction_system.force_distraction_report(result['frame']):
+                print("\n📨 REPORTE FORZADO: Se generó reporte de múltiples distracciones")
+                print("   Revisa la carpeta 'reports/distraction/'")
             else:
-                print("\n⚠️  No hay bostezos registrados para reportar")
+                print("\n⚠️  No hay distracciones registradas para reportar")
     
     # Al salir, mostrar resumen
     print("\n\n=== RESUMEN DE LA SESIÓN ===")
     
-    status = yawn_system.get_current_status()
+    status = distraction_system.get_current_status()
     stats = status['session_stats']
     
     print(f"Total de análisis: {stats['total_detections']}")
-    print(f"Bostezos detectados: {stats['total_yawns']}")
-    print(f"Eventos de múltiples bostezos: {stats['multiple_yawn_events']}")
+    print(f"Distracciones detectadas: {stats['total_distractions']}")
+    print(f"Eventos nivel 1: {stats['level1_events']}")
+    print(f"Eventos nivel 2: {stats['level2_events']}")
+    print(f"Eventos de múltiples distracciones: {stats['multiple_distraction_events']}")
     print(f"Reportes generados: {stats['reports_generated']}")
     
     # Información adicional
-    if stats['total_yawns'] > 0:
-        avg_time = stats['total_detections'] / stats['total_yawns']
-        print(f"Promedio: 1 bostezo cada {avg_time:.0f} frames ({avg_time/30:.1f} segundos)")
+    if stats['total_distractions'] > 0:
+        avg_time = stats['total_detections'] / stats['total_distractions']
+        print(f"Promedio: 1 distracción cada {avg_time:.0f} frames ({avg_time/30:.1f} segundos)")
     
     # Estado del detector
     detector_status = status['detector_status']
     print(f"\nEstado final:")
     print(f"  • Modo: {'NOCTURNO' if detector_status['is_night_mode'] else 'DIURNO'}")
     print(f"  • Nivel de luz: {detector_status['light_level']:.1f}")
-    print(f"  • Umbral MAR: {detector_status['current_threshold']:.2f}")
+    print(f"  • Última dirección: {detector_status['direction']}")
     
     cap.release()
     cv2.destroyAllWindows()

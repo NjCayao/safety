@@ -49,7 +49,7 @@ yawn:
 distraction:
   # Tiempos optimizados para Pi
   level1_time: 4                 # Un poco más permisivo
-  level2_time: 6                 # Tiempo extendido
+  level2_time: 7                 # Tiempo extendido
   camera_fps: 4                  # Sincronizado con FPS de cámara
   
   # Configuración específica para Pi

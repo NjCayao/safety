@@ -1,0 +1,50 @@
+{
+  "operator_id": "47469940",
+  "calibration_info": {
+    "created_at": "2025-07-08T20:41:30.442479",
+    "photos_processed": 4,
+    "version": "1.0",
+    "source": "master_calibration"
+  },
+  "thresholds": {
+    "rotation_threshold_day": 2.6,
+    "rotation_threshold_night": 2.8,
+    "extreme_rotation_threshold": 2.5,
+    "level1_time": 3,
+    "level2_time": 5,
+    "visibility_threshold": 15,
+    "frames_without_face_limit": 5,
+    "confidence_threshold": 0.7,
+    "night_mode_threshold": 50,
+    "enable_night_mode": true,
+    "prediction_buffer_size": 10,
+    "distraction_window": 600,
+    "min_frames_for_reset": 10,
+    "audio_enabled": true,
+    "level1_volume": 0.8,
+    "level2_volume": 1.0,
+    "camera_fps": 4,
+    "calibration_confidence": 1.0
+  },
+  "statistics": {
+    "rotation_stats": {
+      "mean": 0.7977485918007711,
+      "std": 0.23131594903195743,
+      "min": 0.40450201299847804,
+      "max": 0.999699834902438,
+      "percentiles": {
+        "25": 0.7619238865572563,
+        "50": 0.893396259651084,
+        "75": 0.9292209648945988
+      }
+    },
+    "tilt_stats": {
+      "mean": 3.985567269869331,
+      "std": 2.2628585212565078
+    },
+    "face_width_stats": {
+      "mean": 366.5,
+      "std": 139.43009000929462
+    }
+  }
+}

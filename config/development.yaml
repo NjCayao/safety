@@ -35,8 +35,8 @@ yawn:
 
 distraction:
   # Más sensible para testing
-  level1_time: 2                 # Alertas más rápidas para testing
-  level2_time: 3
+  level1_time: 3                 # Alertas más rápidas para testing
+  level2_time: 7
   
   # Debug
   audio_enabled: true

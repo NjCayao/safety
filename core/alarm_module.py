@@ -52,12 +52,13 @@ class AlarmModule:
             "bostezo1": "bostezo1.mp3",
             "bostezo2": "bostezo2.mp3", 
             "bostezo3": "bostezo3.mp3",
-            # QUITAMOS: "yawn": "alarma.mp3",  # Esto podría interferir
             
             # === BEHAVIOR ===
             "telefono": "telefono.mp3",
             "cigarro": "cigarro.mp3",
-            "comportamiento10s": "comportamiento10s.mp3",
+            
+            # === DISTRACTION (GIRO EXTREMO) ===
+            "vadelante1": "vadelante1.mp3",
             
             # === GENERAL ===
             "alarma": "alarma.mp3",
@@ -68,9 +69,10 @@ class AlarmModule:
             "unauthorized": "alarma.mp3",
             "nodding": "alarma.mp3",
             "recomendacion": "recomendacion_pausas.mp3",
-            "recomendacion_pausas": "recomendacion_pausas.mp3"
+            "recomendacion_pausas": "recomendacion_pausas.mp3",
+            "comportamiento10s": "comportamiento10s.mp3"  # MOVIDO AQUÍ
         }
-        
+                
         try:
             # DEBUG para bostezo3
             if "bostezo3" in audio_identifier.lower():

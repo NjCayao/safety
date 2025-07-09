@@ -93,7 +93,7 @@ distraction:
   
   # Temporización de alertas
   level1_time: 3                 # Segundos para primer nivel
-  level2_time: 5                 # Segundos para segundo nivel
+  level2_time: 7                 # Segundos para segundo nivel
   
   # Sensibilidad y detección
   visibility_threshold: 15       # Píxeles mínimos de visibilidad

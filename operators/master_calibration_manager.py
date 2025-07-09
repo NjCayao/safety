@@ -21,7 +21,7 @@ from core.behavior.behavior_calibration import BehaviorCalibration
 from core.analysis.analysis_calibration import AnalysisCalibration
 from core.face_recognition.face_recognition_calibration import FaceRecognitionCalibration
 from core.yawn.yawn_calibration import YawnCalibration
-# from core.distraction.distraction_calibration import DistractionCalibration
+from core.distraction.distraction_calibration import DistractionCalibration
 
 class MasterCalibrationManager:
     def __init__(self, operators_dir="operators", model_path="assets/models/shape_predictor_68_face_landmarks.dat"):
@@ -47,9 +47,8 @@ class MasterCalibrationManager:
             'behavior': BehaviorCalibration(self.baseline_dir),
             'analysis': AnalysisCalibration(self.baseline_dir),
             'face_recognition': FaceRecognitionCalibration(self.baseline_dir),
-            'yawn': YawnCalibration(self.baseline_dir)
-            # 'distraction': DistractionCalibration(self.baseline_dir),
-            
+            'yawn': YawnCalibration(self.baseline_dir),
+            'distraction': DistractionCalibration(self.baseline_dir),            
         }
         
         # Buffer para métricas extraídas

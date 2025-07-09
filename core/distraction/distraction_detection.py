@@ -5,6 +5,7 @@ import cv2
 import numpy as np
 from scipy.spatial import distance
 from collections import deque
+import logging  # IMPORTANTE: Asegurar este import
 
 # 🆕 NUEVO: Importar sistema de configuración
 try:
@@ -18,43 +19,31 @@ class DistractionDetector:
     def __init__(self):
         """Inicializa el detector de distracciones con configuración centralizada"""
         
-        # 🆕 NUEVO: Cargar configuración externa (con fallbacks seguros)
+        # ===== PRIMERO: CREAR EL LOGGER =====
+        self.logger = logging.getLogger('DistractionDetector')
+        
+        # ===== DESPUÉS: CARGAR CONFIGURACIÓN =====
         if CONFIG_AVAILABLE:
-            # ===== CONFIGURACIÓN DESDE ARCHIVOS YAML =====
+            # Configuración desde YAML
             self.config = {
-                # Umbrales de rotación
                 'rotation_threshold_day': get_config('distraction.rotation_threshold_day', 2.6),
                 'rotation_threshold_night': get_config('distraction.rotation_threshold_night', 2.8),
                 'extreme_rotation_threshold': get_config('distraction.extreme_rotation_threshold', 2.5),
-                
-                # Temporización de alertas (en segundos)
                 'level1_time': get_config('distraction.level1_time', 3),
                 'level2_time': get_config('distraction.level2_time', 5),
-                
-                # Sensibilidad y detección
                 'visibility_threshold': get_config('distraction.visibility_threshold', 15),
                 'frames_without_face_limit': get_config('distraction.frames_without_face_limit', 5),
                 'confidence_threshold': get_config('distraction.confidence_threshold', 0.7),
-                
-                # Modo nocturno
                 'night_mode_threshold': get_config('distraction.night_mode_threshold', 50),
                 'enable_night_mode': get_config('distraction.enable_night_mode', True),
-                
-                # Buffer y ventanas de tiempo
                 'prediction_buffer_size': get_config('distraction.prediction_buffer_size', 10),
                 'distraction_window': get_config('distraction.distraction_window', 600),
                 'min_frames_for_reset': get_config('distraction.min_frames_for_reset', 10),
-                
-                # Control de audio
                 'audio_enabled': get_config('distraction.audio_enabled', True),
                 'level1_volume': get_config('distraction.level1_volume', 0.8),
                 'level2_volume': get_config('distraction.level2_volume', 1.0),
-                
-                # FPS de la cámara para cálculos
                 'camera_fps': get_config('distraction.camera_fps', 4)
             }
-            
-            # 🆕 NUEVO: Configuración de GUI
             self.show_gui = has_gui()
             
             print(f"✅ DistractionDetector - Configuración cargada:")
@@ -65,7 +54,7 @@ class DistractionDetector:
             print(f"   - GUI: {self.show_gui}")
             print(f"   - Audio: {self.config['audio_enabled']}")
         else:
-            # ✅ FALLBACK: Configuración original si no hay sistema de config
+            # Configuración por defecto
             self.config = {
                 'rotation_threshold_day': 2.6,
                 'rotation_threshold_night': 2.8,
@@ -85,50 +74,46 @@ class DistractionDetector:
                 'level2_volume': 1.0,
                 'camera_fps': 4
             }
-            self.show_gui = True  # Default para compatibilidad
+            self.show_gui = True
             print("⚠️ DistractionDetector usando configuración por defecto")
         
-        # Calcular frames basados en configuración
+        # ===== CALCULAR FRAMES =====
         self.level1_threshold = int(self.config['level1_time'] * self.config['camera_fps'])
         self.level2_threshold = int(self.config['level2_time'] * self.config['camera_fps'])
         
-        # Buffer para predicciones pasadas
+        # ===== INICIALIZAR BUFFERS =====
         buffer_size = self.config['prediction_buffer_size']
         self.direction_buffer = deque(["CENTRO"] * buffer_size, maxlen=buffer_size)
         self.confidence_buffer = deque([1.0] * buffer_size, maxlen=buffer_size)
         
-        # Estados previos para detección de pérdida de face
+        # ===== ESTADOS =====
         self.last_valid_direction = "CENTRO"
         self.last_valid_confidence = 1.0
         self.frames_without_face = 0
-        
-        # Registro de distracciones
         self.distraction_times = []        
         self.distraction_counter = 0       
         self.current_alert_level = 0
-        
-        # Estado de modo (día/noche)
         self.is_night_mode = False
         self.light_level = 0
         
-        # Inicializar el sistema de audio
+        # ===== VARIABLES PARA AUDIO =====
+        self.alarm_module = None
+        self.audio_ready = False
+        
+        # ===== INICIALIZAR AUDIO =====
         self._initialize_audio()
         
-        # Para visualización
+        # ===== VARIABLES PARA VISUALIZACIÓN =====
         self.direction = "CENTRO"          
         self.rotation_angle = 0            
         self.detection_confidence = 1.0    
         self.last_detection_time = 0       
         self.last_metrics = {}             
-        
-        # Para logs en modo headless
         self._last_log_time = 0
         
-        print("=== Detector de Distracciones - Configuración Inicial ===")
-        print(f"Tiempo Nivel 1: {self.config['level1_time']} segundos")
-        print(f"Tiempo Nivel 2: {self.config['level2_time']} segundos")
-        print(f"Modo nocturno: {'Habilitado' if self.config['enable_night_mode'] else 'Deshabilitado'}")
-        print(f"Audio: {'Habilitado' if self.config['audio_enabled'] else 'Deshabilitado'}")
+        self.logger.info("=== Detector de Distracciones Inicializado ===")
+        self.logger.info(f"Tiempo Nivel 1: {self.config['level1_time']} segundos")
+        self.logger.info(f"Tiempo Nivel 2: {self.config['level2_time']} segundos")
         
     def update_config(self, new_config):
         """Actualiza la configuración desde el panel web"""
@@ -149,52 +134,56 @@ class DistractionDetector:
     def _initialize_audio(self):
         """Inicializa el sistema de audio con dos niveles de alerta"""
         if not self.config['audio_enabled']:
-            self.level1_sound = None
-            self.level2_sound = None
             return
             
         try:
-            pygame.init()
-            pygame.mixer.init(frequency=44100, size=-16, channels=2, buffer=2048)
-            print("Sistema de audio pygame inicializado correctamente")
-            
-            script_dir = os.path.dirname(os.path.abspath(__file__))
-            
-            # 🆕 NUEVO: Archivos de audio configurables
-            if CONFIG_AVAILABLE:
-                audio_level1 = get_config('audio.files.vadelante1', 'vadelante1.mp3')
-                audio_level2 = get_config('audio.files.distraction', 'distraction.mp3')
-            else:
-                audio_level1 = 'vadelante1.mp3'
-                audio_level2 = 'distraction.mp3'
-            
-            # Cargar audio nivel 1
-            audio_path_1 = os.path.join(script_dir, "audio", audio_level1)
-            if os.path.exists(audio_path_1):
-                self.level1_sound = pygame.mixer.Sound(audio_path_1)
-                self.level1_sound.set_volume(self.config['level1_volume'])
-                print(f"✅ Audio nivel 1 cargado: {audio_path_1}")
-            else:
-                print(f"❌ ERROR: No se encontró {audio_level1}")
-                self.level1_sound = None
-            
-            # Cargar audio nivel 2
-            audio_path_2 = os.path.join(script_dir, "audio", audio_level2)
-            if os.path.exists(audio_path_2):
-                self.level2_sound = pygame.mixer.Sound(audio_path_2)
-                self.level2_sound.set_volume(self.config['level2_volume'])
-                print(f"✅ Audio nivel 2 cargado: {audio_path_2}")
-            else:
-                print(f"❌ ERROR: No se encontró {audio_level2}")
-                self.level2_sound = None
+            # Solo registrar que usaremos AlarmModule
+            self.logger.info("Sistema de audio configurado para usar AlarmModule")
+            self.audio_ready = True
                     
         except Exception as e:
-            print(f"❌ ERROR al inicializar audio: {e}")
-            self.level1_sound = None
-            self.level2_sound = None
+            self.logger.error(f"❌ ERROR al configurar audio: {e}")
+            self.audio_ready = False
+
+    def _play_sound(self, level):
+        """Reproduce el sonido correspondiente al nivel de alerta"""
+        if not self.config['audio_enabled']:
+            return
+            
+        try:
+            # Verificar que tenemos AlarmModule
+            if not self.alarm_module:
+                self.logger.warning("AlarmModule no está configurado")
+                return
+            
+            # Detener cualquier audio previo
+            self.alarm_module.stop_audio()
+            
+            if level == 1:
+                # Nivel 1: 3 segundos
+                self.logger.info(f"🔊 Reproduciendo alerta nivel 1: vadelante1")
+                success = self.alarm_module.play_audio("vadelante1")
+                if not success:
+                    self.logger.error("Error reproduciendo vadelante1")
+                    
+            elif level == 2:
+                # Nivel 2: 7 segundos  
+                self.logger.info(f"🔊 Reproduciendo alerta nivel 2: comportamiento10s")
+                success = self.alarm_module.play_audio("comportamiento10s")
+                if not success:
+                    self.logger.error("Error reproduciendo comportamiento10s")
+                    
+        except Exception as e:
+            self.logger.error(f"❌ Error al reproducir sonido nivel {level}: {e}")
+
+    def set_alarm_module(self, alarm_module):
+        """Configura la referencia al AlarmModule"""
+        self.alarm_module = alarm_module
+        self.logger.info("AlarmModule configurado en DistractionDetector")
     
     def detect(self, landmarks, frame):
-        """Detecta distracciones incluyendo giros extremos de cabeza"""
+        """Detecta distracciones enfocándose SOLO en giros extremos"""
+        
         # Detectar condiciones de iluminación si está habilitado
         if self.config['enable_night_mode']:
             self._detect_lighting_conditions(frame)
@@ -203,30 +192,32 @@ class DistractionDetector:
         if landmarks is None or landmarks.num_parts == 0:
             self.frames_without_face += 1
             
-            # Si perdemos la cara por más frames del límite configurado
+            # Si perdemos la cara por muchos frames, asumir giro extremo
             if self.frames_without_face > self.config['frames_without_face_limit']:
-                if self.last_valid_direction != "CENTRO":
-                    self.direction = self.last_valid_direction
-                    self.detection_confidence = 0.5  
-                else:
-                    self.direction = "EXTREMO"
-                    self.detection_confidence = 0.7
+                self.direction = "EXTREMO"
+                self.detection_confidence = 0.7
+            else:
+                # Si no hay cara y no ha pasado suficiente tiempo, no hay distracción
+                self.direction = "CENTRO"
+                self.detection_confidence = 0.0
             
             return self._handle_distraction_timing(frame)
         
         # Si recuperamos la cara, resetear contador
         self.frames_without_face = 0
         
-        # Verificar si es un giro extremo antes de calcular métricas
+        # SOLO verificar si es un giro extremo
         is_extreme_rotation = self._check_extreme_rotation(landmarks, frame)
         
         if is_extreme_rotation:
             self.direction = "EXTREMO"
-            self.detection_confidence = 0.8
-            return self._handle_distraction_timing(frame)
+            self.detection_confidence = 0.9
+        else:
+            # Si no es extremo, está mirando "normal" (centro, izq o der moderado)
+            self.direction = "CENTRO"
+            self.detection_confidence = 1.0
         
-        # Continuar con detección normal si no es giro extremo
-        return self._detect_normal_rotation(landmarks, frame)
+        return self._handle_distraction_timing(frame)
     
     def _check_extreme_rotation(self, landmarks, frame):
         """Verifica si hay un giro extremo de cabeza"""
@@ -288,116 +279,119 @@ class DistractionDetector:
             return True
     
     def _detect_normal_rotation(self, landmarks, frame):
-        """Detección normal cuando el rostro es visible"""
-        # Seleccionar umbral según el modo
-        current_threshold = (self.config['rotation_threshold_night'] if self.is_night_mode 
-                           else self.config['rotation_threshold_day'])
+        """Detección que IGNORA rotaciones normales, solo marca como distracción si NO es extremo"""
         
-        metrics = {}
+        # Si llegamos aquí, NO es un giro extremo
+        # Por lo tanto, lo consideramos como posición "normal" (centro o giro moderado)
+        self.direction = "CENTRO"  # Siempre centro si no es extremo
+        self.detection_confidence = 1.0
+        self.last_valid_direction = "CENTRO"
+        self.last_valid_confidence = 1.0
         
-        try:
-            # Extraer puntos clave
-            left_cheek = (landmarks.part(2).x, landmarks.part(2).y)
-            right_cheek = (landmarks.part(14).x, landmarks.part(14).y)
-            nose_tip = (landmarks.part(30).x, landmarks.part(30).y)
-            
-            # Calcular distancias nariz-mejillas
-            dist_nose_left = distance.euclidean(nose_tip, left_cheek)
-            dist_nose_right = distance.euclidean(nose_tip, right_cheek)
-            
-            if dist_nose_left > 0 and dist_nose_right > 0:
-                cheek_ratio = dist_nose_right / dist_nose_left
-            else:
-                cheek_ratio = 1.0
-                
-            metrics['cheek_ratio'] = cheek_ratio
-            
-            # Determinar dirección (CORREGIDO: invertido para coincidir con vista)
-            if cheek_ratio > current_threshold:
-                self.direction = "DERECHA"    # Cambio aquí
-            elif cheek_ratio < 1.0/current_threshold:
-                self.direction = "IZQUIERDA"  # Cambio aquí
-            else:
-                self.direction = "CENTRO"
-            
-            self.detection_confidence = 1.0
-            self.last_valid_direction = self.direction
-            self.last_valid_confidence = self.detection_confidence
-            
-        except Exception as e:
-            self.detection_confidence = 0.5
-        
+        # NO es una distracción
         return self._handle_distraction_timing(frame)
     
     def _handle_distraction_timing(self, frame):
         """Maneja el timing de distracciones y los dos niveles de alerta"""
-        is_distracted = self.direction != "CENTRO"
+        
+        # SOLO contar como distracción si es EXTREMO
+        is_distracted = (self.direction == "EXTREMO")
         current_time = time.time()
         
         if is_distracted:
             self.distraction_counter += 1
             
-            # Nivel 1
-            if self.distraction_counter == self.level1_threshold and self.current_alert_level < 1:
-                print(f"⚠️ NIVEL 1: Distracción detectada ({self.direction})")
+            # Calcular tiempo en segundos
+            tiempo_actual = self.distraction_counter / self.config['camera_fps']
+            
+            # Nivel 1: EXACTAMENTE a los 3 segundos (solo una vez)
+            if self.distraction_counter == self.level1_threshold and self.current_alert_level == 0:
+                print(f"⚠️ NIVEL 1: Giro extremo detectado ({tiempo_actual:.1f} segundos)")
                 self._play_sound(1)
                 self.current_alert_level = 1
             
-            # Nivel 2
-            elif self.distraction_counter == self.level2_threshold:
-                print(f"🚨 NIVEL 2: Distracción prolongada ({self.direction})")
+            # Nivel 2: EXACTAMENTE a los 7 segundos (solo una vez)
+            elif self.distraction_counter == self.level2_threshold and self.current_alert_level == 1:
+                print(f"🚨 NIVEL 2: Giro extremo prolongado ({tiempo_actual:.1f} segundos)")
                 self._play_sound(2)
                 self.current_alert_level = 2
                 
                 # Registrar la distracción
                 self.distraction_times.append(current_time)
                 
-                # Reiniciar contador después del nivel 2
-                self.distraction_counter = 0
-                self.current_alert_level = 0
+                # Imprimir registro del evento
+                count = len(self.distraction_times)
+                print(f"📊 Giro extremo #{count} registrado")
         else:
-            # Reiniciar contadores si vuelve al centro
-            if self.distraction_counter > self.config['min_frames_for_reset']:
-                print(f"Contador reiniciado: {self.distraction_counter} → 0")
+            # Volvió a posición normal
+            if self.distraction_counter > 0:
+                tiempo_distraccion = self.distraction_counter / self.config['camera_fps']
+                
+                # Solo imprimir si fue una distracción significativa (más de 1 segundo)
+                if tiempo_distraccion >= 1.0:
+                    print(f"✅ Volvió a posición normal tras {tiempo_distraccion:.1f}s")
+                    
+                    # Si alcanzó nivel 2, confirmar que se registró
+                    if self.current_alert_level >= 2:
+                        print(f"   → Evento registrado. Total: {len(self.distraction_times)}/3")
+            
+            # Resetear contadores
             self.distraction_counter = 0
             self.current_alert_level = 0
         
-        # Limpiar distracciones antiguas
+        # Limpiar distracciones antiguas (más de 10 minutos)
         self.distraction_times = [t for t in self.distraction_times 
                                 if t > current_time - self.config['distraction_window']]
         
         # Verificar múltiples distracciones
         multiple_distractions = len(self.distraction_times) >= 3
         
-        # 🆕 NUEVO: Dibujar visualización solo si GUI está habilitada
+        # Dibujar visualización solo si GUI está habilitada
         if self.show_gui:
             self._draw_enhanced_visualization(frame, is_distracted)
         else:
             # En modo headless, log periódico
-            if current_time - self._last_log_time > 10:  # Log cada 10 segundos
+            if current_time - self._last_log_time > 10:
                 mode_str = "NOCHE" if self.is_night_mode else "DÍA"
-                print(f"📊 Distracción: {self.direction} | Confianza: {self.detection_confidence:.2f} | Nivel: {self.current_alert_level} | Modo: {mode_str} | Total: {len(self.distraction_times)}/3")
+                if is_distracted:
+                    print(f"📊 Estado: GIRO EXTREMO | Tiempo: {self.distraction_counter/self.config['camera_fps']:.1f}s | Nivel: {self.current_alert_level} | Total: {len(self.distraction_times)}/3 | Modo: {mode_str}")
                 self._last_log_time = current_time
         
+        # SIEMPRE retornar una tupla
         return is_distracted, multiple_distractions
     
     def _play_sound(self, level):
-        """Reproduce el sonido correspondiente al nivel de alerta"""
+        """Reproduce el sonido correspondiente al nivel de alerta usando AlarmModule"""
         if not self.config['audio_enabled']:
             return
             
         try:
-            pygame.mixer.stop()  
+            # Verificar que tenemos AlarmModule configurado
+            if not hasattr(self, 'alarm_module') or self.alarm_module is None:
+                self.logger.warning("AlarmModule no está configurado - no se puede reproducir audio")
+                return
             
-            if level == 1 and self.level1_sound:
-                pygame.mixer.Channel(0).play(self.level1_sound)
-                print(f"🔊 Reproduciendo alerta nivel 1")
-            elif level == 2 and self.level2_sound:
-                pygame.mixer.Channel(0).play(self.level2_sound)
-                print(f"🔊 Reproduciendo alerta nivel 2")
-                
+            if level == 1:
+                # Nivel 1: 3 segundos - vadelante1
+                self.logger.info(f"🔊 Solicitando reproducción nivel 1: vadelante1")
+                success = self.alarm_module.play_audio("vadelante1")
+                if success:
+                    print(f"🔊 Audio nivel 1 reproducido correctamente")
+                else:
+                    print(f"❌ Error: AlarmModule no pudo reproducir vadelante1")
+                    
+            elif level == 2:
+                # Nivel 2: 7 segundos - comportamiento10s
+                self.logger.info(f"🔊 Solicitando reproducción nivel 2: comportamiento10s")
+                success = self.alarm_module.play_audio("comportamiento10s")
+                if success:
+                    print(f"🔊 Audio nivel 2 reproducido correctamente")
+                else:
+                    print(f"❌ Error: AlarmModule no pudo reproducir comportamiento10s")
+                    
         except Exception as e:
-            print(f"❌ Error al reproducir sonido nivel {level}: {e}")
+            self.logger.error(f"❌ Error inesperado al reproducir audio: {e}")
+            print(f"❌ Error al intentar reproducir audio nivel {level}: {str(e)}")
     
     def _draw_enhanced_visualization(self, frame, is_distracted):
         """Dibuja visualización mejorada con texto centrado en la parte inferior"""

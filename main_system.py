@@ -34,7 +34,7 @@ from core.camera_module import CameraModule
 from core.face_recognition.face_recognition_module import FaceRecognitionModule
 from core.fatigue.fatigue_detection import FatigueDetector
 from core.yawn.bostezo_detection import BostezosDetector
-from core.distraction_detection import DistractionDetector
+from core.distraction.distraction_detection import DistractionDetector
 from core.alarm_module import AlarmModule
 from core.behavior.behavior_detection_module import BehaviorDetectionModule
 

@@ -176,7 +176,7 @@ class YawnDetector:
     def draw_yawn_info(self, frame, result):
         """
         Dibuja información del bostezo en el frame.
-        ACTUALIZADO: Contorno verde + puntos rojos
+        ACTUALIZADO: Contorno verde + puntos rojos SIN borde blanco
         
         Args:
             frame: Frame donde dibujar
@@ -196,13 +196,11 @@ class YawnDetector:
             color_contorno = self.colors['mouth_normal']  # Verde siempre
             cv2.drawContours(frame, [hull], -1, color_contorno, 2)
             
-            # PUNTOS ROJOS
+            # PUNTOS ROJOS (sin borde blanco)
             color_puntos = (0, 0, 255)  # Rojo para todos los puntos
             for (x, y) in mouth_points:
-                # Punto principal rojo
+                # Solo punto rojo, sin borde
                 cv2.circle(frame, (x, y), 3, color_puntos, -1)
-                # Borde blanco para mejor visibilidad
-                cv2.circle(frame, (x, y), 4, (255, 255, 255), 1)
         
         # Información de texto
         h, w = frame.shape[:2]
@@ -212,33 +210,33 @@ class YawnDetector:
         status = "BOSTEZANDO" if result['is_yawning'] else "Normal"
         status_color = self.colors['mouth_yawning'] if result['is_yawning'] else self.colors['mouth_normal']
         cv2.putText(frame, f"Estado: {status}", (10, y_offset),
-                   cv2.FONT_HERSHEY_SIMPLEX, 0.6, status_color, 2)
+                cv2.FONT_HERSHEY_SIMPLEX, 0.6, status_color, 2)
         
         # Valor MAR
         y_offset += 30
         mode_str = "NOCHE" if result['is_night_mode'] else "DÍA"
         cv2.putText(frame, f"MAR: {result['mar_value']:.2f} (Umbral: {result['mar_threshold']:.2f}, Modo: {mode_str})",
-                   (10, y_offset), cv2.FONT_HERSHEY_SIMPLEX, 0.5, self.colors['text'], 1)
+                (10, y_offset), cv2.FONT_HERSHEY_SIMPLEX, 0.5, self.colors['text'], 1)
         
         # Duración si está bostezando
         if result['is_yawning'] and result['yawn_duration'] > 0:
             y_offset += 30
             progress = min(result['yawn_duration'] / self.config['duration_threshold'], 1.0) * 100
             cv2.putText(frame, f"Duración: {result['yawn_duration']:.1f}s ({progress:.0f}%)",
-                       (10, y_offset), cv2.FONT_HERSHEY_SIMPLEX, 0.6, self.colors['mouth_yawning'], 2)
+                    (10, y_offset), cv2.FONT_HERSHEY_SIMPLEX, 0.6, self.colors['mouth_yawning'], 2)
             
             # Barra de progreso
             bar_width = 200
             bar_height = 15
             y_offset += 5
             cv2.rectangle(frame, (10, y_offset), (10 + bar_width, y_offset + bar_height),
-                         (100, 100, 100), -1)
+                        (100, 100, 100), -1)
             filled_width = int(bar_width * progress / 100)
             cv2.rectangle(frame, (10, y_offset), (10 + filled_width, y_offset + bar_height),
-                         self.colors['mouth_yawning'], -1)
+                        self.colors['mouth_yawning'], -1)
         
         return frame
-    
+            
     def _detect_lighting_conditions(self, frame):
         """Detecta las condiciones de iluminación"""
         if len(frame.shape) == 3:
