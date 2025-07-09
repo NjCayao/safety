@@ -28,9 +28,9 @@ class DistractionCalibration:
             'rotation_threshold_night': 2.8,
             'extreme_rotation_threshold': 2.5,
             
-            # Temporización de alertas (en segundos) - ACTUALIZADO
-            'level1_time': 3,  # Era 3, mantener en 3
-            'level2_time': 7,  # CAMBIAR de 5 a 7
+            # Temporización de alertas (en segundos)
+            'level1_time': 3,
+            'level2_time': 7,
             
             # Sensibilidad y detección
             'visibility_threshold': 15,
@@ -89,7 +89,6 @@ class DistractionCalibration:
                 self.logger.info(f"  - Desv. estándar: {std_rotation:.3f}")
                 
                 # Ajustar umbral basado en la variabilidad natural del operador
-                # Si el operador tiene naturalmente más movimiento, ajustar
                 if std_rotation > 0.3:
                     # Operador con mucho movimiento natural
                     thresholds['rotation_threshold_day'] = 2.8
@@ -249,7 +248,13 @@ class DistractionCalibration:
         
         if calibration and 'thresholds' in calibration:
             self.logger.info(f"Usando calibración personalizada de distracciones para {operator_id}")
-            return calibration['thresholds']
+            thresholds = calibration['thresholds']
+            
+            # Asegurar valores correctos para level1 y level2
+            thresholds['level1_time'] = 3
+            thresholds['level2_time'] = 7
+            
+            return thresholds
         else:
             self.logger.info(f"Usando valores por defecto de distracciones para {operator_id}")
             return self.default_thresholds.copy()

@@ -11,7 +11,7 @@
     "rotation_threshold_night": 2.8,
     "extreme_rotation_threshold": 2.5,
     "level1_time": 3,
-    "level2_time": 5,
+    "level2_time": 7,
     "visibility_threshold": 15,
     "frames_without_face_limit": 5,
     "confidence_threshold": 0.7,

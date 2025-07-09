@@ -1,84 +1,173 @@
 """
-Test del Sistema de Detección de Distracciones
+Test Mejorado del Sistema de Detección de Distracciones
+Con diagnóstico de problemas comunes
 """
 
 import cv2
 import sys
 import os
 import dlib
+import time
 
 # Agregar el directorio raíz al path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from core.distraction import IntegratedDistractionSystem
 
+def test_camera():
+    """Prueba la cámara antes de iniciar el sistema"""
+    print("\n🎥 Probando cámara...")
+    
+    # Probar diferentes índices de cámara
+    for index in [0, 1, 2]:
+        cap = cv2.VideoCapture(index)
+        if cap.isOpened():
+            ret, frame = cap.read()
+            if ret and frame is not None:
+                h, w = frame.shape[:2]
+                print(f"✅ Cámara {index} funciona: {w}x{h}")
+                cap.release()
+                return index
+            cap.release()
+    
+    print("❌ No se encontró ninguna cámara funcional")
+    return None
+
 def main():
     print("\n=== TEST SISTEMA DE DETECCIÓN DE DISTRACCIONES ===")
-    print("Inicializando...")
+    print("Versión mejorada con diagnóstico")
     
-    # Verificar modelo de landmarks
+    # 1. Verificar cámara primero
+    camera_index = test_camera()
+    if camera_index is None:
+        print("\n❌ No se puede continuar sin cámara")
+        print("Posibles soluciones:")
+        print("  • Verifica que tu cámara esté conectada")
+        print("  • Cierra otras aplicaciones que usen la cámara")
+        print("  • Verifica los permisos de la cámara")
+        return
+    
+    # 2. Verificar modelo de landmarks
+    print("\n📁 Verificando modelo de landmarks...")
     model_path = "assets/models/shape_predictor_68_face_landmarks.dat"
     if not os.path.exists(model_path):
         print(f"❌ Error: No se encuentra el modelo en {model_path}")
+        print("Descárgalo de: http://dlib.net/files/shape_predictor_68_face_landmarks.dat.bz2")
+        return
+    else:
+        print("✅ Modelo encontrado")
+    
+    # 3. Inicializar detectores
+    print("\n🔧 Inicializando detectores...")
+    try:
+        face_detector = dlib.get_frontal_face_detector()
+        landmark_predictor = dlib.shape_predictor(model_path)
+        print("✅ Detectores inicializados")
+    except Exception as e:
+        print(f"❌ Error al inicializar detectores: {e}")
         return
     
-    # Inicializar detectores
-    face_detector = dlib.get_frontal_face_detector()
-    landmark_predictor = dlib.shape_predictor(model_path)
+    # 4. Crear sistema de distracciones
+    print("\n🚀 Inicializando sistema de distracciones...")
+    try:
+        distraction_system = IntegratedDistractionSystem(
+            operators_dir="operators",
+            dashboard_position='right'
+        )
+        print("✅ Sistema inicializado")
+    except Exception as e:
+        print(f"❌ Error al inicializar sistema: {e}")
+        import traceback
+        traceback.print_exc()
+        return
     
-    # Crear instancia del sistema
-    distraction_system = IntegratedDistractionSystem(
-        operators_dir="operators",
-        dashboard_position='right'
-    )
-    
-    print(f"✅ Sistema inicializado")
-    
-    # Configurar operador
+    # 5. Configurar operador de prueba
     test_operator = {
-        'id': '47469940',  # Cambia esto por el DNI de un operador real
-        'name': 'Operador Real'
+        'id': 'test_operator',
+        'name': 'Operador de Prueba'
     }
     
-    # Intentar cargar información real del operador
-    operator_path = os.path.join("operators", test_operator['id'])
-    if os.path.exists(operator_path):
-        info_file = os.path.join(operator_path, "info.txt")
-        if os.path.exists(info_file):
-            with open(info_file, 'r', encoding='utf-8') as f:
-                lines = f.readlines()
-                if len(lines) > 1:
-                    test_operator['name'] = lines[1].strip()
+    # Buscar operador real si existe
+    if os.path.exists("operators"):
+        operators = [d for d in os.listdir("operators") if os.path.isdir(os.path.join("operators", d))]
+        if operators:
+            print(f"\n📋 Operadores disponibles: {operators}")
+            # Usar el primer operador encontrado
+            test_operator['id'] = operators[0]
+            operator_path = os.path.join("operators", test_operator['id'])
+            info_file = os.path.join(operator_path, "info.txt")
+            if os.path.exists(info_file):
+                with open(info_file, 'r', encoding='utf-8') as f:
+                    lines = f.readlines()
+                    if len(lines) > 1:
+                        test_operator['name'] = lines[1].strip()
     
     distraction_system.set_operator(test_operator)
     
     status = distraction_system.get_current_status()
-    print(f"✅ Operador: {test_operator['name']}")
-    print(f"✅ Calibración: {'PERSONALIZADA' if status['is_calibrated'] else 'POR DEFECTO'}")
+    print(f"\n👤 Operador: {test_operator['name']} (ID: {test_operator['id']})")
+    print(f"📊 Calibración: {'PERSONALIZADA' if status['is_calibrated'] else 'POR DEFECTO'}")
     
-    # Abrir cámara
-    cap = cv2.VideoCapture(0)
+    # 6. Configurar cámara con parámetros optimizados
+    print(f"\n📷 Abriendo cámara {camera_index}...")
+    cap = cv2.VideoCapture(camera_index)
     
-    if not cap.isOpened():
-        print("❌ Error: No se pudo abrir la cámara")
+    # Configurar resolución
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+    cap.set(cv2.CAP_PROP_FPS, 30)
+    
+    # Verificar que la cámara funciona
+    ret, test_frame = cap.read()
+    if not ret or test_frame is None:
+        print("❌ Error: La cámara no está capturando frames")
+        cap.release()
         return
     
-    print("\n📷 Cámara activa")
-    print("\nControles:")
+    print("✅ Cámara funcionando correctamente")
+    print(f"   Resolución: {test_frame.shape[1]}x{test_frame.shape[0]}")
+    
+    print("\n" + "="*50)
+    print("CONTROLES:")
     print("  • q: Salir")
     print("  • d: Cambiar posición del dashboard")
     print("  • h: Ocultar/mostrar dashboard")
     print("  • r: Reiniciar contador de distracciones")
-    print("  • f: Forzar reporte de múltiples distracciones (testing)")
-    print("\n")
+    print("  • f: Forzar reporte (testing)")
+    print("  • ESPACIO: Pausar/reanudar")
+    print("="*50 + "\n")
     
     dashboard_visible = True
     frame_count = 0
+    fps_time = time.time()
+    fps = 0
+    paused = False
+    last_frame = None
+    
+    print("🎯 Sistema listo. Mueve tu cabeza hacia los lados para probar.\n")
     
     while True:
-        ret, frame = cap.read()
-        if not ret:
-            break
+        if not paused:
+            ret, frame = cap.read()
+            if not ret or frame is None:
+                print("\n❌ Error al capturar frame")
+                break
+            
+            # Voltear horizontalmente para efecto espejo
+            frame = cv2.flip(frame, 1)
+            last_frame = frame.copy()
+        else:
+            if last_frame is not None:
+                frame = last_frame.copy()
+            else:
+                continue
+        
+        # Calcular FPS
+        if frame_count % 30 == 0:
+            current_time = time.time()
+            if current_time - fps_time > 0:
+                fps = 30 / (current_time - fps_time)
+                fps_time = current_time
         
         # Detectar rostros
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -86,15 +175,34 @@ def main():
         
         landmarks = None
         if faces:
-            # Obtener landmarks del primer rostro
+            # Dibujar rectángulo del rostro
             face = faces[0]
+            x1, y1, x2, y2 = face.left(), face.top(), face.right(), face.bottom()
+            cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
+            
+            # Obtener landmarks
             landmarks = landmark_predictor(gray, face)
+            
+            # Dibujar algunos puntos clave para verificar
+            for i in [30, 8, 36, 45]:  # Nariz, mentón, ojos
+                x = landmarks.part(i).x
+                y = landmarks.part(i).y
+                cv2.circle(frame, (x, y), 3, (0, 255, 255), -1)
         
-        # Procesar frame con el sistema de distracciones
+        # Procesar con el sistema de distracciones
         result = distraction_system.analyze_frame(frame, landmarks)
         
-        # Mostrar información en consola cada segundo (30 frames aprox)
-        if frame_count % 30 == 0:
+        # Agregar información de debug en la imagen
+        debug_frame = result['frame']
+        cv2.putText(debug_frame, f"FPS: {fps:.1f}", (10, 20), 
+                   cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+        
+        if paused:
+            cv2.putText(debug_frame, "PAUSADO", (10, 50), 
+                       cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 255), 2)
+        
+        # Mostrar estado en consola
+        if frame_count % 30 == 0 and not paused:
             detector_status = result.get('detector_status', {})
             
             if detector_status:
@@ -107,22 +215,24 @@ def main():
                     print(f"\r🟡 DISTRACCIÓN ({direction}) | "
                           f"{level_str} | "
                           f"Tiempo: {distraction_time:.1f}s | "
-                          f"Total: {result['total_distractions']}/{result['max_distractions']}    ", end='')
+                          f"Total: {result['total_distractions']}/{result['max_distractions']} | "
+                          f"FPS: {fps:.1f}    ", end='', flush=True)
                 else:
                     print(f"\r✅ Atento (CENTRO) | "
-                          f"Distracciones: {result['total_distractions']}/{result['max_distractions']}    ", end='')
+                          f"Distracciones: {result['total_distractions']}/{result['max_distractions']} | "
+                          f"FPS: {fps:.1f}    ", end='', flush=True)
             else:
-                print(f"\r⏸️  Sin detección de rostro                              ", end='')
+                print(f"\r⏸️  Sin detección de rostro | FPS: {fps:.1f}                    ", end='', flush=True)
         
-        # Mostrar alerta especial si hay múltiples distracciones
+        # Alertas especiales
         if result.get('multiple_distractions', False):
-            if frame_count % 15 == 0:  # Parpadeo cada medio segundo
-                print(f"\n⚠️  ALERTA: {result['total_distractions']} distracciones detectadas en {result['window_minutes']} minutos!")
+            if frame_count % 15 == 0:
+                print(f"\n⚠️  ALERTA: {result['total_distractions']} distracciones en {result['window_minutes']} minutos!")
         
         frame_count += 1
         
-        # Mostrar frame con dashboard
-        cv2.imshow('Test Detección de Distracciones', result['frame'])
+        # Mostrar frame
+        cv2.imshow('Test Detección de Distracciones', debug_frame)
         
         # Procesar teclas
         key = cv2.waitKey(1) & 0xFF
@@ -130,51 +240,34 @@ def main():
         if key == ord('q'):
             break
         elif key == ord('d'):
-            # Cambiar posición del dashboard
             new_pos = 'left' if distraction_system.dashboard.position == 'right' else 'right'
             distraction_system.set_dashboard_position(new_pos)
             print(f"\n📊 Dashboard movido a: {new_pos}")
         elif key == ord('h'):
-            # Ocultar/mostrar dashboard
             dashboard_visible = not dashboard_visible
             distraction_system.enable_dashboard(dashboard_visible)
             print(f"\n📊 Dashboard: {'visible' if dashboard_visible else 'oculto'}")
         elif key == ord('r'):
-            # Reiniciar contador
             distraction_system.reset_distraction_counter()
-            print("\n🔄 Contador de distracciones reiniciado")
+            print("\n🔄 Contador reiniciado")
         elif key == ord('f'):
-            # Forzar reporte
-            if distraction_system.force_distraction_report(result['frame']):
-                print("\n📨 REPORTE FORZADO: Se generó reporte de múltiples distracciones")
-                print("   Revisa la carpeta 'reports/distraction/'")
-            else:
-                print("\n⚠️  No hay distracciones registradas para reportar")
+            if distraction_system.force_distraction_report(debug_frame):
+                print("\n📨 Reporte generado en 'reports/distraction/'")
+        elif key == ord(' '):
+            paused = not paused
+            print(f"\n⏸️  {'PAUSADO' if paused else 'REANUDADO'}")
     
-    # Al salir, mostrar resumen
-    print("\n\n=== RESUMEN DE LA SESIÓN ===")
+    # Resumen final
+    print("\n\n" + "="*50)
+    print("RESUMEN DE LA SESIÓN")
+    print("="*50)
     
     status = distraction_system.get_current_status()
     stats = status['session_stats']
     
-    print(f"Total de análisis: {stats['total_detections']}")
+    print(f"Total frames procesados: {frame_count}")
     print(f"Distracciones detectadas: {stats['total_distractions']}")
-    print(f"Eventos nivel 1: {stats['level1_events']}")
-    print(f"Eventos nivel 2: {stats['level2_events']}")
-    print(f"Eventos de múltiples distracciones: {stats['multiple_distraction_events']}")
     print(f"Reportes generados: {stats['reports_generated']}")
-    
-    # Información adicional
-    if stats['total_distractions'] > 0:
-        avg_time = stats['total_detections'] / stats['total_distractions']
-        print(f"Promedio: 1 distracción cada {avg_time:.0f} frames ({avg_time/30:.1f} segundos)")
-    
-    # Estado del detector
-    detector_status = status['detector_status']
-    print(f"\nEstado final:")
-    print(f"  • Modo: {'NOCTURNO' if detector_status['is_night_mode'] else 'DIURNO'}")
-    print(f"  • Nivel de luz: {detector_status['light_level']:.1f}")
-    print(f"  • Última dirección: {detector_status['direction']}")
     
     cap.release()
     cv2.destroyAllWindows()

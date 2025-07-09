@@ -1,6 +1,6 @@
 """
 Dashboard de Detección de Distracciones
-======================================
+==================================
 Visualización especializada para el módulo de distracciones.
 """
 
@@ -250,26 +250,46 @@ class DistractionDashboard:
             bar_width = self.width - 60
             bar_height = 10
             
-            # Progreso hacia nivel 1
-            level1_progress = min(1.0, distraction_time / 3.0)
+            # Obtener tiempos de configuración
+            level1_time = detector_status.get('level1_time', 3)
+            level2_time = detector_status.get('level2_time', 7)
             
+            # Calcular progreso
+            if distraction_time <= level1_time:
+                # Progreso hacia nivel 1
+                progress = distraction_time / level1_time
+                bar_color = self.colors['warning']
+                progress_text = f"Hacia Nivel 1: {distraction_time:.1f}/{level1_time}s"
+            else:
+                # Progreso hacia nivel 2
+                progress = distraction_time / level2_time
+                bar_color = self.colors['danger']
+                progress_text = f"Hacia Nivel 2: {distraction_time:.1f}/{level2_time}s"
+            
+            # Fondo de la barra
             cv2.rectangle(frame, (x + 30, y), (x + 30 + bar_width, y + bar_height),
                          self.colors['graph_bg'], -1)
             
-            progress_width = int(bar_width * level1_progress)
+            # Progreso actual
+            progress_width = int(bar_width * min(1.0, progress))
             cv2.rectangle(frame, (x + 30, y), (x + 30 + progress_width, y + bar_height),
-                         self.colors['warning'], -1)
+                         bar_color, -1)
             
-            # Marcador de nivel 2
-            level2_x = x + 30 + int(bar_width * (5.0 / 3.0))
-            if level2_x <= x + 30 + bar_width:
-                cv2.line(frame, (level2_x, y - 2), (level2_x, y + bar_height + 2),
-                        self.colors['danger'], 2)
+            # Marcador de nivel 1
+            level1_x = x + 30 + int(bar_width * (level1_time / level2_time))
+            cv2.line(frame, (level1_x, y - 2), (level1_x, y + bar_height + 2),
+                    self.colors['warning'], 2)
             
-            y += bar_height
+            # Texto de progreso
+            y += bar_height + 5
+            cv2.putText(frame, progress_text, (x + 30, y),
+                       self.fonts['small'], self.font_scales['small'],
+                       bar_color, 1)
+            
+            y += 5
         
         # Confianza
-        y += 20
+        y += 15
         confidence = detector_status.get('confidence', 1.0)
         conf_color = self.colors['success'] if confidence > 0.8 else self.colors['warning']
         cv2.putText(frame, f"Confianza: {confidence:.2f}", (x + 30, y),

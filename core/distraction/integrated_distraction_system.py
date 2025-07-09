@@ -32,11 +32,11 @@ class IntegratedDistractionSystem:
             baseline_dir=os.path.join(operators_dir, "baseline-json")
         )
         
-        # PRIMERO: Crear e inicializar AlarmModule
+        # Crear e inicializar AlarmModule
         self.alarm_module = AlarmModule(audio_dir="assets/audio")
         self.alarm_module.initialize()
         
-        # DESPUÉS: Crear detector y conectar AlarmModule
+        # Crear detector y conectar AlarmModule
         self.detector = DistractionDetector()
         self.detector.set_alarm_module(self.alarm_module)
         
@@ -56,6 +56,7 @@ class IntegratedDistractionSystem:
         self.distraction_times = deque()
         self.window_size = 600  # 10 minutos por defecto
         self.max_distractions_before_alert = 3
+        self.first_distraction_time = None  # Para rastrear el inicio del ciclo
         
         # Control de reportes
         self.last_report_time = 0
@@ -66,12 +67,12 @@ class IntegratedDistractionSystem:
         self.audio_cooldown = 5  # segundos
         
         # Variables para captura mejorada
-        self.current_distraction_frames = []  # Buffer de frames durante distracción
+        self.current_distraction_frames = []
         self.max_rotation_during_distraction = 0
         self.frame_at_max_rotation = None
         self.distraction_start_time = None
         self.last_distraction_data = None
-        self.extreme_event_recorded = False  # Para evitar múltiples registros del mismo evento
+        self.extreme_event_recorded = False
         
         # Estadísticas de sesión
         self.session_stats = {
@@ -85,7 +86,7 @@ class IntegratedDistractionSystem:
             'reports_generated': 0
         }
         
-        self.logger.info("Sistema integrado de distracciones inicializado con captura mejorada")
+        self.logger.info("Sistema integrado de distracciones inicializado")
     
     def set_operator(self, operator_info):
         """
@@ -129,11 +130,10 @@ class IntegratedDistractionSystem:
         
         # Actualizar parámetros de control
         self.window_size = thresholds.get('distraction_window', 600)
-        self.max_distractions_before_alert = 3  # Fijo en 3 como bostezos
+        self.max_distractions_before_alert = 3
         
         # Limpiar historiales
-        self.distraction_times.clear()
-        self.current_distraction_frames.clear()
+        self._reset_distraction_cycle()
         
         return True
     
@@ -150,6 +150,9 @@ class IntegratedDistractionSystem:
         
         # Incrementar contador
         self.session_stats['total_detections'] += 1
+        
+        # Verificar si el ciclo actual ha expirado (10 minutos)
+        self._check_cycle_expiration()
         
         # Detectar distracción (solo giros extremos)
         is_distracted, multiple_distractions = self.detector.detect(landmarks, frame)
@@ -175,6 +178,10 @@ class IntegratedDistractionSystem:
                 self.session_stats['total_distractions'] += 1
                 self.extreme_event_recorded = True
                 
+                # Si es el primer evento del ciclo, marcar inicio
+                if len(self.distraction_times) == 1:
+                    self.first_distraction_time = current_time
+                
                 # Capturar frame en este momento
                 self.last_distraction_data = {
                     'frame': frame.copy(),
@@ -185,23 +192,18 @@ class IntegratedDistractionSystem:
                 # Log
                 count = len(self.distraction_times)
                 self.logger.warning(f"⚠️ GIRO EXTREMO #{count} registrado (duración: {duration:.1f}s)")
-                
-                # NO reproducir audio aquí - el detector ya lo hace
         else:
             # Volvió a posición normal
             if self.distraction_start_time is not None:
                 duration = time.time() - self.distraction_start_time
-                if duration >= 3.0:  # Solo log si fue significativo
+                if duration >= 3.0:
                     self.logger.info(f"✅ Volvió a posición normal después de {duration:.1f}s")
             
             # Resetear
             self.distraction_start_time = None
             self.extreme_event_recorded = False
         
-        # Limpiar eventos antiguos (más de 10 minutos)
-        self._clean_old_distractions()
-        
-        # Verificar si hay 3 giros extremos en 10 minutos
+        # Verificar si hay 3 giros extremos
         total_extreme_events = len(self.distraction_times)
         should_report = total_extreme_events >= 3
         
@@ -213,23 +215,49 @@ class IntegratedDistractionSystem:
             'operator_info': self.current_operator,
             'operator_name': self.current_operator.get('name', 'Unknown'),
             'is_calibrated': self.is_calibrated,
+            'calibration_confidence': self.current_thresholds.get('calibration_confidence', 0),
             'total_distractions': total_extreme_events,
             'window_minutes': self.window_size // 60,
             'max_distractions': 3,
             'timestamp': time.time()
         }
         
-        # Aplicar dashboard
+        # Aplicar dashboard ANTES de guardar para captura
         if self.dashboard_enabled:
-            frame = self.dashboard.render(frame, result)
+            frame_with_dashboard = self.dashboard.render(frame.copy(), result)
+        else:
+            frame_with_dashboard = frame.copy()
         
-        result['frame'] = frame
+        result['frame'] = frame_with_dashboard
         
         # Generar reporte si hay 3 giros extremos
         if should_report and not self.report_recently_sent():
             self._generate_extreme_rotation_report(result)
+            # IMPORTANTE: Reiniciar ciclo después del reporte
+            self._reset_distraction_cycle()
+            self.logger.info("🔄 Ciclo reiniciado después del reporte (3/3)")
         
         return result
+    
+    def _check_cycle_expiration(self):
+        """Verifica si han pasado 10 minutos desde el primer evento"""
+        if self.first_distraction_time and len(self.distraction_times) > 0:
+            current_time = time.time()
+            elapsed = current_time - self.first_distraction_time
+            
+            if elapsed > self.window_size:
+                # El ciclo ha expirado
+                count = len(self.distraction_times)
+                self.logger.info(f"⏰ Ciclo expirado después de {self.window_size//60} minutos con {count}/3 eventos")
+                self._reset_distraction_cycle()
+    
+    def _reset_distraction_cycle(self):
+        """Reinicia el ciclo de conteo de distracciones"""
+        self.distraction_times.clear()
+        self.first_distraction_time = None
+        self.current_distraction_frames.clear()
+        self.last_distraction_data = None
+        self.logger.info("🔄 Contador de distracciones reiniciado (0/3)")
     
     def _generate_extreme_rotation_report(self, result):
         """Genera reporte por múltiples giros extremos"""
@@ -244,10 +272,18 @@ class IntegratedDistractionSystem:
             f"Operador: {self.current_operator['name']}"
         )
         
+        # Calcular tiempo del ciclo
+        if self.first_distraction_time:
+            cycle_duration = current_time - self.first_distraction_time
+            cycle_minutes = cycle_duration / 60
+        else:
+            cycle_minutes = 0
+        
         # Preparar datos
         event_data = {
             'extreme_rotation_count': len(self.distraction_times),
             'window_minutes': self.window_size // 60,
+            'actual_cycle_minutes': round(cycle_minutes, 1),
             'event_times': list(self.distraction_times),
             'operator_id': self.current_operator['id'],
             'operator_name': self.current_operator['name'],
@@ -255,19 +291,36 @@ class IntegratedDistractionSystem:
             'recommendation': 'Verificar estado del operador inmediatamente'
         }
         
-        # Usar el frame capturado si está disponible
-        frame_to_save = result['frame']
+        # Usar el frame CON dashboard que viene en result
+        frame_to_save = result['frame']  # Este ya tiene el dashboard
+        
+        # Si hay un frame de distracción guardado, usarlo con dashboard
         if self.last_distraction_data and 'frame' in self.last_distraction_data:
-            frame_to_save = self.last_distraction_data['frame']
+            # Aplicar dashboard al frame de distracción
+            temp_result = result.copy()
+            frame_with_dashboard = self.dashboard.render(
+                self.last_distraction_data['frame'].copy(), 
+                temp_result
+            )
             
             # Agregar texto de alerta
-            cv2.putText(frame_to_save, 
-                        "ALERTA: GIRO EXTREMO DETECTADO", 
+            cv2.putText(frame_with_dashboard, 
+                        "ALERTA: 3 GIROS EXTREMOS DETECTADOS", 
                         (50, 50), 
                         cv2.FONT_HERSHEY_SIMPLEX, 
                         1.0, 
                         (0, 0, 255), 
                         3)
+            
+            cv2.putText(frame_with_dashboard, 
+                        f"Completados en {cycle_minutes:.1f} minutos", 
+                        (50, 90), 
+                        cv2.FONT_HERSHEY_SIMPLEX, 
+                        0.8, 
+                        (0, 0, 255), 
+                        2)
+            
+            frame_to_save = frame_with_dashboard
         
         # Generar reporte
         report = self.report_manager.generate_report(
@@ -281,172 +334,12 @@ class IntegratedDistractionSystem:
         if report:
             self.last_report_time = current_time
             self.session_stats['reports_generated'] += 1
+            self.session_stats['multiple_distraction_events'] += 1
             self.logger.info(f"📋 Reporte de giros extremos generado: {report['id']}")
     
-    def _select_best_distraction_frame(self):
-        """
-        Selecciona el mejor frame de la distracción para capturar.
-        Prioriza el frame con máxima rotación.
-        """
-        if not self.current_distraction_frames:
-            return None
-        
-        # Estrategia principal: Frame con rotación máxima
-        if self.frame_at_max_rotation:
-            self.logger.debug(f"Usando frame con rotación máxima: {self.frame_at_max_rotation['rotation']:.1f}°")
-            return self.frame_at_max_rotation
-        
-        # Estrategia alternativa: Frame en el punto medio temporal
-        middle_index = len(self.current_distraction_frames) // 2
-        middle_frame = self.current_distraction_frames[middle_index]
-        self.logger.debug(f"Usando frame medio (índice {middle_index})")
-        return middle_frame
-    
-    def _reset_distraction_buffers(self):
-        """Limpia los buffers de captura para la próxima distracción"""
-        self.max_rotation_during_distraction = 0
-        self.frame_at_max_rotation = None
-        self.current_distraction_frames.clear()
-        self.distraction_start_time = None
-    
-    def _handle_distraction_detected(self, duration):
-        """
-        Maneja la detección de una distracción completa.
-        
-        Args:
-            duration: Duración de la distracción en segundos
-        """
-        current_time = time.time()
-        
-        # Registrar distracción
-        self.distraction_times.append(current_time)
-        self.session_stats['total_distractions'] += 1
-        
-        # Contar evento según nivel
-        if duration >= self.detector.config['level2_time']:
-            self.session_stats['level2_events'] += 1
-        else:
-            self.session_stats['level1_events'] += 1
-        
-        # Seleccionar mejor frame
-        best_frame_data = self._select_best_distraction_frame()
-        
-        if best_frame_data:
-            # Crear información de captura
-            capture_info = {
-                'capture_rotation': best_frame_data['rotation'],
-                'capture_direction': best_frame_data['direction'],
-                'capture_time_offset': best_frame_data['duration_so_far'],
-                'max_rotation_observed': self.max_rotation_during_distraction,
-                'total_duration': duration,
-                'frames_analyzed': len(self.current_distraction_frames),
-                'validation_status': 'CONFIRMED_DISTRACTION'
-            }
-            
-            self.logger.info(f"Distracción VALIDADA:")
-            self.logger.info(f"  - Duración total: {duration:.2f}s")
-            self.logger.info(f"  - Rotación máxima: {self.max_rotation_during_distraction:.1f}°")
-            self.logger.info(f"  - Dirección: {best_frame_data['direction']}")
-            
-            # Guardar datos
-            self.last_distraction_data = {
-                'frame': best_frame_data['frame'],
-                'capture_info': capture_info,
-                'timestamp': current_time
-            }
-        
-        # Log detallado
-        distraction_count = len(self.distraction_times)
-        self.logger.info(f"Distracción #{distraction_count} confirmada - Duración: {duration:.1f}s")
-        
-        # Reproducir audio según el número de distracciones
-        if self.alarm_module and (current_time - self.last_audio_time > self.audio_cooldown):
-            # Similar a bostezos: diferentes audios según número
-            if distraction_count == 1:
-                audio_key = "distraction"  # Primer audio
-            elif distraction_count == 2:
-                audio_key = "vadelante1"  # Segundo audio
-            else:  # >= 3
-                audio_key = "distraction"  # Tercer audio (más fuerte)
-            
-            self.logger.info(f"Reproduciendo: {audio_key}")
-            success = self.alarm_module.play_audio(audio_key)
-            
-            if success:
-                self.last_audio_time = current_time
-    
-    def _handle_multiple_distractions(self, result):
-        """
-        Maneja el evento de múltiples distracciones.
-        Usa el frame capturado de la última distracción.
-        """
-        current_time = time.time()
-        
-        # Verificar cooldown de reporte
-        if current_time - self.last_report_time < self.report_cooldown:
-            return
-        
-        # Log de alerta
-        self.logger.warning(
-            f"ALERTA: {len(self.distraction_times)} distracciones en {self.window_size//60} minutos - "
-            f"Operador: {self.current_operator['name']}"
-        )
-        
-        # Incrementar contador de eventos
-        self.session_stats['multiple_distraction_events'] += 1
-        
-        # Preparar datos del evento
-        event_data = {
-            'distraction_count': len(self.distraction_times),
-            'window_minutes': self.window_size // 60,
-            'max_allowed': self.max_distractions_before_alert,
-            'distraction_times': list(self.distraction_times),
-            'detector_status': result.get('detector_status', {}),
-            'is_calibrated': self.is_calibrated,
-            'analysis_timestamp': current_time
-        }
-        
-        # Agregar información de captura si está disponible
-        if self.last_distraction_data and self.last_distraction_data.get('capture_info'):
-            event_data['capture_info'] = self.last_distraction_data['capture_info']
-        
-        # Usar el frame de la última distracción capturada si está disponible
-        frame_to_save = result['frame']  # Frame actual con dashboard
-        if self.last_distraction_data and 'frame' in self.last_distraction_data:
-            # Aplicar dashboard al frame capturado
-            frame_to_save = self.dashboard.render(self.last_distraction_data['frame'], result)
-            
-            # Agregar texto adicional
-            cv2.putText(frame_to_save, 
-                        f"Distracción capturada - Rotación: {self.last_distraction_data['capture_info']['capture_rotation']:.1f}°", 
-                        (10, 30), 
-                        cv2.FONT_HERSHEY_SIMPLEX, 
-                        0.7, 
-                        (0, 255, 255), 
-                        2)
-        
-        # Generar reporte
-        report = self.report_manager.generate_report(
-            module_name='distraction',
-            event_type='multiple_distractions',
-            data=event_data,
-            frame=frame_to_save,
-            operator_info=self.current_operator
-        )
-        
-        if report:
-            self.last_report_time = current_time
-            self.session_stats['reports_generated'] += 1
-            self.logger.info(f"Reporte de múltiples distracciones generado: {report['id']}")
-    
-    def _clean_old_distractions(self):
-        """Elimina distracciones fuera de la ventana temporal"""
-        current_time = time.time()
-        
-        # Eliminar distracciones antiguas
-        while self.distraction_times and (current_time - self.distraction_times[0] > self.window_size):
-            removed_time = self.distraction_times.popleft()
-            self.logger.debug(f"Distracción antigua eliminada (más de {self.window_size//60} minutos)")
+    def report_recently_sent(self):
+        """Verifica si se envió un reporte recientemente"""
+        return (time.time() - self.last_report_time) < self.report_cooldown
     
     def force_distraction_report(self, frame):
         """
@@ -464,7 +357,8 @@ class IntegratedDistractionSystem:
                 'frame': frame
             }
             
-            self._handle_multiple_distractions(result)
+            self._generate_extreme_rotation_report(result)
+            self._reset_distraction_cycle()  # Reiniciar después del reporte forzado
             self.logger.warning("REPORTE FORZADO: Múltiples distracciones")
             return True
         else:
@@ -472,14 +366,22 @@ class IntegratedDistractionSystem:
             return False
     
     def reset_distraction_counter(self):
-        """Reinicia el contador de distracciones"""
-        self.distraction_times.clear()
-        self._reset_distraction_buffers()
-        self.logger.info("Contador de distracciones reiniciado")
+        """Reinicia el contador de distracciones manualmente"""
+        count = len(self.distraction_times)
+        self._reset_distraction_cycle()
+        self.logger.info(f"Contador reiniciado manualmente (tenía {count} eventos)")
         return True
     
     def get_current_status(self):
         """Obtiene el estado actual del sistema"""
+        # Calcular tiempo del ciclo actual
+        if self.first_distraction_time and len(self.distraction_times) > 0:
+            cycle_elapsed = time.time() - self.first_distraction_time
+            cycle_remaining = max(0, self.window_size - cycle_elapsed)
+        else:
+            cycle_elapsed = 0
+            cycle_remaining = self.window_size
+        
         return {
             'current_operator': self.current_operator,
             'is_calibrated': self.is_calibrated,
@@ -487,6 +389,8 @@ class IntegratedDistractionSystem:
             'detector_status': self.detector.get_status(),
             'distraction_count': len(self.distraction_times),
             'distraction_times': list(self.distraction_times),
+            'cycle_elapsed_seconds': cycle_elapsed,
+            'cycle_remaining_seconds': cycle_remaining,
             'session_stats': self.session_stats,
             'capture_buffer_size': len(self.current_distraction_frames)
         }
@@ -505,10 +409,9 @@ class IntegratedDistractionSystem:
         self.current_operator = None
         self.current_thresholds = None
         self.is_calibrated = False
-        self.distraction_times.clear()
         self.last_report_time = 0
         self.last_audio_time = 0
-        self._reset_distraction_buffers()
+        self._reset_distraction_cycle()
         
         # Reiniciar estadísticas
         self.session_stats = {
@@ -524,6 +427,7 @@ class IntegratedDistractionSystem:
         
         # Reiniciar componentes
         self.detector = DistractionDetector()
+        self.detector.set_alarm_module(self.alarm_module)
         self.dashboard.reset()
         
-        self.logger.info("Sistema de detección de distracciones reiniciado")
+        self.logger.info("Sistema de detección de distracciones reiniciado completamente")
