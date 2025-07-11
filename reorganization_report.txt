@@ -11,9 +11,9 @@ MOVIMIENTOS REALIZADOS:
   - behavior_detection_module.py -> core/
   - alarm_module.py -> core/
   - report_generator.py -> core/
-  - behavior_detection_wrapper.py -> sync/wrappers/
-  - fatigue_detection_wrapper.py -> sync/wrappers/
-  - face_recognition_wrapper.py -> sync/wrappers/
+  - behavior_detection_wrapper.py -> sync/wrappers/ (SINCRONIZAR CON EL SERVIDOR)
+  - fatigue_detection_wrapper.py -> sync/wrappers/ (SINCRONIZAR CON EL SERVIDOR)
+  - face_recognition_wrapper.py -> sync/wrappers/ (SINCRONIZAR CON EL SERVIDOR)
   - register_operator.py -> scripts/
   - process_photos.py -> scripts/
   - audio/ -> assets/audio/

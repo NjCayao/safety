@@ -463,7 +463,7 @@ class BehaviorDetectionModule:
                 cv2.rectangle(frame, (roi_x1, roi_y1), (roi_x2, roi_y2), (255, 255, 0), 2)
                 cv2.putText(frame, "ROI", (roi_x1, roi_y1-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 0), 1)
             
-            frame = self._draw_behavior_timers(frame)
+            # frame = self._draw_behavior_timers(frame)
             frame = self._draw_optimization_info(frame, processing_start_time)
         else:
             # Log en modo headless
