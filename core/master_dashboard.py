@@ -316,9 +316,9 @@ class MasterDashboard:
         modules = [
             ("RECONOCIMIENTO", face_result, self.colors['info'], 
              self._get_face_status(face_result)),
-            ("FATIGA-SUENO", fatigue_result, self.colors['warning'],
+            ("MICROSUENO", fatigue_result, self.colors['warning'],
              self._get_fatigue_status(fatigue_result)),
-            ("COMPORTAMIENTO", behavior_result, self.colors['danger'],
+            ("CELULAR/CIGARRO", behavior_result, self.colors['danger'],
              self._get_behavior_status(behavior_result)),
             ("DISTRACCIONES", distraction_result, self.colors['warning'],
              self._get_distraction_status(distraction_result)),

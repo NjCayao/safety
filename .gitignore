@@ -7,4 +7,5 @@ assets/audio/
 output/logs/
 output/reports/
 server/logs/
+docs/
 "@ | Out-File -FilePath .gitignore -Encoding UTF8

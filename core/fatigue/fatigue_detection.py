@@ -345,9 +345,9 @@ class FatigueDetector:
         frame = self._draw_display_messages(frame, current_time)
 
         # Información de orientación de cabeza
-        orientation_text = "Mirando abajo" if is_looking_down else "Mirando al frente"
-        cv2.putText(frame, orientation_text, (10, 120), 
-                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 0), 1)
+        # orientation_text = "Mirando abajo" if is_looking_down else "Mirando al frente"
+        # cv2.putText(frame, orientation_text, (10, 120), 
+        #         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 0), 1)
 
         # Solo hacer log en consola si es headless
         if not self.show_gui:
@@ -579,31 +579,31 @@ class FatigueDetector:
             cv2.circle(frame, (x, y), 2, (0, 0, 255), -1)  # Puntos rojos
         
         # Determinar estado de los ojos usando el umbral ajustado al modo actual
-        status = "OJOS ABIERTOS" if avg_ear > current_threshold else "OJOS CERRADOS"
-        color = (0, 255, 0) if avg_ear > current_threshold else (0, 0, 255)
+        # status = "OJOS ABIERTOS" if avg_ear > current_threshold else "OJOS CERRADOS"
+        # color = (0, 255, 0) if avg_ear > current_threshold else (0, 0, 255)
         
-        # Mostrar EAR y estado
-        mode_str = "noche" if self.is_night_mode else "día"
-        cv2.putText(frame, f"EAR: {ear:.2f} (Umbral: {current_threshold:.2f}, Modo: {mode_str})", (10, 30), 
-                   cv2.FONT_HERSHEY_SIMPLEX, 0.6, color, 2)
-        cv2.putText(frame, f"Estado: {status}", (10, 60), 
-                   cv2.FONT_HERSHEY_SIMPLEX, 0.7, color, 2)
+        # # Mostrar EAR y estado
+        # mode_str = "noche" if self.is_night_mode else "día"
+        # cv2.putText(frame, f"EAR: {ear:.2f} (Umbral: {current_threshold:.2f}, Modo: {mode_str})", (10, 30), 
+        #            cv2.FONT_HERSHEY_SIMPLEX, 0.6, color, 2)
+        # cv2.putText(frame, f"Estado: {status}", (10, 60), 
+        #            cv2.FONT_HERSHEY_SIMPLEX, 0.7, color, 2)
         
         # Indicador de tiempo con ojos cerrados
-        if self.eyes_closed_duration > 0:
-            # Cambiar color a amarillo cuando está cerca del umbral
-            time_color = (0, 165, 255) if self.eyes_closed_duration > (self.EYE_CLOSED_THRESHOLD * 0.7) else (255, 255, 255)
+        # if self.eyes_closed_duration > 0:
+        #     # Cambiar color a amarillo cuando está cerca del umbral
+        #     time_color = (0, 165, 255) if self.eyes_closed_duration > (self.EYE_CLOSED_THRESHOLD * 0.7) else (255, 255, 255)
             
-            # Mostrar progreso hacia umbral de microsueño
-            progress = min(self.eyes_closed_duration / self.EYE_CLOSED_THRESHOLD, 1.0) * 100
-            cv2.putText(frame, f"Tiempo ojos cerrados: {self.eyes_closed_duration:.1f}s / {self.EYE_CLOSED_THRESHOLD}s ({progress:.0f}%)", 
-                       (10, 90), cv2.FONT_HERSHEY_SIMPLEX, 0.6, time_color, 2)
+        #     # Mostrar progreso hacia umbral de microsueño
+        #     progress = min(self.eyes_closed_duration / self.EYE_CLOSED_THRESHOLD, 1.0) * 100
+        #     cv2.putText(frame, f"Tiempo ojos cerrados: {self.eyes_closed_duration:.1f}s / {self.EYE_CLOSED_THRESHOLD}s ({progress:.0f}%)", 
+        #                (10, 90), cv2.FONT_HERSHEY_SIMPLEX, 0.6, time_color, 2)
             
-            # Barra de progreso visual para tiempo con ojos cerrados
-            bar_width = 200
-            filled_width = int(bar_width * (self.eyes_closed_duration / self.EYE_CLOSED_THRESHOLD))
-            cv2.rectangle(frame, (10, 100), (10 + bar_width, 115), (100, 100, 100), -1)
-            cv2.rectangle(frame, (10, 100), (10 + filled_width, 115), time_color, -1)
+        #     # Barra de progreso visual para tiempo con ojos cerrados
+        #     bar_width = 200
+        #     filled_width = int(bar_width * (self.eyes_closed_duration / self.EYE_CLOSED_THRESHOLD))
+        #     cv2.rectangle(frame, (10, 100), (10 + bar_width, 115), (100, 100, 100), -1)
+        #     cv2.rectangle(frame, (10, 100), (10 + filled_width, 115), time_color, -1)
         
         # Mostrar conteo de microsueños con advertencia visual
         count_color = (0, 0, 255) if len(self.microsleeps) >= 2 else (255, 255, 255)
@@ -626,17 +626,17 @@ class FatigueDetector:
             text_x = (frame.shape[1] - text_size[0]) // 2
             text_y = (frame.shape[0] + text_size[1]) // 2
             cv2.putText(frame, text, (text_x, text_y), font, 1, (0, 0, 255), 2)
-        else:
-            # Visualización normal del conteo
-            cv2.putText(frame, f"Microsueños (10min): {len(self.microsleeps)}/3", 
-                       (10, y_position), cv2.FONT_HERSHEY_SIMPLEX, 0.7, count_color, 2)
+        # else:
+        #     # Visualización normal del conteo
+        #     # cv2.putText(frame, f"Microsueños (10min): {len(self.microsleeps)}/3", 
+        #                (10, y_position), cv2.FONT_HERSHEY_SIMPLEX, 0.7, count_color, 2)
         
         # Calcular y mostrar parpadeos por minuto
-        elapsed_time = current_time - self.blink_start_time
-        if elapsed_time > 0:
-            blinks_per_minute = (self.blink_count / elapsed_time) * 60
-            cv2.putText(frame, f"Parpadeos/min: {int(blinks_per_minute)}", 
-                    (10, 170), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 1)
+        # elapsed_time = current_time - self.blink_start_time
+        # if elapsed_time > 0:
+        #     blinks_per_minute = (self.blink_count / elapsed_time) * 60
+        #     cv2.putText(frame, f"Parpadeos/min: {int(blinks_per_minute)}", 
+        #             (10, 170), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 1)
         
         return frame
     

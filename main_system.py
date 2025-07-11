@@ -555,6 +555,7 @@ class SafetySystem:
             yawn_result=yawn_result,
             analysis_data=analysis_result
         )
+        # frame_final = frame
         
         # 8. Agregar información de estado si es necesario
         if self.optimizer:
