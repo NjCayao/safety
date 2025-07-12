@@ -1,7 +1,7 @@
 <?php
 // Rutas del sistema
 
-define('URL_SAFETY', 'https://safetysystem.devcayao.com');
+define('URL_SAFETY', 'http://localhost/safety_system');
 
 
 define('BASE_URL', URL_SAFETY . '/server');  

@@ -96,12 +96,12 @@ if (function_exists('db_fetch_one')) {
                 <p>Nuevo Operador</p>
               </a>
             </li>
-            <li class="nav-item">
+            <!-- <li class="nav-item">
               <a href="<?php echo BASE_URL; ?>/pages/operators/assign.php" class="nav-link <?php echo ($currentPage == 'assign.php') ? 'active' : ''; ?>">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Asignar a Máquina</p>
               </a>
-            </li>
+            </li> -->
           </ul>
         </li>
 

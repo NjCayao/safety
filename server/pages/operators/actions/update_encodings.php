@@ -8,10 +8,16 @@ date_default_timezone_set('America/Lima');
 
 // Función para ejecutar el script de Python
 function execute_python_script() {
-    // Rutas explícitas
-    $safety_root = "C:/xampp/htdocs/safety_system";
-    $operators_dir = "$safety_root/operators";
-    $python_script = "$operators_dir/update_encodings.py";
+     // Rutas relativas correctas
+    $current_file = __FILE__; // /server/pages/operators/actions/update_encodings.php
+    $actions_dir = dirname($current_file); // .../actions/
+    $operators_page_dir = dirname($actions_dir); // .../operators/
+    $pages_dir = dirname($operators_page_dir); // .../pages/
+    $server_dir = dirname($pages_dir); // .../server/
+    $base_dir = dirname($server_dir); // .../safety_system/
+    
+    $operators_dir = $base_dir . DIRECTORY_SEPARATOR . 'operators';
+    $python_script = $operators_dir . DIRECTORY_SEPARATOR . 'update_encodings.py';
     
     // Normalizar rutas
     $operators_dir = str_replace('/', DIRECTORY_SEPARATOR, $operators_dir);

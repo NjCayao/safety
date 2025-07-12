@@ -182,7 +182,7 @@ ob_start();
                 <div class="text-center">
                     <?php if (!empty($operator['photo_path'])): ?>
                         <img class="profile-user-img img-fluid img-circle" 
-                             src="../../<?php echo htmlspecialchars($operator['photo_path']); ?>" 
+                             src="<?php echo htmlspecialchars($operator['photo_path']); ?>" 
                              alt="Foto del operador">
                     <?php else: ?>
                         <img class="profile-user-img img-fluid img-circle" 

@@ -22,8 +22,8 @@ class Database {
         // Parámetros de conexión
         $db_host = 'localhost';
         $db_name = 'safetysystem';
-        $db_user = 'safetysystem';  // Cambia esto por tu usuario de MySQL
-        $db_pass = 'Thenilfer1414';      // Cambia esto por tu contraseña de MySQL
+        $db_user = 'root';  // Cambia esto por tu usuario de MySQL
+        $db_pass = '';      // Cambia esto por tu contraseña de MySQL
         $db_charset = 'utf8mb4';
         
         // Opciones para PDO

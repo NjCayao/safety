@@ -35,6 +35,25 @@ if (!$operator) {
     exit;
 }
 
+// Verificar si el operador tiene calibración
+$current_file = __FILE__; // /server/pages/operators/view.php
+$operators_page_dir = dirname($current_file); // /server/pages/operators/
+$pages_dir = dirname($operators_page_dir); // /server/pages/
+$server_dir = dirname($pages_dir); // /server/
+$base_dir = dirname($server_dir); // /safety_system/
+
+$calibration_file = $base_dir . "/operators/baseline-json/{$operator['dni_number']}/master_baseline.json";
+$has_calibration = file_exists($calibration_file);
+
+$calibration_date = null;
+
+if ($has_calibration) {
+    $calibration_data = json_decode(file_get_contents($calibration_file), true);
+    if (isset($calibration_data['calibration_info']['created_at'])) {
+        $calibration_date = $calibration_data['calibration_info']['created_at'];
+    }
+}
+
 // Obtener asignaciones actuales del operador
 $currentAssignments = db_fetch_all(
     "SELECT om.*, m.name as machine_name, m.type as machine_type, m.location as machine_location 
@@ -152,6 +171,48 @@ ob_start();
                         </button>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Información de calibración biométrica -->
+        <div class="card card-info">
+            <div class="card-header">
+                <h3 class="card-title">Calibración Biométrica</h3>
+            </div>
+            <div class="card-body">
+                <?php if ($has_calibration): ?>
+                    <div class="alert alert-success">
+                        <i class="icon fas fa-check"></i> Operador calibrado
+                    </div>
+                    <p><strong>Última calibración:</strong><br>
+                    <?php echo date('d/m/Y H:i', strtotime($calibration_date)); ?></p>
+                <?php else: ?>
+                    <div class="alert alert-warning">
+                        <i class="icon fas fa-exclamation-triangle"></i> Sin calibración
+                    </div>
+                    <p>Este operador no tiene calibración biométrica. Es necesario calibrar para mejorar la precisión del sistema.</p>
+                <?php endif; ?>
+                
+                <!-- Contenedor de progreso (oculto por defecto) -->
+                <div id="calibration-progress-container" style="display:none;">
+                    <div class="progress mb-2">
+                        <div id="calibration-progress-bar" class="progress-bar progress-bar-striped progress-bar-animated bg-info" 
+                             role="progressbar" style="width: 0%" 
+                             aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                            <span id="calibration-progress-text">0%</span>
+                        </div>
+                    </div>
+                    <p id="calibration-status-text" class="text-sm">Iniciando calibración...</p>
+                </div>
+                
+                <!-- Botón de calibración -->
+                <button type="button" id="calibrate-btn" class="btn btn-info btn-block" onclick="startCalibration()">
+                    <i class="fas fa-cogs"></i> <?php echo $has_calibration ? 'Recalibrar Operador' : 'Calibrar Operador'; ?>
+                </button>
+                
+                <?php if ($has_calibration): ?>
+                    <small class="text-muted">Recalibrar si actualizó las fotos o para mejorar precisión</small>
+                <?php endif; ?>
             </div>
         </div>
 
@@ -423,7 +484,7 @@ ob_start();
                                     </div>
                                     <div class="card-body text-center">
                                         <?php if (!empty($operator['photo_path'])): ?>
-                                            <img src="../../<?php echo htmlspecialchars($operator['photo_path']); ?>" 
+                                            <img src="<?php echo htmlspecialchars($operator['photo_path']); ?>" 
                                                  alt="Foto de perfil" 
                                                  class="img-fluid" 
                                                  style="max-height: 200px;">
@@ -452,7 +513,7 @@ ob_start();
                                                     $hasFacialPhotos = true;
                                             ?>
                                                 <div class="col-md-4 text-center mb-3">
-                                                    <img src="../../<?php echo htmlspecialchars($operator[$photoField]); ?>" 
+                                                    <img src="<?php echo htmlspecialchars($operator[$photoField]); ?>" 
                                                          alt="Foto facial <?php echo $index + 1; ?>" 
                                                          class="img-fluid" 
                                                          style="max-height: 100px;">
@@ -524,6 +585,93 @@ ob_start();
         </div>
     </div>
 </div>
+
+<!-- JavaScript para calibración -->
+<script>
+let calibrationInterval;
+const operatorDNI = '<?php echo $operator['dni_number']; ?>';
+
+function startCalibration() {
+    // Deshabilitar el botón
+    $('#calibrate-btn').prop('disabled', true);
+    
+    // Mostrar el contenedor de progreso
+    $('#calibration-progress-container').show();
+    
+    // Reiniciar la barra de progreso
+    $('#calibration-progress-bar').css('width', '0%').attr('aria-valuenow', 0);
+    $('#calibration-progress-text').text('0%');
+    $('#calibration-status-text').text('Iniciando calibración...');
+    
+    // Enviar solicitud para iniciar calibración
+    $.ajax({
+        url: 'actions/calibrate_operator.php',
+        method: 'POST',
+        data: { operator_id: operatorDNI },
+        dataType: 'json',
+        success: function(response) {
+            if (response.success) {
+                // Iniciar monitoreo del progreso
+                monitorCalibrationProgress();
+            } else {
+                showCalibrationError(response.error || 'Error al iniciar calibración');
+            }
+        },
+        error: function() {
+            showCalibrationError('Error de conexión al iniciar calibración');
+        }
+    });
+}
+
+function monitorCalibrationProgress() {
+    calibrationInterval = setInterval(function() {
+        $.ajax({
+            url: 'actions/calibrate_operator.php?check_progress=1',
+            dataType: 'json',
+            success: function(data) {
+                // Actualizar barra de progreso
+                $('#calibration-progress-bar').css('width', data.progress + '%')
+                                              .attr('aria-valuenow', data.progress);
+                $('#calibration-progress-text').text(data.progress + '%');
+                
+                // Actualizar texto de estado según el progreso
+                if (data.progress < 30) {
+                    $('#calibration-status-text').text('Iniciando proceso de calibración...');
+                } else if (data.progress < 50) {
+                    $('#calibration-status-text').text('Analizando fotografías...');
+                } else if (data.progress < 90) {
+                    $('#calibration-status-text').text('Generando parámetros biométricos...');
+                } else {
+                    $('#calibration-status-text').text('Finalizando calibración...');
+                }
+                
+                // Si completó
+                if (data.progress >= 100) {
+                    clearInterval(calibrationInterval);
+                    $('#calibration-status-text').text('¡Calibración completada exitosamente!');
+                    $('#calibration-progress-bar').removeClass('progress-bar-striped progress-bar-animated');
+                    
+                    // Recargar la página después de 2 segundos
+                    setTimeout(function() {
+                        location.reload();
+                    }, 2000);
+                }
+            },
+            error: function() {
+                clearInterval(calibrationInterval);
+                showCalibrationError('Error al obtener el progreso');
+            }
+        });
+    }, 1000);
+}
+
+function showCalibrationError(message) {
+    clearInterval(calibrationInterval);
+    $('#calibration-progress-bar').removeClass('bg-info').addClass('bg-danger');
+    $('#calibration-status-text').text('Error: ' + message);
+    $('#calibrate-btn').prop('disabled', false);
+}
+</script>
 
 <?php
 // Capturar el contenido y guardarlo en $pageContent

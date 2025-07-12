@@ -1,13 +1,13 @@
 {
   "operator_id": "47469940",
   "calibration_info": {
-    "created_at": "2025-07-08T20:41:30.438720",
+    "created_at": "2025-07-11T20:26:26.336317",
     "photos_processed": 4,
     "version": "1.0",
     "source": "master_calibration"
   },
   "thresholds": {
-    "confidence_threshold": 0.4,
+    "confidence_threshold": 0.35,
     "night_confidence_threshold": 0.35,
     "phone_alert_threshold_1": 3,
     "phone_alert_threshold_2": 7,
@@ -25,14 +25,14 @@
   },
   "statistics": {
     "face_area_stats": {
-      "mean": 153763.0,
-      "std": 79754.01148531653,
-      "min": 15625.0,
-      "max": 199809.0
+      "mean": 61974.75,
+      "std": 8844.28443614858,
+      "min": 46656.0,
+      "max": 67081.0
     },
     "face_geometry": {
-      "nose_mouth_distance_mean": 75.10717919985996,
-      "nose_mouth_distance_std": 29.515447356259454
+      "nose_mouth_distance_mean": 49.02551178686891,
+      "nose_mouth_distance_std": 0.9995969365587772
     }
   }
 }

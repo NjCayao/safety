@@ -1,14 +1,14 @@
 {
   "operator_id": "47469940",
   "calibration_info": {
-    "created_at": "2025-07-08T20:41:30.442479",
+    "created_at": "2025-07-11T20:26:26.339891",
     "photos_processed": 4,
     "version": "1.0",
     "source": "master_calibration"
   },
   "thresholds": {
-    "rotation_threshold_day": 2.6,
-    "rotation_threshold_night": 2.8,
+    "rotation_threshold_day": 2.4,
+    "rotation_threshold_night": 2.6,
     "extreme_rotation_threshold": 2.5,
     "level1_time": 3,
     "level2_time": 7,
@@ -28,23 +28,23 @@
   },
   "statistics": {
     "rotation_stats": {
-      "mean": 0.7977485918007711,
-      "std": 0.23131594903195743,
-      "min": 0.40450201299847804,
-      "max": 0.999699834902438,
+      "mean": 0.9862939562462407,
+      "std": 0.04086744669780296,
+      "min": 0.9268653867444931,
+      "max": 1.0278362443554885,
       "percentiles": {
-        "25": 0.7619238865572563,
-        "50": 0.893396259651084,
-        "75": 0.9292209648945988
+        "25": 0.9592960509218208,
+        "50": 0.9952370969424906,
+        "75": 1.0222350022669107
       }
     },
     "tilt_stats": {
-      "mean": 3.985567269869331,
-      "std": 2.2628585212565078
+      "mean": 1.6582230679744898,
+      "std": 0.5468658201837764
     },
     "face_width_stats": {
-      "mean": 366.5,
-      "std": 139.43009000929462
+      "mean": 248.25,
+      "std": 18.619546181365433
     }
   }
 }

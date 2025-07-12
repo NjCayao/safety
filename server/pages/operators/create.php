@@ -169,6 +169,63 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         'Usuario: ' . $_SESSION['username']
                     );
 
+                    // Ejecutar calibración automática en segundo plano
+                    $current_file = __FILE__; // /server/pages/operators/create.php
+                    $operators_page_dir = dirname($current_file); // /server/pages/operators/
+                    $pages_dir = dirname($operators_page_dir); // /server/pages/
+                    $server_dir = dirname($pages_dir); // /server/
+                    $base_dir = dirname($server_dir); // /safety_system/
+
+                    $operators_dir = $base_dir . DIRECTORY_SEPARATOR . 'operators';
+                    $log_dir = $operators_dir . DIRECTORY_SEPARATOR . 'logs';
+
+                    // Crear directorio de logs si no existe
+                    if (!file_exists($log_dir)) {
+                        mkdir($log_dir, 0755, true);
+                    }
+
+                    // Archivo de log específico para este operador
+                    $auto_calib_log = $log_dir . DIRECTORY_SEPARATOR . 'auto_calibration_' . $dni_number . '_' . date('YmdHis') . '.log';
+
+                    // Comando para ejecutar la calibración
+                    if (substr(php_uname(), 0, 7) == "Windows") {
+                        // En Windows, usar un archivo bat para mejor control
+                        $bat_content = "@echo off\r\n";
+                        $bat_content .= "cd /d \"$operators_dir\"\r\n";
+                        $bat_content .= "echo [%date% %time%] Iniciando calibracion automatica para DNI $dni_number >> \"$auto_calib_log\"\r\n";
+                        $bat_content .= "python calibrate_single_operator.py \"$dni_number\" >> \"$auto_calib_log\" 2>&1\r\n";
+                        $bat_content .= "echo [%date% %time%] Calibracion finalizada con codigo %errorlevel% >> \"$auto_calib_log\"\r\n";
+
+                        $bat_file = $operators_dir . DIRECTORY_SEPARATOR . 'temp_calib_' . $dni_number . '.bat';
+                        file_put_contents($bat_file, $bat_content);
+
+                        // Ejecutar el bat en segundo plano
+                        $cmd = "start /B cmd /c \"$bat_file\"";
+                        pclose(popen($cmd, "r"));
+
+                        // Programar eliminación del archivo bat después de 60 segundos
+                        $cleanup_cmd = "start /B cmd /c \"timeout /t 60 /nobreak > nul && del \"$bat_file\"\"";
+                        pclose(popen($cleanup_cmd, "r"));
+                    } else {
+                        // Para Linux/Unix
+                        $cmd = "cd $operators_dir && nohup python calibrate_single_operator.py $dni_number >> $auto_calib_log 2>&1 &";
+                        exec($cmd);
+                    }
+
+                    // Log de calibración iniciada
+                    log_system_message(
+                        'info',
+                        'Calibración automática iniciada para operador: ' . $name . ' (DNI: ' . $dni_number . ')',
+                        null,
+                        'Sistema automático'
+                    );
+
+                    // Agregar mensaje informativo
+                    $successMessage = 'Operador registrado exitosamente con ID: ' . $operatorId .
+                        '. La calibración biométrica se está ejecutando en segundo plano. ' .
+                        'Puede verificar el estado en la lista de operadores.';
+                    // === FIN DE LA SECCIÓN DE CALIBRACIÓN AUTOMÁTICA ===
+
                     $successMessage = 'Operador registrado exitosamente con ID: ' . $operatorId;
 
                     // Limpiar los campos del formulario para un nuevo registro
@@ -270,7 +327,7 @@ ob_start();
                     </div>
 
                     <div class="form-group">
-                        <label for="profile_photo">Fotografía de Perfil</label>
+                        <label for="profile_photo">Fotografía de Perfil <i class="fas fa-info-circle text-info" title="Frontal, expresión neutral, con lentes si usa"></i></label>
                         <div class="input-group mb-2">
                             <div class="custom-file">
                                 <input type="file" class="custom-file-input" id="profile_photo" name="profile_photo" accept="image/jpeg,image/png">
@@ -280,16 +337,23 @@ ob_start();
                         <div id="preview_profile_photo" class="mt-2 d-none">
                             <img src="" class="img-thumbnail" style="max-height: 150px;">
                         </div>
-                        <small class="form-text text-muted">Foto principal del operador (máx. 5MB)</small>
+                        <small class="form-text text-muted">Foto principal del operador - Frontal con expresión neutral (máx. 5MB)</small>
                     </div>
                 </div>
             </div>
 
-            <h4 class="mt-4 mb-3">Fotos Adicionales para Reconocimiento Facial</h4>
+            <h4 class="mt-4 mb-3">
+                Fotos para Reconocimiento Facial y Calibración Biométrica
+                <small class="text-muted">(Importantes para la precisión del sistema)</small>
+            </h4>
+
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="face_photo1">Foto Facial 1</label>
+                        <label for="face_photo1">
+                            Foto Facial 1 - Base
+                            <i class="fas fa-info-circle text-info" title="Ojos bien abiertos, boca cerrada"></i>
+                        </label>
                         <div class="input-group mb-2">
                             <div class="custom-file">
                                 <input type="file" class="custom-file-input" id="face_photo1" name="face_photo1" accept="image/jpeg,image/png">
@@ -299,11 +363,15 @@ ob_start();
                         <div id="preview_face_photo1" class="mt-2 d-none">
                             <img src="" class="img-thumbnail" style="max-height: 100px;">
                         </div>
+                        <small class="form-text text-muted">Para calibración base - Ojos abiertos, boca cerrada</small>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="face_photo2">Foto Facial 2</label>
+                        <label for="face_photo2">
+                            Foto Facial 2 - Expresión
+                            <i class="fas fa-info-circle text-info" title="Con ligera sonrisa o boca entreabierta"></i>
+                        </label>
                         <div class="input-group mb-2">
                             <div class="custom-file">
                                 <input type="file" class="custom-file-input" id="face_photo2" name="face_photo2" accept="image/jpeg,image/png">
@@ -313,11 +381,15 @@ ob_start();
                         <div id="preview_face_photo2" class="mt-2 d-none">
                             <img src="" class="img-thumbnail" style="max-height: 100px;">
                         </div>
+                        <small class="form-text text-muted">Con sonrisa o boca entreabierta</small>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label for="face_photo3">Foto Facial 3</label>
+                        <label for="face_photo3">
+                            Foto Facial 3 - Alternativa
+                            <i class="fas fa-info-circle text-info" title="Sin lentes (si usa) o diferente iluminación"></i>
+                        </label>
                         <div class="input-group mb-2">
                             <div class="custom-file">
                                 <input type="file" class="custom-file-input" id="face_photo3" name="face_photo3" accept="image/jpeg,image/png">
@@ -327,23 +399,29 @@ ob_start();
                         <div id="preview_face_photo3" class="mt-2 d-none">
                             <img src="" class="img-thumbnail" style="max-height: 100px;">
                         </div>
+                        <small class="form-text text-muted">Sin lentes o con diferente luz</small>
                     </div>
                 </div>
             </div>
-            <small class="form-text text-muted mb-4">Suba fotos adicionales para mejorar el reconocimiento facial (máx. 5MB cada una)</small>
 
-            <div class="row">
-                <div class="col-12">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save"></i> Guardar
-                    </button>
-                    <a href="index.php" class="btn btn-secondary">
-                        <i class="fas fa-times"></i> Cancelar
-                    </a>
-                </div>
+            <div class="alert alert-warning alert-sm">
+                <i class="fas fa-exclamation-triangle"></i> <strong>Importante:</strong> La calidad de las fotos afecta directamente la precisión del sistema de detección de fatiga.
             </div>
-        </form>
     </div>
+    <small class="form-text text-muted mb-4">Suba fotos adicionales para mejorar el reconocimiento facial (máx. 5MB cada una)</small>
+
+    <div class="row">
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Guardar
+            </button>
+            <a href="index.php" class="btn btn-secondary">
+                <i class="fas fa-times"></i> Cancelar
+            </a>
+        </div>
+    </div>
+    </form>
+</div>
 </div>
 
 <?php

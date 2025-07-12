@@ -1,1 +1,16 @@
-[2025-07-03 11:26:21] Actualizaci髇 completada. 4 encodings guardados
+[2025-07-11 20:05:04] PHP: Iniciando ejecuci贸n del script Python
+[2025-07-11 20:05:04] PHP: Script Python: C:\xampp\htdocs\safety_system\operators\update_encodings.py
+[2025-07-11 20:05:04] PHP: Directorio de trabajo: C:\xampp\htdocs\safety_system\operators
+[2025-07-11 20:05:04] PHP: Archivo encodings.pkl no existente
+[2025-07-11 20:05:04] PHP: Comando ejecutado: cd /d "C:\xampp\htdocs\safety_system\operators" && python "C:\xampp\htdocs\safety_system\operators\update_encodings.py" > "C:\xampp\htdocs\safety_system\operators/python_output.txt" 2>&1
+[2025-07-11 20:05:09] Actualizaci髇 completada. 4 encodings guardados
+[2025-07-11 20:05:09] PHP: C贸digo de retorno: 1
+[2025-07-11 20:05:09] PHP: ERROR al ejecutar el script Python
+[2025-07-11 20:27:03] PHP: Iniciando ejecuci贸n del script Python
+[2025-07-11 20:27:03] PHP: Script Python: C:\xampp\htdocs\safety_system\operators\update_encodings.py
+[2025-07-11 20:27:03] PHP: Directorio de trabajo: C:\xampp\htdocs\safety_system\operators
+[2025-07-11 20:27:03] PHP: Archivo encodings.pkl existente - Tama帽o: 4472 bytes, Modificado: 2025-07-11 20:05:09
+[2025-07-11 20:27:03] PHP: Comando ejecutado: cd /d "C:\xampp\htdocs\safety_system\operators" && python "C:\xampp\htdocs\safety_system\operators\update_encodings.py" > "C:\xampp\htdocs\safety_system\operators/python_output.txt" 2>&1
+[2025-07-11 20:27:07] Actualizaci髇 completada. 4 encodings guardados
+[2025-07-11 20:27:07] PHP: C贸digo de retorno: 1
+[2025-07-11 20:27:07] PHP: ERROR al ejecutar el script Python

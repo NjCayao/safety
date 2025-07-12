@@ -33,7 +33,46 @@ $status = isset($_GET['status']) ? $_GET['status'] : '';
 $license_status = isset($_GET['license_status']) ? $_GET['license_status'] : '';
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 
-// Construir la consulta SQL base
+// Configuración de paginación - OBTENER VALOR DE REGISTROS POR PÁGINA
+$registros_por_pagina = isset($_GET['per_page']) ? intval($_GET['per_page']) : 20;
+// Validar que sea un valor permitido
+if (!in_array($registros_por_pagina, [10, 20, 50, 100])) {
+    $registros_por_pagina = 20;
+}
+
+$pagina_actual = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
+$offset = ($pagina_actual - 1) * $registros_por_pagina;
+
+// Primero contar el total de registros para la paginación
+$count_sql = "SELECT COUNT(*) as total FROM operators o WHERE 1=1";
+$count_params = [];
+
+// Aplicar los mismos filtros para el conteo
+if ($status !== '') {
+    $count_sql .= " AND o.status = ?";
+    $count_params[] = $status;
+}
+
+if ($license_status !== '') {
+    $count_sql .= " AND o.license_status = ?";
+    $count_params[] = $license_status;
+}
+
+if ($search !== '') {
+    $count_sql .= " AND (o.name LIKE ? OR o.id LIKE ? OR o.position LIKE ? OR o.dni_number LIKE ?)";
+    $searchTerm = "%$search%";
+    $count_params[] = $searchTerm;
+    $count_params[] = $searchTerm;
+    $count_params[] = $searchTerm;
+    $count_params[] = $searchTerm;
+}
+
+// Obtener total de registros
+$total_result = db_fetch_one($count_sql, $count_params);
+$total_registros = $total_result['total'];
+$total_paginas = ceil($total_registros / $registros_por_pagina);
+
+// Construir la consulta SQL principal con paginación
 $sql = "SELECT o.*, 
                (SELECT COUNT(*) FROM operator_machine om WHERE om.operator_id = o.id AND om.is_current = 1) as assigned_machines,
                (SELECT m.name FROM operator_machine om JOIN machines m ON om.machine_id = m.id WHERE om.operator_id = o.id AND om.is_current = 1 LIMIT 1) as current_machine
@@ -61,11 +100,33 @@ if ($search !== '') {
     $params[] = $searchTerm;
 }
 
-// Ordenar los resultados
-$sql .= " ORDER BY o.name ASC";
+// Ordenar por fecha de registro descendente
+$sql .= " ORDER BY o.registration_date DESC";
+
+// Agregar límite y offset para paginación
+$sql .= " LIMIT ? OFFSET ?";
+$params[] = $registros_por_pagina;
+$params[] = $offset;
 
 // Ejecutar la consulta
 $operators = db_fetch_all($sql, $params);
+
+// Verificar estado de calibración para cada operador
+$base_dir = dirname(dirname(dirname(__DIR__))); // Llegar a safety_system
+
+// Agregar campo de calibración a cada operador
+for ($i = 0; $i < count($operators); $i++) {
+    if (!empty($operators[$i]['dni_number'])) {
+        $calibration_file = $base_dir . DIRECTORY_SEPARATOR . 'operators' .
+            DIRECTORY_SEPARATOR . 'baseline-json' .
+            DIRECTORY_SEPARATOR . $operators[$i]['dni_number'] .
+            DIRECTORY_SEPARATOR . 'master_baseline.json';
+
+        $operators[$i]['has_calibration'] = file_exists($calibration_file);
+    } else {
+        $operators[$i]['has_calibration'] = false;
+    }
+}
 
 // Mensajes de sesión
 $successMessage = $_SESSION['success_message'] ?? '';
@@ -121,27 +182,27 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'update_started') {
                 <p>No se ha generado el archivo de reconocimiento facial. Por favor, actualice el sistema.</p>
             </div>
         <?php endif; ?>
-        
+
         <!-- Mensaje de estado (solo visible durante el inicio de la actualización) -->
         <div id="status-message">
             <?php echo $status_msg; ?>
         </div>
-        
+
         <!-- Contenedor de progreso (visible solo durante la actualización) -->
         <div id="progress-container" style="<?php echo $in_progress ? '' : 'display:none;'; ?>">
             <div class="progress">
-                <div id="progress-bar" class="progress-bar progress-bar-striped progress-bar-animated bg-success" 
-                     role="progressbar" style="width: <?php echo $progress; ?>%" 
-                     aria-valuenow="<?php echo $progress; ?>" aria-valuemin="0" aria-valuemax="100">
+                <div id="progress-bar" class="progress-bar progress-bar-striped progress-bar-animated bg-success"
+                    role="progressbar" style="width: <?php echo $progress; ?>%"
+                    aria-valuenow="<?php echo $progress; ?>" aria-valuemin="0" aria-valuemax="100">
                     <span id="progress-text"><?php echo $progress; ?>%</span>
                 </div>
             </div>
             <p id="status-text" class="mt-2">Actualizando reconocimiento facial...</p>
         </div>
-        
+
         <!-- Botón de actualización (visible cuando no hay una actualización en curso) -->
-        <form id="update-form" action="actions/update_encodings.php" method="post" 
-              style="<?php echo $in_progress ? 'display:none;' : ''; ?>">
+        <form id="update-form" action="actions/update_encodings.php" method="post"
+            style="<?php echo $in_progress ? 'display:none;' : ''; ?>">
             <button type="submit" class="btn btn-warning">
                 <i class="fas fa-sync"></i> Actualizar Reconocimiento Facial
             </button>
@@ -151,62 +212,62 @@ if (isset($_GET['msg']) && $_GET['msg'] == 'update_started') {
 
 <!-- JavaScript para actualizar la barra de progreso -->
 <script>
-$(document).ready(function() {
-    // Si hay una operación en curso, inicia el monitoreo
-    <?php if ($in_progress): ?>
-    startProgressMonitoring();
-    <?php endif; ?>
-    
-    function startProgressMonitoring() {
-        // Mostrar el contenedor de progreso y ocultar el formulario
-        $('#progress-container').show();
-        $('#update-form').hide();
-        
-        // Función para actualizar el progreso
-        function updateProgress() {
-            $.ajax({
-                url: 'actions/update_encodings.php?check_progress=1',
-                dataType: 'json',
-                success: function(data) {
-                    // Actualiza la barra de progreso
-                    $('#progress-bar').css('width', data.progress + '%')
-                                      .attr('aria-valuenow', data.progress);
-                    $('#progress-text').text(data.progress + '%');
-                    
-                    // Si la operación ha terminado
-                    if (data.progress >= 100) {
-                        $('#status-text').text('¡Actualización completada!');
-                        
-                        // Espera un momento y luego recarga la página
-                        setTimeout(function() {
-                            window.location.href = window.location.pathname; // Recarga sin parámetros GET
-                        }, 1000);
-                        
-                        // Detiene el monitoreo
-                        clearInterval(progressInterval);
+    $(document).ready(function() {
+        // Si hay una operación en curso, inicia el monitoreo
+        <?php if ($in_progress): ?>
+            startProgressMonitoring();
+        <?php endif; ?>
+
+        function startProgressMonitoring() {
+            // Mostrar el contenedor de progreso y ocultar el formulario
+            $('#progress-container').show();
+            $('#update-form').hide();
+
+            // Función para actualizar el progreso
+            function updateProgress() {
+                $.ajax({
+                    url: 'actions/update_encodings.php?check_progress=1',
+                    dataType: 'json',
+                    success: function(data) {
+                        // Actualiza la barra de progreso
+                        $('#progress-bar').css('width', data.progress + '%')
+                            .attr('aria-valuenow', data.progress);
+                        $('#progress-text').text(data.progress + '%');
+
+                        // Si la operación ha terminado
+                        if (data.progress >= 100) {
+                            $('#status-text').text('¡Actualización completada!');
+
+                            // Espera un momento y luego recarga la página
+                            setTimeout(function() {
+                                window.location.href = window.location.pathname; // Recarga sin parámetros GET
+                            }, 1000);
+
+                            // Detiene el monitoreo
+                            clearInterval(progressInterval);
+                        }
+                    },
+                    error: function() {
+                        // En caso de error en la solicitud
+                        $('#status-text').text('Error al actualizar el progreso.');
+                        $('#progress-bar').removeClass('bg-success')
+                            .addClass('bg-danger');
                     }
-                },
-                error: function() {
-                    // En caso de error en la solicitud
-                    $('#status-text').text('Error al actualizar el progreso.');
-                    $('#progress-bar').removeClass('bg-success')
-                                     .addClass('bg-danger');
-                }
-            });
+                });
+            }
+
+            // Actualiza inmediatamente
+            updateProgress();
+
+            // Configura una actualización periódica
+            var progressInterval = setInterval(updateProgress, 1000);
         }
-        
-        // Actualiza inmediatamente
-        updateProgress();
-        
-        // Configura una actualización periódica
-        var progressInterval = setInterval(updateProgress, 1000);
-    }
-    
-    // Cuando se envía el formulario
-    $('#update-form').on('submit', function() {
-        startProgressMonitoring();
+
+        // Cuando se envía el formulario
+        $('#update-form').on('submit', function() {
+            startProgressMonitoring();
+        });
     });
-});
 </script>
 <br>
 
@@ -238,13 +299,24 @@ $(document).ready(function() {
                         </select>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label>Mostrar:</label>
+                        <select name="per_page" class="form-control">
+                            <option value="10" <?php echo ($registros_por_pagina == 10) ? 'selected' : ''; ?>>10 por página</option>
+                            <option value="20" <?php echo ($registros_por_pagina == 20) ? 'selected' : ''; ?>>20 por página</option>
+                            <option value="50" <?php echo ($registros_por_pagina == 50) ? 'selected' : ''; ?>>50 por página</option>
+                            <option value="100" <?php echo ($registros_por_pagina == 100) ? 'selected' : ''; ?>>100 por página</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3">
                     <div class="form-group">
                         <label>Buscar:</label>
                         <input type="text" name="search" class="form-control" placeholder="Nombre, ID, DNI o Posición" value="<?php echo htmlspecialchars($search); ?>">
                     </div>
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-1">
                     <div class="form-group">
                         <label>&nbsp;</label>
                         <div>
@@ -280,6 +352,7 @@ $(document).ready(function() {
                     <th>Posición</th>
                     <th>Estado</th>
                     <th>Licencia</th>
+                    <th>Calibración</th>
                     <th>Máquina Asignada</th>
                     <th>Acciones</th>
                 </tr>
@@ -287,7 +360,7 @@ $(document).ready(function() {
             <tbody>
                 <?php if (empty($operators)): ?>
                     <tr>
-                        <td colspan="9" class="text-center">No se encontraron operadores</td>
+                        <td colspan="10" class="text-center">No se encontraron operadores</td>
                     </tr>
                 <?php else: ?>
                     <?php foreach ($operators as $operator): ?>
@@ -328,6 +401,17 @@ $(document).ready(function() {
                                     <?php if (!empty($operator['license_expiry'])): ?>
                                         <small class="d-block">Venció: <?php echo date('d/m/Y', strtotime($operator['license_expiry'])); ?></small>
                                     <?php endif; ?>
+                                <?php endif; ?>
+                            </td>
+                            <td>
+                                <?php if ($operator['has_calibration']): ?>
+                                    <span class="badge badge-success" title="Operador calibrado">
+                                        <i class="fas fa-check-circle"></i> Calibrado
+                                    </span>
+                                <?php else: ?>
+                                    <span class="badge badge-warning" title="Sin calibración">
+                                        <i class="fas fa-exclamation-triangle"></i> Sin calibrar
+                                    </span>
                                 <?php endif; ?>
                             </td>
                             <td>
@@ -387,6 +471,81 @@ $(document).ready(function() {
             </tbody>
         </table>
     </div>
+    
+    <!-- Paginación -->
+    <?php if ($total_paginas > 1): ?>
+    <div class="card-footer clearfix">
+        <div class="float-left">
+            <p class="mb-0">
+                Mostrando <?php echo $offset + 1; ?> a 
+                <?php echo min($offset + $registros_por_pagina, $total_registros); ?> 
+                de <?php echo $total_registros; ?> operadores
+            </p>
+        </div>
+        <ul class="pagination pagination-sm m-0 float-right">
+            <!-- Botón Primera página -->
+            <?php if ($pagina_actual > 1): ?>
+                <li class="page-item">
+                    <a class="page-link" href="?page=1&status=<?php echo $status; ?>&license_status=<?php echo $license_status; ?>&search=<?php echo urlencode($search); ?>&per_page=<?php echo $registros_por_pagina; ?>">
+                        <i class="fas fa-angle-double-left"></i>
+                    </a>
+                </li>
+            <?php endif; ?>
+            
+            <!-- Botón Anterior -->
+            <?php if ($pagina_actual > 1): ?>
+                <li class="page-item">
+                    <a class="page-link" href="?page=<?php echo $pagina_actual - 1; ?>&status=<?php echo $status; ?>&license_status=<?php echo $license_status; ?>&search=<?php echo urlencode($search); ?>&per_page=<?php echo $registros_por_pagina; ?>">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                </li>
+            <?php endif; ?>
+            
+            <!-- Números de página -->
+            <?php
+            $rango = 2; // Mostrar 2 páginas antes y después de la actual
+            $desde = max(1, $pagina_actual - $rango);
+            $hasta = min($total_paginas, $pagina_actual + $rango);
+            
+            if ($desde > 1) {
+                echo '<li class="page-item disabled"><span class="page-link">...</span></li>';
+            }
+            
+            for ($i = $desde; $i <= $hasta; $i++):
+            ?>
+                <li class="page-item <?php echo ($i == $pagina_actual) ? 'active' : ''; ?>">
+                    <a class="page-link" href="?page=<?php echo $i; ?>&status=<?php echo $status; ?>&license_status=<?php echo $license_status; ?>&search=<?php echo urlencode($search); ?>&per_page=<?php echo $registros_por_pagina; ?>">
+                        <?php echo $i; ?>
+                    </a>
+                </li>
+            <?php 
+            endfor;
+            
+            if ($hasta < $total_paginas) {
+                echo '<li class="page-item disabled"><span class="page-link">...</span></li>';
+            }
+            ?>
+            
+            <!-- Botón Siguiente -->
+            <?php if ($pagina_actual < $total_paginas): ?>
+                <li class="page-item">
+                    <a class="page-link" href="?page=<?php echo $pagina_actual + 1; ?>&status=<?php echo $status; ?>&license_status=<?php echo $license_status; ?>&search=<?php echo urlencode($search); ?>&per_page=<?php echo $registros_por_pagina; ?>">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+            <?php endif; ?>
+            
+            <!-- Botón Última página -->
+            <?php if ($pagina_actual < $total_paginas): ?>
+                <li class="page-item">
+                    <a class="page-link" href="?page=<?php echo $total_paginas; ?>&status=<?php echo $status; ?>&license_status=<?php echo $license_status; ?>&search=<?php echo urlencode($search); ?>&per_page=<?php echo $registros_por_pagina; ?>">
+                        <i class="fas fa-angle-double-right"></i>
+                    </a>
+                </li>
+            <?php endif; ?>
+        </ul>
+    </div>
+    <?php endif; ?>
 </div>
 
 <?php

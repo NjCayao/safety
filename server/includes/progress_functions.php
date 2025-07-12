@@ -1,6 +1,7 @@
 <?php
 /**
  * Funciones para el manejo del progreso de operaciones
+ * VERSIÓN CORREGIDA - Compatible con tu estructura actual
  */
 
 /**
@@ -18,11 +19,16 @@ function get_peru_datetime() {
  * @return int Porcentaje de progreso (0-100)
  */
 function get_progress($operation_type = 'update_encodings') {
-    // Ruta explícita al archivo de progreso
-    $safety_root = "C:/xampp/htdocs/safety_system";
-    $operators_dir = "$safety_root/operators";
-    $progress_file = "$operators_dir/update_progress.txt";
-    $progress_file = str_replace('/', DIRECTORY_SEPARATOR, $progress_file);
+    // Ruta al directorio operators relativa desde includes
+    $base_dir = dirname(dirname(dirname(__FILE__))); // Subir a safety_system
+    $operators_dir = $base_dir . DIRECTORY_SEPARATOR . 'operators';
+    
+    // Determinar archivo según tipo de operación
+    if ($operation_type == 'calibration') {
+        $progress_file = $operators_dir . DIRECTORY_SEPARATOR . 'calibration_progress.txt';
+    } else {
+        $progress_file = $operators_dir . DIRECTORY_SEPARATOR . 'update_progress.txt';
+    }
     
     // Si el archivo no existe, el progreso es 0
     if (!file_exists($progress_file)) {
@@ -52,11 +58,16 @@ function is_operation_in_progress($operation_type = 'update_encodings') {
  * @return string Contenido del log
  */
 function get_operation_log($operation_type = 'update_encodings') {
-    // Ruta explícita al archivo de log
-    $safety_root = "C:/xampp/htdocs/safety_system";
-    $operators_dir = "$safety_root/operators";
-    $log_file = "$operators_dir/update_log.txt";
-    $log_file = str_replace('/', DIRECTORY_SEPARATOR, $log_file);
+    // Ruta al directorio operators
+    $base_dir = dirname(dirname(dirname(__FILE__)));
+    $operators_dir = $base_dir . DIRECTORY_SEPARATOR . 'operators';
+    
+    // Determinar archivo según tipo de operación
+    if ($operation_type == 'calibration') {
+        $log_file = $operators_dir . DIRECTORY_SEPARATOR . 'calibration_log.txt';
+    } else {
+        $log_file = $operators_dir . DIRECTORY_SEPARATOR . 'update_log.txt';
+    }
     
     // Si el archivo no existe, devuelve mensaje vacío
     if (!file_exists($log_file)) {
@@ -75,11 +86,10 @@ function get_encodings_info() {
     // Asegurar que se use la zona horaria de Perú
     date_default_timezone_set('America/Lima');
     
-    // Ruta explícita al archivo encodings.pkl
-    $safety_root = "C:/xampp/htdocs/safety_system";
-    $operators_dir = "$safety_root/operators";
-    $pickle_file = "$operators_dir/encodings.pkl";
-    $pickle_file = str_replace('/', DIRECTORY_SEPARATOR, $pickle_file);
+    // Ruta al archivo encodings.pkl
+    $base_dir = dirname(dirname(dirname(__FILE__)));
+    $operators_dir = $base_dir . DIRECTORY_SEPARATOR . 'operators';
+    $pickle_file = $operators_dir . DIRECTORY_SEPARATOR . 'encodings.pkl';
     
     $info = array(
         'exists' => false,
@@ -96,5 +106,19 @@ function get_encodings_info() {
     }
     
     return $info;
+}
+
+/**
+ * Verifica si existe calibración para un operador
+ * @param string $dni DNI del operador
+ * @return bool True si tiene calibración
+ */
+function has_operator_calibration($dni) {
+    $base_dir = dirname(dirname(dirname(__FILE__)));
+    $calibration_file = $base_dir . DIRECTORY_SEPARATOR . 'operators' . 
+                       DIRECTORY_SEPARATOR . 'baseline-json' . 
+                       DIRECTORY_SEPARATOR . $dni . 
+                       DIRECTORY_SEPARATOR . 'master_baseline.json';
+    return file_exists($calibration_file);
 }
 ?>

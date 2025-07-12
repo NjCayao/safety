@@ -1,0 +1,63 @@
+[2025-07-11 20:12:09] PHP: Iniciando calibraci贸n para operador 47469940
+[2025-07-11 20:12:09] PHP: Script Python: C:\xampp\htdocs\safety_system\operators\calibrate_single_operator.py
+[2025-07-11 20:12:09] PHP: Directorio de trabajo: C:\xampp\htdocs\safety_system\operators
+[2025-07-11 20:12:09] PHP: Comando ejecutado: cd /d "C:\xampp\htdocs\safety_system\operators" && "python" "calibrate_single_operator.py" "47469940" > "C:\xampp\htdocs\safety_system\operators\calibration_output.txt" 2>&1
+[2025-07-11 20:12:10] Iniciando calibraci髇 para operador 47469940
+[2025-07-11 20:12:10] Operador: Nilson Cayao (ID: 47469940)
+[2025-07-11 20:12:10] Directorio de fotos: C:\xampp\htdocs\safety_system\server\operator-photo\47469940
+[2025-07-11 20:12:10] Ejecutando calibraci髇...
+[2025-07-11 20:12:11] ERROR: Calibraci髇 fallida
+[2025-07-11 20:12:11] PHP: C贸digo de retorno: 1
+[2025-07-11 20:12:11] PHP: ERROR al ejecutar el script Python
+[2025-07-11 20:12:11] PHP: Error Python: Error inicializando detectores: Unable to open assets/models/shape_predictor_68_face_landmarks.dat
+Error procesando face1_20250712_030457.png: 'NoneType' object is not callable
+Error procesando face2_20250712_030457.png: 'NoneType' object is not callable
+Error procesando face3_20250712_030457.png: 'NoneType' object is not callable
+Error procesando profile_20250712_030457.png: 'NoneType' object is not callable
+Solo se procesaron 0 fotos, se necesitan al menos 2
+pygame 2.6.1 (SDL 2.28.4, Python 3.9.10)
+Hello from the pygame community. https://www.pygame.org/contribute.html
+ERROR
+Traceback (most recent call last):
+  File "C:\xampp\htdocs\safety_system\operators\calibrate_single_operator.py", line 119, in <module>
+    main()
+  File "C:\xampp\htdocs\safety_system\operators\calibrate_single_operator.py", line 116, in main
+    os.chdir(original_dir)
+NameError: name 'original_dir' is not defined
+
+[2025-07-11 20:16:30] PHP: Iniciando calibraci贸n para operador 47469940
+[2025-07-11 20:16:30] PHP: Script Python: C:\xampp\htdocs\safety_system\operators\calibrate_single_operator.py
+[2025-07-11 20:16:30] PHP: Directorio de trabajo: C:\xampp\htdocs\safety_system\operators
+[2025-07-11 20:16:30] PHP: Comando ejecutado: cd /d "C:\xampp\htdocs\safety_system\operators" && "python" "calibrate_single_operator.py" "47469940" > "C:\xampp\htdocs\safety_system\operators\calibration_output.txt" 2>&1
+[2025-07-11 20:16:31] Iniciando calibraci髇 para operador 47469940
+[2025-07-11 20:16:31] Directorio de trabajo cambiado a: C:\xampp\htdocs\safety_system
+[2025-07-11 20:16:31] Modelo esperado en: C:\xampp\htdocs\safety_system\assets\models\shape_predictor_68_face_landmarks.dat
+[2025-07-11 20:16:31] 縀xiste el modelo? True
+[2025-07-11 20:16:32] Operador: Nilson Cayao (ID: 47469940)
+[2025-07-11 20:16:32] Directorio de fotos: C:\xampp\htdocs\safety_system\server\operator-photo\47469940
+[2025-07-11 20:16:32] Ejecutando calibraci髇...
+[2025-07-11 20:16:33] Calibraci髇 completada exitosamente
+[2025-07-11 20:16:33] PHP: C贸digo de retorno: 0
+[2025-07-11 20:16:33] PHP: Script Python ejecutado exitosamente
+[2025-07-11 20:20:16] PHP: Iniciando calibraci贸n para operador 47469940
+[2025-07-11 20:20:16] PHP: Script Python: C:\xampp\htdocs\safety_system\operators\calibrate_single_operator.py
+[2025-07-11 20:20:16] PHP: Directorio de trabajo: C:\xampp\htdocs\safety_system\operators
+[2025-07-11 20:20:16] PHP: Comando ejecutado: cd /d "C:\xampp\htdocs\safety_system\operators" && "python" "calibrate_single_operator.py" "47469940" > "C:\xampp\htdocs\safety_system\operators\calibration_output.txt" 2>&1
+[2025-07-11 20:20:17] Iniciando calibraci髇 para operador 47469940
+[2025-07-11 20:20:17] Directorio de trabajo cambiado a: C:\xampp\htdocs\safety_system
+[2025-07-11 20:20:17] Modelo esperado en: C:\xampp\htdocs\safety_system\assets\models\shape_predictor_68_face_landmarks.dat
+[2025-07-11 20:20:17] 縀xiste el modelo? True
+[2025-07-11 20:20:18] Operador: Nilson Cayao (ID: 47469940)
+[2025-07-11 20:20:18] Directorio de fotos: C:\xampp\htdocs\safety_system\server\operator-photo\47469940
+[2025-07-11 20:20:18] Ejecutando calibraci髇...
+[2025-07-11 20:20:18] Calibraci髇 completada exitosamente
+[2025-07-11 20:20:19] PHP: C贸digo de retorno: 0
+[2025-07-11 20:20:19] PHP: Script Python ejecutado exitosamente
+[2025-07-11 20:26:25] Iniciando calibraci髇 para operador 47469940
+[2025-07-11 20:26:25] Directorio de trabajo cambiado a: C:\xampp\htdocs\safety_system
+[2025-07-11 20:26:25] Modelo esperado en: C:\xampp\htdocs\safety_system\assets\models\shape_predictor_68_face_landmarks.dat
+[2025-07-11 20:26:25] 縀xiste el modelo? True
+[2025-07-11 20:26:25] Operador: Nilson Cayao (ID: 47469940)
+[2025-07-11 20:26:25] Directorio de fotos: C:\xampp\htdocs\safety_system\server\operator-photo\47469940
+[2025-07-11 20:26:25] Ejecutando calibraci髇...
+[2025-07-11 20:26:26] Calibraci髇 completada exitosamente

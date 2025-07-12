@@ -1,0 +1,10 @@
+Directorio base: C:\xampp\htdocs\safety_system
+Buscando fotos en: C:\xampp\htdocs\safety_system\server\operator-photo
+Traceback (most recent call last):
+  File "C:\xampp\htdocs\safety_system\operators\update_encodings.py", line 137, in <module>
+    main()
+  File "C:\xampp\htdocs\safety_system\operators\update_encodings.py", line 134, in main
+    print(f"\u2705 Proceso completado. {len(encodings)} encodings guardados")
+  File "C:\Users\FOCUS\AppData\Local\Programs\Python\Python39\lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2705' in position 0: character maps to <undefined>
